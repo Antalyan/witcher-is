@@ -5,10 +5,10 @@
     <projectFile profileName="WitcherProject">WitcherProject.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="834400f9-cb2e-48b8-afee-d0a5d08bf3a9" name="Changes" comment="Add ignore files">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/projectSettingsUpdater.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="834400f9-cb2e-48b8-afee-d0a5d08bf3a9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/PersonInitializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/PersonInitializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Migrations/KaerMorhenDBContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Migrations/KaerMorhenDBContextModelSnapshot.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,16 +27,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.WitcherProject">
     <configuration name="WitcherProject" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/WitcherProject.csproj" />
@@ -78,7 +78,8 @@
       <option name="presentableId" value="Default" />
       <updated>1664297149194</updated>
       <workItem from="1664297161324" duration="1551000" />
-      <workItem from="1664299797719" duration="76000" />
+      <workItem from="1664299797719" duration="170000" />
+      <workItem from="1664300467948" duration="307000" />
     </task>
     <task id="LOCAL-00001" summary="Add ignore files">
       <created>1664298542140</created>
@@ -87,7 +88,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664298542140</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Fix files for git">
+      <created>1664299894459</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1664299894459</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -112,6 +120,26 @@
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Add ignore files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add ignore files" />
+    <MESSAGE value="Fix files for git" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix files for git" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Data/PersonInitializer.cs</url>
+          <line>9</line>
+          <properties documentPath="C:\Users\misac\RiderProjects\kaer-morhen-is\KaerMorhenIS\Data\PersonInitializer.cs" initialLine="9" containingFunctionPresentation="method 'Seed'">
+            <startOffsets>
+              <option value="218" />
+            </startOffsets>
+            <endOffsets>
+              <option value="417" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
