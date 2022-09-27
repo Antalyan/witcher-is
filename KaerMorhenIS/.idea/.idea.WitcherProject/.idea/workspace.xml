@@ -6,42 +6,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="834400f9-cb2e-48b8-afee-d0a5d08bf3a9" name="Changes" comment="Add ignore files">
-      <change afterPath="$PROJECT_DIR$/App.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/KaerMorhenDBContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Models/Person.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/PersonInitializer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/WeatherForecast.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/WeatherForecastService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pages/Counter.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pages/Error.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pages/Error.cshtml.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pages/FetchData.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pages/Index.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pages/_Host.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pages/_Layout.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shared/MainLayout.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shared/MainLayout.razor.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shared/NavMenu.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shared/NavMenu.razor.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shared/SurveyPrompt.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_Imports.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appsettings.Development.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/appsettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/bootstrap/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/bootstrap/bootstrap.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/FONT-LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/ICON-LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/font/css/open-iconic-bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/font/fonts/open-iconic.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/font/fonts/open-iconic.otf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/font/fonts/open-iconic.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/font/fonts/open-iconic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/open-iconic/font/fonts/open-iconic.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/css/site.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wwwroot/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/projectSettingsUpdater.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WitcherProject/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +33,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -111,6 +78,7 @@
       <option name="presentableId" value="Default" />
       <updated>1664297149194</updated>
       <workItem from="1664297161324" duration="1551000" />
+      <workItem from="1664299797719" duration="76000" />
     </task>
     <task id="LOCAL-00001" summary="Add ignore files">
       <created>1664298542140</created>
@@ -139,6 +107,9 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+    </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Add ignore files" />
     <option name="LAST_COMMIT_MESSAGE" value="Add ignore files" />
