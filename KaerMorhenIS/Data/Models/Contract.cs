@@ -33,6 +33,6 @@ public class Contract
 
     [ForeignKey(nameof(ContractorId))] public virtual Contractor? Contractor { get; set; }
 
-    public int PersonId { get; set; }
+    public int? PersonId { get; set; }
     [ForeignKey(nameof(PersonId))] public virtual Person? Person { get; set; }
 }
