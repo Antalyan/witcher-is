@@ -10,4 +10,6 @@ public class Person
     public string Cv { get; set; }
     public DateTime Birthdate { get; set; }
     public bool IsActive { get; set; }
+
+    public virtual List<Contract> Contracts { get; set; }
 }
