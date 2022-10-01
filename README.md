@@ -22,12 +22,15 @@
 
 * Stáhnout Microsoft SQL server (mě fungoval postup z tohoto odkazu)
   * https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?source=recommendations&view=sql-server-ver16:
-* Po naistalování v termínálu lokalizovat **SqllocalDB.exe**
+* Po nainstalování v terminálu lokalizovat **SqllocalDB.exe**
   * Já jsem  našel na adrese: C:\Program Files\Microsoft SQL Server\150\Tools\Binn>
 * Zadat příkazy 
-  * Vytvoření LokalDB `SqlLocalDb create KaerMorhenIS`
-  * Spuštění LocalDB `SqlLocalDb start KaerMorhenIS`
-  * Zkontrolovat že vše funguje: `SqlLocalDb info KaerMorhenIS`
+  * Vytvoření LocalDB `.\SqlLocalDb create KaerMorhenIS`
+  * Spuštění LocalDB `.\SqlLocalDb start KaerMorhenIS`
+  * Zkontrolovat, že vše funguje: `.\SqlLocalDb info KaerMorhenIS`
     * ![Info](img.png)
-* `connectionString` by měl být nastaven na DB s názvem KaerMorhenIS.
-* Po naseedování databáze přes `database update` by měli být data viditelné v DB
+* `connectionString` by měl být nastaven v appsettings.json na DB s názvem KaerMorhenIS.
+* V IDE přidat nový Data Source -> Microsoft SQL Server Local Db a jako instanci vybrat KaerMorhen IS
+* Vytvořit migraci: *dotnet ef migrations add <jmenomigrace>* NEBO přes plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
+* Updatovat databázi dle migrace: *dotnet ef database update* NEBO přes plugin *Update Database*
+* Data by měla být viditelná v DB
