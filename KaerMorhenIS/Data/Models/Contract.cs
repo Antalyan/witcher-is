@@ -17,19 +17,19 @@ public class Contract
 
     public string Name { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public ContractState State { get; set; }
 
-    public DateTime StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
-    public DateTime Deadline { get; set; }
+    public DateTime? Deadline { get; set; }
 
-    public string Location { get; set; }
+    public string? Location { get; set; }
 
-    public int ContractorId { get; set; }
+    public int? ContractorId { get; set; }
 
     [ForeignKey(nameof(ContractorId))] public virtual Contractor? Contractor { get; set; }
 

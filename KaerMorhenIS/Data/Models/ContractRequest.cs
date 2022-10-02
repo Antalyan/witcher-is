@@ -16,7 +16,7 @@ public class ContractRequest
 
     public DateTime CreatedOn { get; set; }
 
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     public ContractRequestState State { get; set; }
 
