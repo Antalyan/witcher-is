@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WitcherProject.Data.Models;
+using WitcherProject.Data.Models.States;
 
 namespace WitcherProject.Data.Initializers;
 

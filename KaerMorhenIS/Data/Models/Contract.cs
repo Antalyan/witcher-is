@@ -1,15 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using WitcherProject.Data.Models.States;
 
 namespace WitcherProject.Data.Models;
-
-public enum ContractState
-{
-    Accepted,
-    Approved,
-    Declined,
-    Assigned,
-    Resolved
-}
 
 public class Contract
 {
