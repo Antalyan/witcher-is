@@ -10,8 +10,8 @@
 - správci zakázek přiřadit zakázku k zaklínači
 
 ## Volitelná rozšíření zadání:
-- žádost o přidělení zakázky
-- databáze zaklínačských znalostí
+- žádost o přidělení zakázky (bude implementováno)
+- databáze zaklínačských znalostí (návrh k dispozici v ERD, zatím nebude implementováno)
 
 ## Členové týmu (v abecedním pořadí)
 - Michael Koudela 485441
@@ -34,3 +34,6 @@
 * Vytvořit migraci: *dotnet ef migrations add <jmenomigrace>* NEBO přes plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
 * Updatovat databázi dle migrace: *dotnet ef database update* NEBO přes plugin *Update Database*
 * Data by měla být viditelná v DB
+
+## Hodnocení:
+* Kdyby chyběl půlbod na konci semestru, Dominik ho přidá
