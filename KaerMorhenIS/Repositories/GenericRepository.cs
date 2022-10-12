@@ -46,9 +46,4 @@ public class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEnti
         _dbSet.Attach(entity);
         _context.Entry(entity).State = EntityState.Modified;
     }
-    
-    public async ValueTask DisposeAsync()
-    {
-        await _context.DisposeAsync();
-    }
 }

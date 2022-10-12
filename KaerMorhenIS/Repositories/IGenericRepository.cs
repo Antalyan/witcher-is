@@ -3,7 +3,7 @@ using WitcherProject.Data;
 
 namespace WitcherProject.Repositories;
 
-public interface IGenericRepository<TEntity> : IAsyncDisposable where TEntity : class
+public interface IGenericRepository<TEntity> where TEntity : class
 {
     Task Delete(int id);
     Task<IEnumerable<TEntity>> GetAll();
