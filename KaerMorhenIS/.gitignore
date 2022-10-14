@@ -12,7 +12,8 @@
 /dataSources/
 /dataSources.local.xml
 
-/bin
-/obj
+*/bin
+*/obj
+
 /Migrations
 
