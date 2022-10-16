@@ -25,15 +25,14 @@ Information system enables:
 * Download Microsoft SQL server
   * https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?source=recommendations&view=sql-server-ver16:
 * After it is installed, find **SqllocalDB.exe** in file explorer and switch to that folder
-  * default: C:\Program Files\Microsoft SQL Server\150\Tools\Binn>
+  * default: C:\Program Files\Microsoft SQL Server\150\Tools\Binn
   * cd <installation_path>
-* Use the following commands (<dbname> = KaerMorhenIS)
+* Use the following commands (in this project, *dbname* = *KaerMorhenIS*)
   * Create LocalDB: `.\SqlLocalDb.exe create <dbname>`
   * Run LocalDB: `.\SqlLocalDb.exe start <dbname>`
   * Check that everything works: `.\SqlLocalDb.exe info <dbname>`
-    * ![Info](img.png)
-* Check that database `connectionString` in appsettings.json is set to <dbname>.
-* Add new Data Source in Rider IDE -> Microsoft SQL Server Local Db -> choose <dbname> as instance name
+* Check that database `connectionString` in appsettings.json is set to *dbname*.
+* Add new Data Source in Rider IDE -> Microsoft SQL Server Local Db -> choose *dbname* as instance name
 * Create migration: *dotnet ef migrations add <jmenomigrace>* OR using plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
 * Update database according to chosen migration: *dotnet ef database update* OR using plugin... *Update Database*
 * Data should be visible in DB
