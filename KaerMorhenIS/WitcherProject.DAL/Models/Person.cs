@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WitcherProject.DAL.Data.Models;
+namespace WitcherProject.DAL.Models;
 
 [Index(nameof(Login), IsUnique = true)]
 public class Person

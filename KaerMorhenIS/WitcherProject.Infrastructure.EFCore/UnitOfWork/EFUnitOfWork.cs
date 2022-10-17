@@ -1,9 +1,10 @@
-﻿using WitcherProject.DAL.Data;
-using WitcherProject.DAL.Data.Models;
-using WitcherProject.DAL.Repositories;
-using WitcherProject.Infrastructure.UnitsOfWork;
+﻿using WitcherProject.DAL;
+using WitcherProject.DAL.Models;
+using WitcherProject.Infrastructure.EFCore.Repository;
+using WitcherProject.Infrastructure.Repository;
+using WitcherProject.Infrastructure.UnitOfWork;
 
-namespace WitcherProject.UnitsOfWork;
+namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
 public class UnitOfWork: IUnitOfWork
 {

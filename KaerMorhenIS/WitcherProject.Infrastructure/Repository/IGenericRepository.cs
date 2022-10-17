@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WitcherProject.DAL.Data;
-
-namespace WitcherProject.DAL.Repositories;
+﻿namespace WitcherProject.Infrastructure.Repository;
 
 public interface IGenericRepository<TEntity> where TEntity : class
 {

@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL.Data.Initializers;
-using System.Configuration;
-using WitcherProject.DAL.Data.Models;
+using WitcherProject.DAL.Models;
 
-namespace WitcherProject.DAL.Data;
+namespace WitcherProject.DAL;
 
 public class KaerMorhenDBContext : DbContext
 {

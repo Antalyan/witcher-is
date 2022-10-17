@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WitcherProject.DAL.Data.Models;
-using WitcherProject.DAL.Data.Models.States;
+using WitcherProject.DAL.Models;
+using WitcherProject.DAL.Models.Enums;
 
 namespace WitcherProject.DAL.Data.Initializers;
 

@@ -8,6 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\WitcherProject.DAL\WitcherProject.DAL.csproj" />
+        <ProjectReference Include="..\WitcherProject.Application\WitcherProject.Application.csproj" />
     </ItemGroup>
 </Project>
