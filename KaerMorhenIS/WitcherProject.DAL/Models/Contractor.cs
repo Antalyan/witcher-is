@@ -1,4 +1,4 @@
-﻿namespace WitcherProject.DAL.Data.Models;
+﻿namespace WitcherProject.DAL.Models;
 
 public class Contractor
 {

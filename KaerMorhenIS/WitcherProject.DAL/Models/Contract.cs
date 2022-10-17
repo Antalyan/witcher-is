@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using WitcherProject.DAL.Data.Models.States;
+using WitcherProject.DAL.Models.Enums;
 
-namespace WitcherProject.DAL.Data.Models;
+namespace WitcherProject.DAL.Models;
 
 public class Contract
 {

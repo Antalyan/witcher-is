@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WitcherProject.DAL.Data.Models;
+namespace WitcherProject.DAL.Models;
 
 public class RoleToPerson
 {

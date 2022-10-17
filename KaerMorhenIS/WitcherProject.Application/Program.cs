@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using WitcherProject.DAL.Data;
+using WitcherProject.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 

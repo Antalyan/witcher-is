@@ -1,7 +1,7 @@
-﻿using WitcherProject.DAL.Data.Models;
-using WitcherProject.DAL.Repositories;
+﻿using WitcherProject.DAL.Models;
+using WitcherProject.Infrastructure.Repository;
 
-namespace WitcherProject.Infrastructure.UnitsOfWork;
+namespace WitcherProject.Infrastructure.UnitOfWork;
 
 public interface IUnitOfWork: IAsyncDisposable
 {

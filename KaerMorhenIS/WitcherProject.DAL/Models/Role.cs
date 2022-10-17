@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace WitcherProject.DAL.Data.Models;
+namespace WitcherProject.DAL.Models;
 
 [Index(nameof(RoleName), IsUnique = true)]
 public class Role
