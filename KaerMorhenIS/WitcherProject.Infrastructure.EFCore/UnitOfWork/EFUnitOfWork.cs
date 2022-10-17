@@ -35,7 +35,6 @@ public class UnitOfWork: IUnitOfWork
     
     public async ValueTask DisposeAsync()
     {
-        //TODO: IDK what it does or what it is good for
         await _context.DisposeAsync();
     }
 }
