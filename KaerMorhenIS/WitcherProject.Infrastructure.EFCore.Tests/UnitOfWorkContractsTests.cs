@@ -36,7 +36,7 @@ public class UnitOfWorkContractsTests
     }
 
     [Fact]
-    public async Task TwoContractorsAdded()
+    public async Task TwoContractorsAdded_DbReturnsThreeObjects()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
         var uowUnderTest = new UnitOfWorkContracts(dbContext);
@@ -56,7 +56,7 @@ public class UnitOfWorkContractsTests
     }
 
     [Fact]
-    public async Task InvalidContractorShouldNotInsert()
+    public async Task InvalidContractor_ShouldNotInsert()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
         var uowUnderTest = new UnitOfWorkContracts(dbContext);

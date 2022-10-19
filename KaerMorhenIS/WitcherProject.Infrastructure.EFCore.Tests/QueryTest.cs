@@ -15,7 +15,7 @@ public class QueryTest
 {
 
     private DbContextOptions<KaerMorhenDBContext> _options;
-    
+    // based on https://github.com/Lukas-Razz/CSharp_Demo-QueryObject/blob/master/Demo.QueryObject.Infrastructure.EFCore.Tests/QueryObjectTests.cs
 
     public QueryTest()
     {
