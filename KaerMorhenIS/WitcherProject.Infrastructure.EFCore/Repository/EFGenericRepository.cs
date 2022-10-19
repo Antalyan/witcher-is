@@ -4,12 +4,12 @@ using WitcherProject.Infrastructure.Repository;
 
 namespace WitcherProject.Infrastructure.EFCore.Repository;
 
-public class GenericRepository<TEntity>: IGenericRepository<TEntity> where TEntity: class
+public class EFGenericRepository<TEntity>: IGenericRepository<TEntity> where TEntity: class
 {
     private readonly KaerMorhenDBContext _context;
     private readonly DbSet<TEntity> _dbSet;
 
-    public GenericRepository(KaerMorhenDBContext context)
+    public EFGenericRepository(KaerMorhenDBContext context)
     {
         _context = context;
         _dbSet = context.Set<TEntity>();
