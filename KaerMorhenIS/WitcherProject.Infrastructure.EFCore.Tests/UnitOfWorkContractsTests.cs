@@ -66,7 +66,7 @@ public class UnitOfWorkContractsTests
             {Id = 1, Name = "NewContractorName2", Surname = "NewContractorSurname2", Contracts = new List<Contract>()};
 
         await uowUnderTest.ContractorRepository.Insert(validContractor);
-        var act = () =>  uowUnderTest.ContractorRepository.Insert(invalidContractor);
+        var act = () =>  uowUnderTest.ContractorRepository.Insert(invalidContractor);   // based on: https://stackoverflow.com/a/45017575
         
         var allContractors = await uowUnderTest.ContractorRepository.GetAll();
         Assert.True(allContractors.Count() == 1);

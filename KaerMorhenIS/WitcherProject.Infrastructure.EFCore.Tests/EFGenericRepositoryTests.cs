@@ -39,7 +39,7 @@ public class EFGenericRepositoryTests
     }
 
     [Fact]
-    public async Task GetAll_Test()
+    public async Task ShouldGetAllContractors()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
         var repoUnderTest = new EFGenericRepository<Contractor>(dbContext);
@@ -50,7 +50,7 @@ public class EFGenericRepositoryTests
     }
 
     [Fact]
-    public async Task Insert_Test()
+    public async Task ShouldInsertContractor()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
         var repoUnderTest = new EFGenericRepository<Contractor>(dbContext);
@@ -65,7 +65,7 @@ public class EFGenericRepositoryTests
     }
 
     [Fact]
-    public async Task GetById_Test()
+    public async Task ShouldGetContractorById()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
         var repoUnderTest = new EFGenericRepository<Contractor>(dbContext);
@@ -77,7 +77,7 @@ public class EFGenericRepositoryTests
     }
 
     [Fact]
-    public async Task Delete_Test()
+    public async Task ShouldDeleteContractor()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
         var repoUnderTest = new EFGenericRepository<Contractor>(dbContext);
@@ -90,7 +90,7 @@ public class EFGenericRepositoryTests
     }
 
     [Fact]
-    public async Task Update_Test()
+    public async Task ShouldUpdateContractor()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
         var repoUnderTest = new EFGenericRepository<Contractor>(dbContext);
