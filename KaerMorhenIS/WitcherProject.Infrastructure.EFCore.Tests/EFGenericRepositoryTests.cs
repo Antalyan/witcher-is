@@ -89,7 +89,6 @@ public class EFGenericRepositoryTests
         Assert.True(allContractors.Count() == 1);
     }
 
-    // TODO check if logic is good
     [Fact]
     public async Task Update_Test()
     {
@@ -102,13 +101,13 @@ public class EFGenericRepositoryTests
         contractor.Name = updatedName;
 
         repoUnderTest.Update(contractor);
-        // todo - shouldn't I here also call dbContext.SaveChanges()?
-
+        await dbContext.SaveChangesAsync();
+        
         var updatedContractor = await repoUnderTest.GetById(1);
         
         Assert.NotEqual(oldName, updatedContractor.Name);
         Assert.Equal(updatedName, updatedContractor.Name);
     }
     
-    // possible further test cases: lazy loading, nullables, navigation property
+    // possible further test cases: lazy loading, nullables, navigation property...
 }
