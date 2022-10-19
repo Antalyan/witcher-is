@@ -3,6 +3,7 @@
 ## Compulsory use cases
 Information system enables:
 - user authentication
+- person manager to add new users
 - person manager to assign roles to users
 - user to change their personal data
 - witcher to create and view contracts
