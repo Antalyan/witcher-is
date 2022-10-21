@@ -40,7 +40,10 @@ public class QueryTest
         kaerMorhenDbContext.Contractors.Add(new Contractor() { Id = 3, Name = "Holy", Surname = "Harry" });
         kaerMorhenDbContext.Contractors.Add(new Contractor() { Id = 4, Name = "Homer", Surname = "Kimchi" });
         kaerMorhenDbContext.Contractors.Add(new Contractor() { Id = 5, Name = "Hilde", Surname = "Teddings" });
-
+        kaerMorhenDbContext.Contractors.Add(new Contractor() { Id = 6, Name = "Ulrike", Surname = "Teddings" });
+        kaerMorhenDbContext.Contractors.Add(new Contractor() { Id = 7, Name = "Sigismund", Surname = "Djisktra" });
+        
+        
         kaerMorhenDbContext.Contracts.Add(
             new Contract()
             {
@@ -163,5 +166,33 @@ public class QueryTest
         Assert.NotEmpty(queryResult);
         Assert.Equal("Homer", queryResult.First().Name);
     } 
+    
+    [Fact]
+    public async Task False_Query_ReturnsNone()
+    {
+        using var dbContext = new KaerMorhenDBContext(_options);
+
+        var query = new EFQuery<Contractor>(dbContext)
+            .Filter(cont => cont.Name == "Geralt");
+
+        var queryResult = await query.ExecuteAsync();
+        
+        Assert.Empty(queryResult);
+    } 
+    
+    
+    [Fact]
+    public async Task Page_Third_ReturnsOneContractor()
+    {
+        using var dbContext = new KaerMorhenDBContext(_options);
+
+        var query = new EFQuery<Contractor>(dbContext)
+            .Page(3, 3);
+    
+        var queryResult = await query.ExecuteAsync();
+        
+        Assert.NotEmpty(queryResult);
+        Assert.Equal(7, queryResult.First().Id);
+    }
     
 }
