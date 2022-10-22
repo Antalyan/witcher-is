@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.DAL", "WitcherProject.DAL\WitcherProject.DAL.csproj", "{C4179911-8E7F-4548-9F31-D02A091FC181}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.Infrastructure.EFCore.Tests", "WitcherProject.Infrastructure.EFCore.Tests\WitcherProject.Infrastructure.EFCore.Tests.csproj", "{5E416A6E-F8DC-4A6E-B89B-88AFA7F753A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{C4179911-8E7F-4548-9F31-D02A091FC181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4179911-8E7F-4548-9F31-D02A091FC181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4179911-8E7F-4548-9F31-D02A091FC181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E416A6E-F8DC-4A6E-B89B-88AFA7F753A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E416A6E-F8DC-4A6E-B89B-88AFA7F753A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E416A6E-F8DC-4A6E-B89B-88AFA7F753A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E416A6E-F8DC-4A6E-B89B-88AFA7F753A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
