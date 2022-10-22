@@ -138,7 +138,7 @@ public class EFGenericRepositoryTests
         var repoUnderTestContracts = new EFGenericRepository<Contract>(dbContext);
         var returnedContracts = await repoUnderTestContracts.GetAll();
 
-        Assert.Equal(returnedContracts.ToList()[0].Name, insertedContractName);
+        Assert.Equal(returnedContracts.First().Name, insertedContractName);
     }
     
     // possible further test cases: lazy loading, nullables, navigation property...
