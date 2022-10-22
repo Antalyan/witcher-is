@@ -69,7 +69,7 @@ public class UnitOfWorkContractsTests
         var act = () =>  uowUnderTest.ContractorRepository.Insert(invalidContractor);   // based on: https://stackoverflow.com/a/45017575
         
         var allContractors = await uowUnderTest.ContractorRepository.GetAll();
-        Assert.True(allContractors.Count() == 1);
         await Assert.ThrowsAsync<InvalidOperationException>(act);
+        Assert.True(allContractors.Count() == 1);
     }
 }
