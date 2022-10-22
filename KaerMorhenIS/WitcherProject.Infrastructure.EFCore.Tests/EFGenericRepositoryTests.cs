@@ -109,5 +109,37 @@ public class EFGenericRepositoryTests
         Assert.Equal(updatedName, updatedContractor.Name);
     }
     
+    
+    [Fact]
+    public async Task InsertContractViaContractor_DbReturnsOne()
+    {
+        using var dbContext = new KaerMorhenDBContext(_options);
+        var repoUnderTestContractors = new EFGenericRepository<Contractor>(dbContext);
+
+        var contractor = await repoUnderTestContractors.GetById(1);
+        const string insertedContractName = "Find Yennefer";
+        contractor.Contracts = new List<Contract>
+        {
+            new()
+            {
+                Name = insertedContractName, Description = "Look everywhere!", State = ContractState.Accepted,
+                Location = "White Orchard", Deadline = new DateTime(2050, 12, 1)
+            }
+        };
+
+        repoUnderTestContractors.Update(contractor);
+        await dbContext.SaveChangesAsync();
+        
+        var updatedContractor = await repoUnderTestContractors.GetById(1);
+        
+        Assert.True(updatedContractor.Contracts.Count == 1);
+        Assert.Equal(updatedContractor.Contracts[0].Name, insertedContractName);
+        
+        var repoUnderTestContracts = new EFGenericRepository<Contract>(dbContext);
+        var returnedContracts = await repoUnderTestContracts.GetAll();
+
+        Assert.Equal(returnedContracts.ToList()[0].Name, insertedContractName);
+    }
+    
     // possible further test cases: lazy loading, nullables, navigation property...
 }
