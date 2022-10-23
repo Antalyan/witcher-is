@@ -14,38 +14,27 @@ public class UnitOfWorkAuthentication : IUnitOfWorkAuthentication
 {
     private readonly KaerMorhenDBContext _context;
     
-    private IGenericRepository<Person> _personRepository;
+    private IGenericRepository<Person>? _personRepository;
 
     public UnitOfWorkAuthentication(KaerMorhenDBContext context)
     {
         _context = context;
     }
     
-    public IGenericRepository<Person> PersonRepository
-    {
-        get
-        {
-            if (this._personRepository == null)
-            {
-                this._personRepository = new EFGenericRepository<Person>(_context);
-            }
-
-            return _personRepository;
-        }
-    }
+    public IGenericRepository<Person> PersonRepository => _personRepository ??= new EFGenericRepository<Person>(_context);
 
 
-    private bool _disposed = false;
+    private bool _disposed;
     protected virtual async ValueTask DisposeAsync(bool disposing)
     {
-        if (!this._disposed)
+        if (!_disposed)
         {
             if (disposing)
             {
                 await _context.DisposeAsync();
             }
         }
-        this._disposed = true;
+        _disposed = true;
     }
     
     public async ValueTask DisposeAsync()

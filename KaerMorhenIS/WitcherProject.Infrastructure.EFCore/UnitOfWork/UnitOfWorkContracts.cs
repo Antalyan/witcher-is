@@ -18,80 +18,35 @@ public class UnitOfWorkContracts : IUnitOfWorkContracts
 {
     private readonly KaerMorhenDBContext _context;
 
-    private IGenericRepository<Person> _personRepository;
-    private IGenericRepository<Contract> _contractRepository;
-    private IGenericRepository<Contractor> _contractorRepository;
-    private IGenericRepository<ContractRequest> _contractRequestRepository;
+    private IGenericRepository<Person>? _personRepository;
+    private IGenericRepository<Contract>? _contractRepository;
+    private IGenericRepository<Contractor>? _contractorRepository;
+    private IGenericRepository<ContractRequest>? _contractRequestRepository;
 
     public UnitOfWorkContracts(KaerMorhenDBContext context)
     {
         _context = context;
     }
     
-    public IGenericRepository<Contract> ContractRepository
-    {
-        get
-        {
-            if (this._contractRepository == null)
-            {
-                this._contractRepository = new EFGenericRepository<Contract>(_context);
-            }
+    public IGenericRepository<Contract> ContractRepository => _contractRepository ??= new EFGenericRepository<Contract>(_context);
 
-            return _contractRepository;
-        }
-    }
+    public IGenericRepository<Contractor> ContractorRepository => _contractorRepository ??= new EFGenericRepository<Contractor>(_context);
 
-    public IGenericRepository<Contractor> ContractorRepository
-    {
-        get
-        {
-            if (this._contractorRepository == null)
-            {
-                this._contractorRepository = new EFGenericRepository<Contractor>(_context);
-            }
+    public IGenericRepository<ContractRequest> ContractRequestRepository =>_contractRequestRepository ??= new EFGenericRepository<ContractRequest>(_context);
 
-            return _contractorRepository;
-        }
-    }
+    public IGenericRepository<Person> PersonRepository => _personRepository ??= new EFGenericRepository<Person>(_context);
 
-    public IGenericRepository<ContractRequest> ContractRequestRepository
-    {
-        get
-        {
-            if (this._contractRequestRepository == null)
-            {
-                this._contractRequestRepository = new EFGenericRepository<ContractRequest>(_context);
-            }
-
-            return _contractRequestRepository;
-        }
-    }
-
-    public IGenericRepository<Person> PersonRepository
-    {
-        get
-        {
-            if (this._personRepository == null)
-            {
-                this._personRepository = new EFGenericRepository<Person>(_context);
-            }
-
-            return _personRepository;
-        }
-    }
-
-    
-    private bool _disposed = false;
+    private bool _disposed;
     protected virtual async ValueTask DisposeAsync(bool disposing)
     {
-        if (!this._disposed)
+        if (!_disposed)
         {
             if (disposing)
             {
                 await _context.DisposeAsync();
             }
         }
-        this._disposed = true;
+        _disposed = true;
     }
     
     public async ValueTask DisposeAsync()

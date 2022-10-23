@@ -16,65 +16,33 @@ public class UnitOfWorkPersonalData : IUnitOfWorkPersonalData
 {
     private readonly KaerMorhenDBContext _context;
 
-    private IGenericRepository<Person> _personRepository;
-    private IGenericRepository<Role> _roleRepository;
-    private IGenericRepository<RoleToPerson> _roleToPersonRepository;
+    private IGenericRepository<Person>? _personRepository;
+    private IGenericRepository<Role>? _roleRepository;
+    private IGenericRepository<RoleToPerson>? _roleToPersonRepository;
 
     public UnitOfWorkPersonalData(KaerMorhenDBContext context)
     {
         _context = context;
     }
-    
-    public IGenericRepository<Person> PersonRepository
-    {
-        get
-        {
-            if (this._personRepository == null)
-            {
-                this._personRepository = new EFGenericRepository<Person>(_context);
-            }
 
-            return _personRepository;
-        }
-    }
+    public IGenericRepository<Person> PersonRepository =>
+        _personRepository ??= new EFGenericRepository<Person>(_context);
 
-    public IGenericRepository<Role> RoleRepository
-    {
-        get
-        {
-            if (this._roleRepository == null)
-            {
-                this._roleRepository = new EFGenericRepository<Role>(_context);
-            }
+    public IGenericRepository<Role> RoleRepository => _roleRepository ??= new EFGenericRepository<Role>(_context);
 
-            return _roleRepository;
-        }
-    }
+    public IGenericRepository<RoleToPerson> RoleToPersonRepository => _roleToPersonRepository ??= new EFGenericRepository<RoleToPerson>(_context);
 
-    public IGenericRepository<RoleToPerson> RoleToPersonRepository
-    {
-        get
-        {
-            if (this._roleToPersonRepository == null)
-            {
-                this._roleToPersonRepository = new EFGenericRepository<RoleToPerson>(_context);
-            }
-
-            return _roleToPersonRepository;
-        }
-    }
-    
-    private bool _disposed = false;
+    private bool _disposed;
     protected virtual async ValueTask DisposeAsync(bool disposing)
     {
-        if (!this._disposed)
+        if (!_disposed)
         {
             if (disposing)
             {
                 await _context.DisposeAsync();
             }
         }
-        this._disposed = true;
+        _disposed = true;
     }
     
     public async ValueTask DisposeAsync()
