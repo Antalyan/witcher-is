@@ -11,22 +11,10 @@ using Xunit;
 
 namespace WitcherProject.Infrastructure.EFCore.Tests;
 
-public class UnitOfWorkContractsTests
+public class UnitOfWorkContractsTests: EFGenericTest
 {
-    private DbContextOptions<KaerMorhenDBContext> _options;
-    // based on https://github.com/Lukas-Razz/CSharp_Demo-QueryObject/blob/master/Demo.QueryObject.Infrastructure.EFCore.Tests/QueryObjectTests.cs
-
     public UnitOfWorkContractsTests()
     {
-        var serviceProvider = new ServiceCollection()
-            .AddEntityFrameworkInMemoryDatabase()
-            .BuildServiceProvider();
-
-        _options = new DbContextOptionsBuilder<KaerMorhenDBContext>()
-            .UseInMemoryDatabase($"test_db_{DateTime.Now.ToFileTimeUtc()}")
-            .UseInternalServiceProvider(serviceProvider)
-            .Options;
-
         using var kaerMorhenDbContext = new KaerMorhenDBContext(_options);
         
         kaerMorhenDbContext.Add(new Contractor

@@ -11,24 +11,11 @@ using Xunit;
 
 namespace WitcherProject.Infrastructure.EFCore.Tests;
 
-public class QueryTest
+public class QueryTest: EFGenericTest
 {
-
-    private DbContextOptions<KaerMorhenDBContext> _options;
-    // based on https://github.com/Lukas-Razz/CSharp_Demo-QueryObject/blob/master/Demo.QueryObject.Infrastructure.EFCore.Tests/QueryObjectTests.cs
-
     public QueryTest()
     {
-        var serviceProvider = new ServiceCollection()
-                .AddEntityFrameworkInMemoryDatabase()
-                .BuildServiceProvider();
-        _options = new DbContextOptionsBuilder<KaerMorhenDBContext>()
-                .UseInMemoryDatabase(databaseName: $"inMemory_{Guid.NewGuid()}")
-                .UseInternalServiceProvider(serviceProvider)
-                .Options;
-
         using var kaerMorhenDbContext = new KaerMorhenDBContext(_options);
-        
         
         kaerMorhenDbContext.Database.EnsureDeleted();
         // TODO: Find why this causes your code to crash!

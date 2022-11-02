@@ -1,39 +1,39 @@
-# Zaklínačský systém / Witcher system
+# Witcher system
 
-## Systém by měl umožňovat:
-- autentizaci uživatelů
-- správci osob přidělovat uživatelům role
-- uživateli změnit si osobní údaje
-- zaklínači přistupovat k zakázkám
-- zaklínači aktualizovat stav zakázky
-- správci zakázek přidávat, upravovat a mazat zakázky
-- správci zakázek přiřadit zakázku k zaklínači
+## Compulsory use cases
+Information system enables:
+- user authentication
+- person manager to add new users
+- person manager to assign roles to users
+- user to change their personal data
+- witcher to create and view contracts
+- witcher to update contract states
+- contract manager to add, edit and delete contracts 
+- contract manager to assign a contract to a witcher
 
-## Volitelná rozšíření zadání:
-- žádost o přidělení zakázky (bude implementováno)
-- databáze zaklínačských znalostí (návrh k dispozici v ERD, zatím nebude implementováno)
+## Optional uses cases (assignment extensions):
 
-## Členové týmu (v abecedním pořadí)
-- Michael Koudela 485441
-- Patrik Procházka 467880
-- Peter Šípoš 527365
+- contract requests (to be implemented)
+- witcher knowledge database/wikipedia (included in ERD, currently not in implementation plan)
 
-## Rozběhnutí localDB MSSQL (1.10.2022)
+## Team members (alphabetical order)
+- Michael Koudela 485441 FI MU
+- Patrik Procházka 467880 FI MU
+- Peter Šípoš 527365 FI MU
 
-* Stáhnout Microsoft SQL server (mě fungoval postup z tohoto odkazu)
+## Running project with MS SQL & Rider (1.10.2022)
+
+* Download Microsoft SQL server
   * https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?source=recommendations&view=sql-server-ver16:
-* Po nainstalování v terminálu lokalizovat **SqllocalDB.exe**
-  * Já jsem  našel na adrese: C:\Program Files\Microsoft SQL Server\150\Tools\Binn>
-* Zadat příkazy 
-  * Vytvoření LocalDB `.\SqlLocalDb create KaerMorhenIS`
-  * Spuštění LocalDB `.\SqlLocalDb start KaerMorhenIS`
-  * Zkontrolovat, že vše funguje: `.\SqlLocalDb info KaerMorhenIS`
-    * ![Info](img.png)
-* `connectionString` by měl být nastaven v appsettings.json na DB s názvem KaerMorhenIS.
-* V IDE přidat nový Data Source -> Microsoft SQL Server Local Db a jako instanci vybrat KaerMorhen IS
-* Vytvořit migraci: *dotnet ef migrations add <jmenomigrace>* NEBO přes plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
-* Updatovat databázi dle migrace: *dotnet ef database update* NEBO přes plugin *Update Database*
-* Data by měla být viditelná v DB
-
-## Hodnocení:
-* Kdyby chyběl půlbod na konci semestru, Dominik ho přidá
+* After it is installed, find **SqllocalDB.exe** in file explorer and switch to that folder
+  * default: C:\Program Files\Microsoft SQL Server\150\Tools\Binn
+  * cd <installation_path>
+* Use the following commands (in this project, *dbname* = *KaerMorhenIS*)
+  * Create LocalDB: `.\SqlLocalDb.exe create <dbname>`
+  * Run LocalDB: `.\SqlLocalDb.exe start <dbname>`
+  * Check that everything works: `.\SqlLocalDb.exe info <dbname>`
+* Check that database `connectionString` in appsettings.json is set to *dbname*.
+* Add new Data Source in Rider IDE -> Microsoft SQL Server Local Db -> choose *dbname* as instance name
+* Create migration: *dotnet ef migrations add <jmenomigrace>* OR using plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
+* Update database according to chosen migration: *dotnet ef database update* OR using plugin... *Update Database*
+* Data should be visible in DB
