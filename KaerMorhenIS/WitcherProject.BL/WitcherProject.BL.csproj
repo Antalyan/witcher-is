@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations" />
+      <Folder Include="QueryObjects" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-rc.1.22426.7" />
+      <PackageReference Include="Mapster" Version="7.3.0" />
     </ItemGroup>
 
 </Project>
