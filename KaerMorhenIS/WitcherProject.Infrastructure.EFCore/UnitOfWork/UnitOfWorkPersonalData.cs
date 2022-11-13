@@ -2,7 +2,6 @@ using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
 using WitcherProject.Infrastructure.Repository;
-using WitcherProject.Infrastructure.UnitOfWork;
 
 namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
