@@ -1,19 +1,24 @@
 ﻿using WitcherProject.BL.DTOs;
-using WitcherProject.BL.DTOs.Contractor;
+using WitcherProject.BL.DTOs.Contract;
 
 namespace WitcherProject.BL.Services;
 
 public interface IContractService
 {
-    Task AddContractAsync(ContractAddDto contractAddDto);
+    Task CreateContractAsync(ContractDto contractDto, int contractorId, int personId);
 
-    Task<IEnumerable<ContractGetDto>> GetAllContractsAsync();
+    Task<IEnumerable<ContractDto>> GetAllContractsAsync();
     
-    Task<IEnumerable<ContractGetDto>> GetContractsByContractorAsync(ContractorGetDto contractorGetDto);
-    
-    Task<IEnumerable<ContractGetDto>> GetContractsAssignedToPersonAsync(ContractGetDto contractGetDto);
+    Task<IEnumerable<ContractDto>> GetContractsFiltered(ContractFilterDto contractFilterDto);
 
-    Task UpdateContractAsync(ContractGetDto contractGetDto);
+    Task UpdateContractAsync(ContractDto contractDto);
+
+    Task AddPersonToContract(int contractId, int personId);
     
-    // TODO: should service also contain methods like add
+    Task AddContractorToContract(int contractId, int contractorId);
+
+    Task DeleteContractAsync(int contractId);
+
+
+    // TODO: should service also contain methods like add contract to person/contractor?
 }
