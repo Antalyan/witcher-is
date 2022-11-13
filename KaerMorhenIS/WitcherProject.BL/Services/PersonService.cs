@@ -1,4 +1,4 @@
-﻿namespace WitcherProject.BL;
+﻿namespace WitcherProject.BL.Services;
 
 public class PersonService
 {

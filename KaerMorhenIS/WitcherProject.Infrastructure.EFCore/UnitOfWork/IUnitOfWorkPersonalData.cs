@@ -1,5 +1,5 @@
 using WitcherProject.DAL.Models;
-using WitcherProject.Infrastructure.Repository;
+using WitcherProject.Infrastructure.EFCore.Repository;
 
 namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 

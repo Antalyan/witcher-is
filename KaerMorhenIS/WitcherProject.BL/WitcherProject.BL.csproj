@@ -7,15 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="QueryObjects" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Mapster" Version="7.3.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\WitcherProject.Infrastructure.EFCore\WitcherProject.Infrastructure.EFCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="DTOs\Contractor" />
+      <Folder Include="DTOs\ContractRequest" />
     </ItemGroup>
 
 </Project>
