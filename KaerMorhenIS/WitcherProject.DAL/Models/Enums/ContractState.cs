@@ -2,9 +2,10 @@
 
 public enum ContractState
 {
-    Accepted,
-    Approved,
-    Declined,
+    Created,
+    Open,
     Assigned,
-    Resolved
+    Resolved,
+    Unresolved,
+    Cancelled,
 }
