@@ -31,6 +31,7 @@ public class ContractService : IContractService
 
     public async Task CreateContractAsync(ContractDto contractDto, int contractorId = -1, int personId = -1)
     {
+        //TODO: is it necessary if IDs become a part of DTO?
         var contractToInsert = contractDto.Adapt<Contract>();
         if (contractorId != -1)
         {
@@ -44,7 +45,7 @@ public class ContractService : IContractService
         }
         else
         {
-            //TODO: which state should be set? or is it decided above dependent on who calls it?
+            contractToInsert.State = ContractState.Created;
         }
 
         await _contractsUow.ContractRepository.Insert(contractToInsert);
@@ -74,6 +75,7 @@ public class ContractService : IContractService
         await _contractsUow.CommitAsync();
     }
 
+    //TODO: is this method even necessary as it can be set via update if DTO has corresponding properties?
     public async Task AddPersonToContract(int contractId, int personId)
     {
         var contractToUpdate = await _contractsUow.ContractRepository.GetById(contractId);
@@ -82,6 +84,7 @@ public class ContractService : IContractService
         await _contractsUow.CommitAsync();
     }
 
+    //TODO: is this method even necessary as it can be set via update if DTO has corresponding properties?
     public async Task AddContractorToContract(int contractId, int contractorId)
     {
         var contractToUpdate = await _contractsUow.ContractRepository.GetById(contractId);

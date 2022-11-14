@@ -14,8 +14,4 @@
       <ProjectReference Include="..\WitcherProject.Infrastructure.EFCore\WitcherProject.Infrastructure.EFCore.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DTOs\ContractRequest" />
-    </ItemGroup>
-
 </Project>

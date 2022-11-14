@@ -11,7 +11,7 @@ public class Contract
 
     public string? Description { get; set; }
 
-    public ContractState State { get; set; }
+    public ContractState? State { get; set; }
 
     public DateTime? StartDate { get; set; }
 
