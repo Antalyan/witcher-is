@@ -15,4 +15,8 @@ public class Person
     public bool IsActive { get; set; }
 
     public virtual List<Contract> Contracts { get; set; }
+    
+    public virtual List<RoleToPerson> RoleToPersons { get; set; }
+    
+    public virtual List<ContractRequest> ContractRequests { get; set; }
 }

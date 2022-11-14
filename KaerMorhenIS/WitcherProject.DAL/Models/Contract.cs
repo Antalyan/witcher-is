@@ -27,4 +27,6 @@ public class Contract
 
     public int? PersonId { get; set; }
     [ForeignKey(nameof(PersonId))] public virtual Person? Person { get; set; }
+    
+    public virtual List<ContractRequest> ContractRequests { get; set; }
 }
