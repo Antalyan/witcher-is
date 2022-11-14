@@ -1,10 +1,10 @@
 ﻿using Mapster;
 using WitcherProject.BL.DTOs.Contractor;
-using WitcherProject.DAL;
+using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
-namespace WitcherProject.BL.Services;
+namespace WitcherProject.BL.Services.Implementations;
 
 public class ContractorService: IContractorService
 {

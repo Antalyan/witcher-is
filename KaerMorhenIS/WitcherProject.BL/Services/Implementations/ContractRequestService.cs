@@ -2,12 +2,13 @@
 using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.DTOs.ContractRequest;
 using WitcherProject.BL.QueryObjects;
+using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.DAL.Models.Enums;
 using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
-namespace WitcherProject.BL.Services;
+namespace WitcherProject.BL.Services.Implementations;
 
 public class ContractRequestService : IContractRequestService
 {

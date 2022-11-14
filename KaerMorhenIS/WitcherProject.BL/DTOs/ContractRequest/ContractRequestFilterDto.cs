@@ -1,6 +1,6 @@
 ﻿using WitcherProject.DAL.Models.Enums;
 
-namespace WitcherProject.BL.DTOs.Contract;
+namespace WitcherProject.BL.DTOs.ContractRequest;
 
 public class ContractRequestFilterDto
 {

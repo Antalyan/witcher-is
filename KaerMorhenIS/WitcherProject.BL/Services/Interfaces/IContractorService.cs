@@ -1,7 +1,6 @@
-﻿using WitcherProject.BL.DTOs.Contract;
-using WitcherProject.BL.DTOs.Contractor;
+﻿using WitcherProject.BL.DTOs.Contractor;
 
-namespace WitcherProject.BL.Services;
+namespace WitcherProject.BL.Services.Interfaces;
 
 public interface IContractorService
 {

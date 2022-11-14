@@ -1,6 +1,7 @@
 using WitcherProject.BL.DTOs;
+using WitcherProject.BL.DTOs.Person;
 
-namespace WitcherProject.BL.Services;
+namespace WitcherProject.BL.Services.Interfaces;
 
 public interface IPersonService
 {

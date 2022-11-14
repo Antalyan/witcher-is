@@ -1,16 +1,13 @@
-﻿using System.Diagnostics.Contracts;
-using Mapster;
-using WitcherProject.BL.DTOs;
+﻿using Mapster;
 using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.QueryObjects;
+using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.DAL;
-using WitcherProject.DAL.Models;
 using WitcherProject.DAL.Models.Enums;
-using WitcherProject.Infrastructure.EFCore.Query;
 using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 using Contract = WitcherProject.DAL.Models.Contract;
 
-namespace WitcherProject.BL.Services;
+namespace WitcherProject.BL.Services.Implementations;
 
 public class ContractService : IContractService
 {

@@ -1,4 +1,4 @@
-﻿namespace WitcherProject.BL.DTOs;
+﻿namespace WitcherProject.BL.DTOs.Person;
 
 public class PersonCreateNewDto
 {
