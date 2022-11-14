@@ -110,7 +110,7 @@ public class EFGenericRepositoryTests: EFGenericTest
         {
             new()
             {
-                Name = insertedContractName, Description = "Look everywhere!", State = ContractState.Accepted,
+                Name = insertedContractName, Description = "Look everywhere!", State = ContractState.Open,
                 Location = "White Orchard", Deadline = new DateTime(2050, 12, 1)
             }
         };

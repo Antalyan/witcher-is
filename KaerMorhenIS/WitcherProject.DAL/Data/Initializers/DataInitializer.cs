@@ -25,7 +25,7 @@ public static class DbInitializer
             Id = 1,
             Name = "Devil by the Well",
             Description = "Slay the bitch - Odolan",
-            State = ContractState.Accepted,
+            State = ContractState.Open,
             StartDate = DateTime.Now,
             EndDate = new DateTime(2022, 10, 1),
             ContractorId = odolan.Id,
