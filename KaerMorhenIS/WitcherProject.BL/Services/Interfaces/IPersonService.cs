@@ -10,4 +10,10 @@ public interface IPersonService
     Task AssignRoleToUserAsync(RoleToPersonDto roleToPersonDto);
 
     Task UpdateUserAsync(PersonUpdateDto personUpdateDto);
+
+    Task<IEnumerable<PersonCompleteDto>> GetAllUsersAsync();
+
+    Task DisableUserByIdAsync(int userId);
+
+
 }
