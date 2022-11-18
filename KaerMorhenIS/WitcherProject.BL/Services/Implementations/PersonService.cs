@@ -11,11 +11,9 @@ namespace WitcherProject.BL.Services.Implementations;
 public class PersonService : IPersonService
 {
     private readonly IUnitOfWorkPersonalData _personUow;
-    private readonly KaerMorhenDBContext _context;
     public PersonService(IUnitOfWorkPersonalData personUow, KaerMorhenDBContext context)
     {
         _personUow = personUow;
-        _context = context;
     }
 
     public async Task CreateUserAsync(PersonCreateNewDto personCreateNewDto)
@@ -28,9 +26,9 @@ public class PersonService : IPersonService
 
     public async Task AssignRoleToUserAsync(RoleToPersonDto roleToPersonDto)
     {
-        var newUserRole = roleToPersonDto.Adapt<RoleToPerson>();
+        var newUserRole = roleToPersonDto.Adapt<RoleToPerson>();    
 
-        await _personUow.RoleToPersonRepository.Insert(newUserRole);
+        await _personUow.RoleToPersonRepository.Insert(newUserRole); // todo - will this work since the mapper most probably won't create Role AssignedRole and Person Person properties of the RoleToPerson class?
         await _personUow.CommitAsync();
     }
 
@@ -38,7 +36,20 @@ public class PersonService : IPersonService
     {
         var updatedUser = personUpdateDto.Adapt<Person>();
         
-        await _personUow.PersonRepository.Insert(updatedUser);
+        _personUow.PersonRepository.Update(updatedUser);
         await _personUow.CommitAsync();
+    }
+
+    public async Task<IEnumerable<PersonCompleteDto>> GetAllUsersAsync()
+    {
+        var returnedPersons = await _personUow.PersonRepository.GetAll();
+        return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
+    }
+
+    public async Task DisableUserByIdAsync(int userId)
+    {
+        var userToDisable = await _personUow.PersonRepository.GetById(userId);
+        userToDisable.IsActive = false;
+        _personUow.PersonRepository.Update(userToDisable);   
     }
 }
