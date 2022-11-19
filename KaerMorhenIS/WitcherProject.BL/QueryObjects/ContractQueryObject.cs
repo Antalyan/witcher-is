@@ -19,61 +19,18 @@ public class ContractQueryObject
         _contractQuery = new EFQuery<Contract>(context);
     }
 
-    public async Task<IEnumerable<ContractUpdateDto>> ExecuteQuery(ContractFilterDto filter)
+    public async Task<IEnumerable<ContractDetailedDto>> ExecuteQuery(ContractFilterDto filter)
     {
-        // TODO: Ask whether it can be nicer or even generic and how (via reflection)
-        // var filterProperties = TypeDescriptor.GetProperties(typeof(ContractFilterDto));
-        // var entityProperties = TypeDescriptor.GetProperties(typeof(Contract));
-        //
-        // foreach (string property in filterProperties)
-        // {
-        //     var attributeValue = filterProperties[property]?.GetValue(filter);
-        //     if (attributeValue != null && entityProperties[property] != null)
-        //     {
-        //         _contractQuery.Filter(contract => entityProperties[property].GetValue(contract) == attributeValue);
-        //     }
-        // }
-
-        if (!string.IsNullOrEmpty(filter.Name))
-        {
-            _contractQuery.Filter(contract => contract.Name == filter.Name);
-        }
-
-        if (!string.IsNullOrEmpty(filter.Description))
-        {
-            _contractQuery.Filter(contract => contract.Description == filter.Description);
-        }
-
-        if (filter.State != null)
-        {
-            _contractQuery.Filter(contract => contract.State == filter.State);
-        }
-
-        if (filter.StartDate != null)
-        {
-            _contractQuery.Filter(contract => contract.StartDate == filter.StartDate);
-        }
-
-        if (filter.EndDate != null)
-        {
-            _contractQuery.Filter(contract => contract.EndDate == filter.EndDate);
-        }
-
-        if (filter.Deadline != null)
-        {
-            _contractQuery.Filter(contract => contract.Deadline == filter.Deadline);
-        }
-
-        if (filter.ContractorId != null)
-        {
-            _contractQuery.Filter(contract => contract.ContractorId == filter.ContractorId);
-        }
-
-        if (filter.PersonId != null)
-        {
-            _contractQuery.Filter(contract => contract.PersonId == filter.PersonId);
-        }
-
+        _contractQuery.Filter(contract => !string.IsNullOrEmpty(filter.Name) && contract.Name == filter.Name);
+        _contractQuery.Filter(contract => !string.IsNullOrEmpty(filter.Description) && contract.Description == filter.Description);
+        _contractQuery.Filter(contract => filter.State != null && contract.State == filter.State);
+        _contractQuery.Filter(contract => filter.StartDate != null && contract.StartDate == filter.StartDate);
+        _contractQuery.Filter(contract => filter.EndDate != null && contract.EndDate == filter.EndDate);
+        _contractQuery.Filter(contract => filter.Deadline != null && contract.Deadline == filter.Deadline);
+        _contractQuery.Filter(contract => !string.IsNullOrEmpty(filter.Location) && contract.Location == filter.Location);
+        _contractQuery.Filter(contract => filter.ContractorId != null && contract.ContractorId == filter.ContractorId);
+        _contractQuery.Filter(contract => filter.PersonId != null && contract.PersonId == filter.PersonId);
+        
         if (filter.RequestedPageNumber != null)
         {
             _contractQuery.Page(filter.RequestedPageNumber ?? -1);
@@ -87,6 +44,6 @@ public class ContractQueryObject
         }
 
         var returnedContracts = await _contractQuery.ExecuteAsync();
-        return returnedContracts.Select(contract => contract.Adapt<ContractUpdateDto>());
+        return returnedContracts.Select(contract => contract.Adapt<ContractDetailedDto>());
     }
 }

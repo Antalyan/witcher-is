@@ -7,19 +7,21 @@ public interface IContractService
 {
     Task CreateContractAsync(ContractAddDto contractAddDto);
 
-    Task<IEnumerable<ContractUpdateDto>> GetAllContractsAsync();
+    Task<IEnumerable<ContractDetailedDto>> GetAllContractsAsync();
     
-    Task<IEnumerable<ContractUpdateDto>> GetContractsByStateAsync(ContractState contractState);
+    Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto);
     
-    Task<IEnumerable<ContractUpdateDto>> GetContractsByPersonAsync(int personId);
+    Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState contractState);
+    
+    Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId);
 
     Task UpdateContractAsync(ContractUpdateDto contractUpdateDto);
 
-    Task ChangeContractStateAsync(ContractUpdateDto contractUpdateDto, int personId);
+    Task ChangeContractStateAsync(int contractId, ContractState state);
 
-    Task AddPersonToContractAsync(ContractUpdateDto contractUpdateDto, int personId);
+    Task AddPersonToContractAsync(int contractId, int personId);
     
-    Task AddContractorToContractAsync(ContractUpdateDto contractUpdateDto, int contractorId);
+    Task AddContractorToContractAsync(int contractId, int contractorId);
 
     Task DeleteContractAsync(int contractId);
 }

@@ -16,6 +16,8 @@ public class ContractFilterDto
 
     public DateTime? Deadline { get; set; }
     
+    public string? Location { get; set; }
+    
     public int? ContractorId { get; set; }
     
     public int? PersonId { get; set; }

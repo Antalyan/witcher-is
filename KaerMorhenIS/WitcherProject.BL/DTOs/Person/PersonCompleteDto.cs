@@ -13,7 +13,7 @@ public class PersonCompleteDto
     public string? Cv { get; set; }
     public DateTime Birthdate { get; set; }
     public bool IsActive { get; set; }
-    public virtual List<ContractDto> Contracts { get; set; }
+    public virtual List<ContractSimpleDto> Contracts { get; set; }
     public virtual List<RoleToPersonDto> RoleToPersons { get; set; }
     public virtual List<ContractRequestDto> ContractRequests { get; set; }
 }

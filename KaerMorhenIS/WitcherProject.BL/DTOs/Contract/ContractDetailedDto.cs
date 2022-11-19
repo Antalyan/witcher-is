@@ -1,9 +1,11 @@
 ﻿using WitcherProject.BL.DTOs.Contractor;
+using WitcherProject.BL.DTOs.ContractRequest;
+using WitcherProject.BL.DTOs.Person;
 using WitcherProject.DAL.Models.Enums;
 
 namespace WitcherProject.BL.DTOs.Contract;
 
-public class ContractGetDetailedDto
+public class ContractDetailedDto
 {
     public int? Id { get; set; }
 
@@ -23,5 +25,7 @@ public class ContractGetDetailedDto
 
     public ContractorDto? Contractor { get; set; }
     
-    public int? PersonId { get; set; }
+    public PersonSimpleDto? Person { get; set; }
+    
+    public virtual List<ContractRequestSimpleDto> ContractRequests { get; set; }
 }

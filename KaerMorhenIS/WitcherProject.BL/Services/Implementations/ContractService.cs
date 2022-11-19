@@ -33,31 +33,36 @@ public class ContractService : IContractService
         await _contractsUow.CommitAsync();
     }
 
-    public async Task<IEnumerable<ContractUpdateDto>> GetAllContractsAsync()
+    public async Task<IEnumerable<ContractDetailedDto>> GetAllContractsAsync()
     {
         var returnedContracts = await _contractsUow.ContractRepository.GetAll();
-        return returnedContracts.Select(contract => contract.Adapt<ContractUpdateDto>());
+        return returnedContracts.Select(contract => contract.Adapt<ContractDetailedDto>());
     }
 
-    public async Task<IEnumerable<ContractUpdateDto>> GetContractsFiltered(ContractFilterDto contractFilterDto)
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto)
         => await new ContractQueryObject(_context).ExecuteQuery(contractFilterDto);
 
-    public async Task<IEnumerable<ContractUpdateDto>> GetContractsByContractorAsync(int contractorId)
-    //TODO: set order by, is this method even necessary as filter can be set above?
-        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {ContractorId = contractorId});
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState state)
+        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {State = state, SortCriteria = "StartDate", SortAscending = false});
 
-    public async Task<IEnumerable<ContractUpdateDto>> GetContractsAssignedToPersonAsync(int personId)
-    //TODO: set order by, is this method even necessary as filter can be set above?
-        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {PersonId = personId});
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId)
+        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {PersonId = personId, SortCriteria = "StartDate", SortAscending = false});
 
     public async Task UpdateContractAsync(ContractUpdateDto contractUpdateDto)
     {
         _contractsUow.ContractRepository.Update(contractUpdateDto.Adapt<Contract>());
         await _contractsUow.CommitAsync();
     }
+    
+    public async Task ChangeContractStateAsync(int contractId, ContractState state)
+    {
+        var contractToUpdate = await _contractsUow.ContractRepository.GetById(contractId);
+        contractToUpdate.State = state;
+        _contractsUow.ContractRepository.Update(contractToUpdate);
+        await _contractsUow.CommitAsync();
+    }
 
-    //TODO: is this method even necessary as it can be set via update if DTO has corresponding properties?
-    public async Task AddPersonToContract(int contractId, int personId)
+    public async Task AddPersonToContractAsync(int contractId, int personId)
     {
         var contractToUpdate = await _contractsUow.ContractRepository.GetById(contractId);
         contractToUpdate.PersonId = personId;
@@ -65,8 +70,7 @@ public class ContractService : IContractService
         await _contractsUow.CommitAsync();
     }
 
-    //TODO: is this method even necessary as it can be set via update if DTO has corresponding properties?
-    public async Task AddContractorToContract(int contractId, int contractorId)
+    public async Task AddContractorToContractAsync(int contractId, int contractorId)
     {
         var contractToUpdate = await _contractsUow.ContractRepository.GetById(contractId);
         contractToUpdate.ContractorId = contractorId;
