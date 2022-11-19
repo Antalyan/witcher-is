@@ -18,7 +18,7 @@ public class ContractService : IContractService
     {
         _contractsUow = contractsUow;
         _context = context;
-        
+
         // TODO: setup config if needed
         // TypeAdapterConfig<TSource, TDestination>
         //     .NewConfig()
@@ -42,18 +42,22 @@ public class ContractService : IContractService
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto)
         => await new ContractQueryObject(_context).ExecuteQuery(contractFilterDto);
 
-    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState state)
-        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {State = state, SortCriteria = "StartDate", SortAscending = false});
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState state, int? pageNumber)
+        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto
+            { State = state, SortCriteria = "StartDate", SortAscending = false, RequestedPageNumber = pageNumber });
 
-    public async Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId)
-        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {PersonId = personId, SortCriteria = "StartDate", SortAscending = false});
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber)
+        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto
+        {
+            PersonId = personId, SortCriteria = "StartDate", SortAscending = false, RequestedPageNumber = pageNumber
+        });
 
     public async Task UpdateContractAsync(ContractUpdateDto contractUpdateDto)
     {
         _contractsUow.ContractRepository.Update(contractUpdateDto.Adapt<Contract>());
         await _contractsUow.CommitAsync();
     }
-    
+
     public async Task ChangeContractStateAsync(int contractId, ContractState state)
     {
         var contractToUpdate = await _contractsUow.ContractRepository.GetById(contractId);
