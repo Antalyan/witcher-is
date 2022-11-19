@@ -28,7 +28,7 @@ public class PersonService : IPersonService
     {
         var newUserRole = roleToPersonDto.Adapt<RoleToPerson>();    
 
-        await _personUow.RoleToPersonRepository.Insert(newUserRole); // todo - will this work since the mapper most probably won't create Role AssignedRole and Person Person properties of the RoleToPerson class?
+        await _personUow.RoleToPersonRepository.Insert(newUserRole); // todo - will this work since the mapper most probably won't create Role Role and Person Person properties of the RoleToPerson class?
         await _personUow.CommitAsync();
     }
 
