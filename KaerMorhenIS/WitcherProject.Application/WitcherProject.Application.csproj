@@ -20,6 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\WitcherProject.BL\WitcherProject.BL.csproj" />
       <ProjectReference Include="..\WitcherProject.DAL\WitcherProject.DAL.csproj" />
+      <ProjectReference Include="..\WitcherProject.Infrastructure.EFCore\WitcherProject.Infrastructure.EFCore.csproj" />
     </ItemGroup>
 </Project>

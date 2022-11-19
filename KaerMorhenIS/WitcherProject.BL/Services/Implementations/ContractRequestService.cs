@@ -13,12 +13,13 @@ namespace WitcherProject.BL.Services.Implementations;
 public class ContractRequestService : IContractRequestService
 {
     private readonly IUnitOfWorkContracts _contractsUow;
-    private readonly KaerMorhenDBContext _context;
+    private readonly IContractRequestQueryObject _contractRequestQueryObject;
 
-    public ContractRequestService(IUnitOfWorkContracts contractsUow, KaerMorhenDBContext context)
+
+    public ContractRequestService(IUnitOfWorkContracts contractsUow, IContractRequestQueryObject contractRequestQueryObject)
     {
         _contractsUow = contractsUow;
-        _context = context;
+        _contractRequestQueryObject = contractRequestQueryObject;
     }
 
     public async Task CreateContractRequestAsync(ContractRequestAddDto contractRequestAddDto)
@@ -42,15 +43,15 @@ public class ContractRequestService : IContractRequestService
     }
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByStateAsync(ContractRequestState state, int? pageNumber = null)
-        => await new ContractRequestQueryObject(_context).ExecuteQuery(new ContractRequestFilterDto()
+        => await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto()
             { State = state, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByContractAsync(int contractId, int? pageNumber = null)
-        => await new ContractRequestQueryObject(_context).ExecuteQuery(new ContractRequestFilterDto()
+        => await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto()
             { ContractId = contractId, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByPersonAsync(int personId, int? pageNumber = null)
-        => await new ContractRequestQueryObject(_context).ExecuteQuery(new ContractRequestFilterDto()
+        => await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto()
             { PersonId = personId, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
 
     public async Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto)

@@ -8,17 +8,18 @@ using WitcherProject.BL.DTOs.ContractRequest;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Query;
+using WitcherProject.Infrastructure.Query;
 using Contract = WitcherProject.DAL.Models.Contract;
 
 namespace WitcherProject.BL.QueryObjects;
 
-public class ContractRequestQueryObject
+public class ContractRequestQueryObject: IContractRequestQueryObject
 {
-    private EFQuery<ContractRequest> _contractRequestQuery;
+    private IQuery<ContractRequest> _contractRequestQuery;
 
-    public ContractRequestQueryObject(DbContext context)
+    public ContractRequestQueryObject(IQuery<ContractRequest> contractRequestQuery)
     {
-        _contractRequestQuery = new EFQuery<ContractRequest>(context);
+        _contractRequestQuery = contractRequestQuery;
     }
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> ExecuteQuery(ContractRequestFilterDto filter)

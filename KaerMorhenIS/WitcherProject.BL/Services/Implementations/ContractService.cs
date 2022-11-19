@@ -12,12 +12,12 @@ namespace WitcherProject.BL.Services.Implementations;
 public class ContractService : IContractService
 {
     private readonly IUnitOfWorkContracts _contractsUow;
-    private readonly KaerMorhenDBContext _context;
+    private readonly IContractQueryObject _contractQueryObject;
 
-    public ContractService(IUnitOfWorkContracts contractsUow, KaerMorhenDBContext context)
+    public ContractService(IUnitOfWorkContracts contractsUow, IContractQueryObject contractQueryObject)
     {
         _contractsUow = contractsUow;
-        _context = context;
+        _contractQueryObject = contractQueryObject;
 
         // TODO: setup config if needed
         // TypeAdapterConfig<TSource, TDestination>
@@ -40,14 +40,14 @@ public class ContractService : IContractService
     }
 
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto)
-        => await new ContractQueryObject(_context).ExecuteQuery(contractFilterDto);
+        => await _contractQueryObject.ExecuteQuery(contractFilterDto);
 
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState state, int? pageNumber)
-        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto
+        => await _contractQueryObject.ExecuteQuery(new ContractFilterDto
             { State = state, SortCriteria = "StartDate", SortAscending = false, RequestedPageNumber = pageNumber });
 
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber)
-        => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto
+        => await _contractQueryObject.ExecuteQuery(new ContractFilterDto
         {
             PersonId = personId, SortCriteria = "StartDate", SortAscending = false, RequestedPageNumber = pageNumber
         });

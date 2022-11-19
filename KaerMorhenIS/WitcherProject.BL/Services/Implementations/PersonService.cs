@@ -11,7 +11,7 @@ namespace WitcherProject.BL.Services.Implementations;
 public class PersonService : IPersonService
 {
     private readonly IUnitOfWorkPersonalData _personUow;
-    public PersonService(IUnitOfWorkPersonalData personUow, KaerMorhenDBContext context)
+    public PersonService(IUnitOfWorkPersonalData personUow)
     {
         _personUow = personUow;
     }

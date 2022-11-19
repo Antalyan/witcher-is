@@ -1,22 +1,19 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.Contracts;
-using Mapster;
+﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
-using WitcherProject.BL.DTOs;
 using WitcherProject.BL.DTOs.Contract;
-using WitcherProject.DAL;
+using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Query;
-using Contract = WitcherProject.DAL.Models.Contract;
+using WitcherProject.Infrastructure.Query;
 
 namespace WitcherProject.BL.QueryObjects;
 
-public class ContractQueryObject
+public class ContractQueryObject: IContractQueryObject
 {
-    private EFQuery<Contract> _contractQuery;
+    private IQuery<Contract> _contractQuery;
 
-    public ContractQueryObject(DbContext context)
+    public ContractQueryObject(IQuery<Contract> contractQuery)
     {
-        _contractQuery = new EFQuery<Contract>(context);
+        _contractQuery = contractQuery;
     }
 
     public async Task<IEnumerable<ContractDetailedDto>> ExecuteQuery(ContractFilterDto filter)
