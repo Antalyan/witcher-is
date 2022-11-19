@@ -15,27 +15,22 @@ public class UnitOfWorkPersonalData : IUnitOfWorkPersonalData
 {
     private readonly DbContext _context;
 
-    private IGenericRepository<Person> _personRepository;
-    private IGenericRepository<Role> _roleRepository;
-    private IGenericRepository<RoleToPerson> _roleToPersonRepository;
-
     public UnitOfWorkPersonalData(DbContext context, 
         IGenericRepository<Person> personRepository, 
         IGenericRepository<Role> roleRepository, 
         IGenericRepository<RoleToPerson> roleToPersonRepository)
     {
         _context = context;
-        _personRepository = personRepository;
-        _roleRepository = roleRepository;
-        _roleToPersonRepository = roleToPersonRepository;
+        PersonRepository = personRepository;
+        RoleRepository = roleRepository;
+        RoleToPersonRepository = roleToPersonRepository;
     }
 
-    public IGenericRepository<Person> PersonRepository =>
-        _personRepository;
+    public IGenericRepository<Person> PersonRepository { get; }
 
-    public IGenericRepository<Role> RoleRepository => _roleRepository;
+    public IGenericRepository<Role> RoleRepository { get; }
 
-    public IGenericRepository<RoleToPerson> RoleToPersonRepository => _roleToPersonRepository;
+    public IGenericRepository<RoleToPerson> RoleToPersonRepository { get; }
 
     private bool _disposed;
     protected virtual async ValueTask DisposeAsync(bool disposing)

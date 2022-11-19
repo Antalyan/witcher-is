@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
+using WitcherProject.Infrastructure.EFCore.Repository;
 using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 using Xunit;
 
@@ -27,7 +28,9 @@ public class UnitOfWorkContractsTests: EFGenericTest
     public async Task TwoContractorsAdded_DbReturnsThreeObjects()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
-        var uowUnderTest = new UnitOfWorkContracts(dbContext);
+        var uowUnderTest = new UnitOfWorkContracts(dbContext, new EFGenericRepository<Person>(dbContext), 
+            new EFGenericRepository<Contract>(dbContext), new EFGenericRepository<Contractor>(dbContext),
+            new EFGenericRepository<ContractRequest>(dbContext));
         var contractor1 = new Contractor
             {Name = "NewContractorName1", Surname = "NewContractorSurname1", Contracts = new List<Contract>()};
         var contractor2 = new Contractor
@@ -47,7 +50,9 @@ public class UnitOfWorkContractsTests: EFGenericTest
     public async Task InvalidContractor_ShouldNotInsert()
     {
         using var dbContext = new KaerMorhenDBContext(_options);
-        var uowUnderTest = new UnitOfWorkContracts(dbContext);
+        var uowUnderTest = new UnitOfWorkContracts(dbContext, new EFGenericRepository<Person>(dbContext), 
+            new EFGenericRepository<Contract>(dbContext), new EFGenericRepository<Contractor>(dbContext),
+            new EFGenericRepository<ContractRequest>(dbContext));
         var validContractor = new Contractor
             {Name = "NewContractorName1", Surname = "NewContractorSurname1", Contracts = new List<Contract>()};
         var invalidContractor = new Contractor
