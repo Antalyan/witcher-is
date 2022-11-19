@@ -2,7 +2,7 @@
 
 namespace WitcherProject.BL.DTOs.Contract;
 
-public class ContractDto
+public class ContractUpdateDto
 {
     public int? Id { get; set; }
 

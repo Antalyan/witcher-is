@@ -19,7 +19,7 @@ public class ContractQueryObject
         _contractQuery = new EFQuery<Contract>(context);
     }
 
-    public async Task<IEnumerable<ContractDto>> ExecuteQuery(ContractFilterDto filter)
+    public async Task<IEnumerable<ContractUpdateDto>> ExecuteQuery(ContractFilterDto filter)
     {
         // TODO: Ask whether it can be nicer or even generic and how (via reflection)
         // var filterProperties = TypeDescriptor.GetProperties(typeof(ContractFilterDto));
@@ -87,6 +87,6 @@ public class ContractQueryObject
         }
 
         var returnedContracts = await _contractQuery.ExecuteAsync();
-        return returnedContracts.Select(contract => contract.Adapt<ContractDto>());
+        return returnedContracts.Select(contract => contract.Adapt<ContractUpdateDto>());
     }
 }

@@ -26,49 +26,33 @@ public class ContractService : IContractService
         //         src => $"{src.FirstName} {src.LastName}");
     }
 
-    public async Task CreateContractAsync(ContractDto contractDto, int contractorId = -1, int personId = -1)
+    public async Task CreateContractAsync(ContractAddDto contractAddDto)
     {
-        //TODO: is it necessary if IDs become a part of DTO?
-        var contractToInsert = contractDto.Adapt<Contract>();
-        if (contractorId != -1)
-        {
-            contractToInsert.Contractor = await _contractsUow.ContractorRepository.GetById(contractorId);
-        }
-
-        if (personId != -1)
-        {
-            contractToInsert.Person = await _contractsUow.PersonRepository.GetById(personId);
-            contractToInsert.State = ContractState.Assigned;
-        }
-        else
-        {
-            contractToInsert.State = ContractState.Created;
-        }
-
-        await _contractsUow.ContractRepository.Insert(contractToInsert);
+        contractAddDto.State = contractAddDto.PersonId != null ? ContractState.Assigned : ContractState.Created;
+        await _contractsUow.ContractRepository.Insert(contractAddDto.Adapt<Contract>());
         await _contractsUow.CommitAsync();
     }
 
-    public async Task<IEnumerable<ContractDto>> GetAllContractsAsync()
+    public async Task<IEnumerable<ContractUpdateDto>> GetAllContractsAsync()
     {
         var returnedContracts = await _contractsUow.ContractRepository.GetAll();
-        return returnedContracts.Select(contract => contract.Adapt<ContractDto>());
+        return returnedContracts.Select(contract => contract.Adapt<ContractUpdateDto>());
     }
 
-    public async Task<IEnumerable<ContractDto>> GetContractsFiltered(ContractFilterDto contractFilterDto)
+    public async Task<IEnumerable<ContractUpdateDto>> GetContractsFiltered(ContractFilterDto contractFilterDto)
         => await new ContractQueryObject(_context).ExecuteQuery(contractFilterDto);
 
-    public async Task<IEnumerable<ContractDto>> GetContractsByContractorAsync(int contractorId)
+    public async Task<IEnumerable<ContractUpdateDto>> GetContractsByContractorAsync(int contractorId)
     //TODO: set order by, is this method even necessary as filter can be set above?
         => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {ContractorId = contractorId});
 
-    public async Task<IEnumerable<ContractDto>> GetContractsAssignedToPersonAsync(int personId)
+    public async Task<IEnumerable<ContractUpdateDto>> GetContractsAssignedToPersonAsync(int personId)
     //TODO: set order by, is this method even necessary as filter can be set above?
         => await new ContractQueryObject(_context).ExecuteQuery(new ContractFilterDto {PersonId = personId});
 
-    public async Task UpdateContractAsync(ContractDto contractDto)
+    public async Task UpdateContractAsync(ContractUpdateDto contractUpdateDto)
     {
-        _contractsUow.ContractRepository.Update(contractDto.Adapt<Contract>());
+        _contractsUow.ContractRepository.Update(contractUpdateDto.Adapt<Contract>());
         await _contractsUow.CommitAsync();
     }
 
