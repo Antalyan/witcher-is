@@ -1,4 +1,4 @@
-﻿namespace WitcherProject.DAL.Models.Enums;
+﻿namespace WitcherProject.Shared.Enums;
 
 public enum ContractRequestState
 {

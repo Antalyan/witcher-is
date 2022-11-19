@@ -30,7 +30,7 @@ public class ContractQueryObject
         _contractQuery.Filter(contract => !string.IsNullOrEmpty(filter.Location) && contract.Location == filter.Location);
         _contractQuery.Filter(contract => filter.ContractorId != null && contract.ContractorId == filter.ContractorId);
         _contractQuery.Filter(contract => filter.PersonId != null && contract.PersonId == filter.PersonId);
-        
+
         if (filter.RequestedPageNumber != null)
         {
             _contractQuery.Page(filter.RequestedPageNumber ?? -1);

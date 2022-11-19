@@ -1,7 +1,7 @@
 ﻿using WitcherProject.BL.DTOs.Contractor;
 using WitcherProject.BL.DTOs.ContractRequest;
 using WitcherProject.BL.DTOs.Person;
-using WitcherProject.DAL.Models.Enums;
+using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.DTOs.Contract;
 

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using WitcherProject.DAL.Models.Enums;
+using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.DAL.Models;
 

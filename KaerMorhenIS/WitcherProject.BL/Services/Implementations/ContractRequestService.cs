@@ -5,8 +5,8 @@ using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
-using WitcherProject.DAL.Models.Enums;
 using WitcherProject.Infrastructure.EFCore.UnitOfWork;
+using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.Services.Implementations;
 
@@ -21,40 +21,41 @@ public class ContractRequestService : IContractRequestService
         _context = context;
     }
 
-    public async Task CreateContractRequestAsync(ContractRequestDto contractRequestDto)
+    public async Task CreateContractRequestAsync(ContractRequestAddDto contractRequestAddDto)
     {
-        var requestToInsert = contractRequestDto.Adapt<ContractRequest>();
+        var requestToInsert = contractRequestAddDto.Adapt<ContractRequest>();
+        requestToInsert.CreatedOn = DateTime.Now;
         await _contractsUow.ContractRequestRepository.Insert(requestToInsert);
         await _contractsUow.CommitAsync();
     }
 
-    public async Task<IEnumerable<ContractRequestDto>> GetAllContractRequestsAsync()
+    public async Task<IEnumerable<ContractRequestDetailedDto>> GetAllContractRequestsAsync()
     {
         var returnedRequests = await _contractsUow.ContractRequestRepository.GetAll();
-        return returnedRequests.Select(request => request.Adapt<ContractRequestDto>());
+        return returnedRequests.Select(request => request.Adapt<ContractRequestDetailedDto>());
     }
 
-    public async Task<ContractRequestDto> GetContractRequestByIdAsync(int requestId)
+    public async Task<ContractRequestDetailedDto> GetContractRequestByIdAsync(int requestId)
     {
         var returnedRequests = await _contractsUow.ContractRequestRepository.GetById(requestId);
-        return returnedRequests.Adapt<ContractRequestDto>();
+        return returnedRequests.Adapt<ContractRequestDetailedDto>();
     }
 
-    public async Task<IEnumerable<ContractRequestDto>> GetContractRequestByState(ContractRequestState state, int? pageNumber = null)
+    public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByStateAsync(ContractRequestState state, int? pageNumber = null)
         => await new ContractRequestQueryObject(_context).ExecuteQuery(new ContractRequestFilterDto()
             { State = state, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
 
-    public async Task<IEnumerable<ContractRequestDto>> GetContractRequestByContract(int contractId, int? pageNumber = null)
+    public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByContractAsync(int contractId, int? pageNumber = null)
         => await new ContractRequestQueryObject(_context).ExecuteQuery(new ContractRequestFilterDto()
             { ContractId = contractId, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
 
-    public async Task<IEnumerable<ContractRequestDto>> GetContractRequestByPerson(int personId, int? pageNumber = null)
+    public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByPersonAsync(int personId, int? pageNumber = null)
         => await new ContractRequestQueryObject(_context).ExecuteQuery(new ContractRequestFilterDto()
             { PersonId = personId, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
 
-    public async Task UpdateContractRequestAsync(ContractRequestDto contractRequestDto)
+    public async Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto)
     {
-        _contractsUow.ContractRequestRepository.Update(contractRequestDto.Adapt<ContractRequest>());
+        _contractsUow.ContractRequestRepository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
         await _contractsUow.CommitAsync();
     }
 

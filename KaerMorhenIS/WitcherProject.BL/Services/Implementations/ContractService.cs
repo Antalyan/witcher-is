@@ -3,8 +3,8 @@ using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.DAL;
-using WitcherProject.DAL.Models.Enums;
 using WitcherProject.Infrastructure.EFCore.UnitOfWork;
+using WitcherProject.Shared.Enums;
 using Contract = WitcherProject.DAL.Models.Contract;
 
 namespace WitcherProject.BL.Services.Implementations;

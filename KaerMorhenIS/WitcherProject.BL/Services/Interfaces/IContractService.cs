@@ -1,5 +1,5 @@
 ﻿using WitcherProject.BL.DTOs.Contract;
-using WitcherProject.DAL.Models.Enums;
+using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.Services.Interfaces;
 
@@ -11,9 +11,9 @@ public interface IContractService
     
     Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto);
     
-    Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState contractState, int? pageNumber);
+    Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState contractState, int? pageNumber = null);
     
-    Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber);
+    Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber = null);
 
     Task UpdateContractAsync(ContractUpdateDto contractUpdateDto);
 

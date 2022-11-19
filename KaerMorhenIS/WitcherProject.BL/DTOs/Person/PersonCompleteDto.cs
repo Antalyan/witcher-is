@@ -15,5 +15,5 @@ public class PersonCompleteDto
     public bool IsActive { get; set; }
     public virtual List<ContractSimpleDto> Contracts { get; set; }
     public virtual List<RoleToPersonDto> RoleToPersons { get; set; }
-    public virtual List<ContractRequestDto> ContractRequests { get; set; }
+    public virtual List<ContractRequestDetailedDto> ContractRequests { get; set; }
 }

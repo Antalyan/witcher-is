@@ -1,23 +1,24 @@
-﻿using WitcherProject.BL.DTOs.ContractRequest;
-using WitcherProject.DAL.Models.Enums;
+﻿using WitcherProject.BL.DTOs.Contract;
+using WitcherProject.BL.DTOs.ContractRequest;
+using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.Services.Interfaces;
 
 public interface IContractRequestService
 {
-    Task CreateContractRequestAsync(ContractRequestDto contractRequestDto);
+    Task CreateContractRequestAsync(ContractRequestAddDto contractRequestAddDto);
 
-    Task<IEnumerable<ContractRequestDto>> GetAllContractRequestsAsync();
+    Task<IEnumerable<ContractRequestDetailedDto>> GetAllContractRequestsAsync();
     
-    Task <ContractRequestDto> GetContractRequestByIdAsync(int requestId);
+    Task <ContractRequestDetailedDto> GetContractRequestByIdAsync(int requestId);
     
-    Task<IEnumerable<ContractRequestDto>> GetContractRequestByState(ContractRequestState state, int? pageNumber);
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByStateAsync(ContractRequestState state, int? pageNumber);
     
-    Task<IEnumerable<ContractRequestDto>> GetContractRequestByContract(int contractId, int? pageNumber);
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByContractAsync(int contractId, int? pageNumber);
     
-    Task<IEnumerable<ContractRequestDto>> GetContractRequestByPerson(int personId, int? pageNumber);
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByPersonAsync(int personId, int? pageNumber);
 
-    Task UpdateContractRequestAsync(ContractRequestDto contractRequestDto);
+    Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto);
 
     Task DeleteContractRequestAsync(int requestId);
 }

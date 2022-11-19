@@ -21,22 +21,11 @@ public class ContractRequestQueryObject
         _contractRequestQuery = new EFQuery<ContractRequest>(context);
     }
 
-    public async Task<IEnumerable<ContractRequestDto>> ExecuteQuery(ContractRequestFilterDto filter)
+    public async Task<IEnumerable<ContractRequestDetailedDto>> ExecuteQuery(ContractRequestFilterDto filter)
     {
-        if (filter.State != null)
-        {
-            _contractRequestQuery.Filter(request => request.State == filter.State);
-        }
-        
-        if (filter.ContractId != null)
-        {
-            _contractRequestQuery.Filter(request => request.ContractId == filter.ContractId);
-        }
-
-        if (filter.PersonId != null)
-        {
-            _contractRequestQuery.Filter(request => request.PersonId == filter.PersonId);
-        }
+        _contractRequestQuery.Filter(contract => filter.State != null && contract.State == filter.State);
+        _contractRequestQuery.Filter(contract => filter.ContractId != null && contract.ContractId == filter.ContractId);
+        _contractRequestQuery.Filter(contract => filter.PersonId != null && contract.PersonId == filter.PersonId);
 
         if (filter.RequestedPageNumber != null)
         {
@@ -50,6 +39,6 @@ public class ContractRequestQueryObject
         }
 
         var returnedRequests = await _contractRequestQuery.ExecuteAsync();
-        return returnedRequests.Select(request => request.Adapt<ContractRequestDto>());
+        return returnedRequests.Select(request => request.Adapt<ContractRequestDetailedDto>());
     }
 }
