@@ -34,12 +34,28 @@ public class ContractQueryObject: IContractQueryObject
             _contractQuery.Page(filter.RequestedPageNumber ?? -1);
         }
 
-        if (filter.SortCriteria != null)
+        switch (filter.SortCriteria)
         {
-            // PropertyDescriptor? prop = TypeDescriptor.GetProperties(typeof(Contract)).Find(filter.SortCriteria, true);
-            // _contractQuery.OrderBy(x => prop.GetValue(x), filter.SortAscending);
-            System.Reflection.PropertyInfo prop = typeof(Contract).GetProperty(filter.SortCriteria);
-            _contractQuery.OrderBy(x => prop.GetValue(x, null));
+            case "StartDate":
+            {
+                _contractQuery.OrderBy(x => x.StartDate, filter.SortAscending);
+                break;
+            }
+            case "EndDate":
+            {
+                _contractQuery.OrderBy(x => x.EndDate, filter.SortAscending);
+                break;
+            }
+            case "Name":
+            {
+                _contractQuery.OrderBy(x => x.Name, filter.SortAscending);
+                break;
+            }
+            case "Deadline":
+            {
+                _contractQuery.OrderBy(x => x.Deadline, filter.SortAscending);
+                break;
+            }
         }
 
         var returnedContracts = await _contractQuery.ExecuteAsync();

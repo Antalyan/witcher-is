@@ -33,11 +33,7 @@ public class ContractRequestQueryObject: IContractRequestQueryObject
             _contractRequestQuery.Page(filter.RequestedPageNumber ?? -1);
         }
 
-        if (filter.SortCriteria != null)
-        {
-            _contractRequestQuery.OrderBy(request => request.GetType().GetProperties().First(
-                    prop => prop.Name == filter.SortCriteria), filter.SortAscending);
-        }
+        _contractRequestQuery.OrderBy(x => x.CreatedOn, filter.SortAscending);
 
         var returnedRequests = await _contractRequestQuery.ExecuteAsync();
         return returnedRequests.Select(request => request.Adapt<ContractRequestDetailedDto>());
