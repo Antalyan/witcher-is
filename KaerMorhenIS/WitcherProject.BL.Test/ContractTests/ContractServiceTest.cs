@@ -14,7 +14,6 @@ namespace WitcherProject.BL.Test.ContractTests;
 
 public class ContractServiceTest
 {
-
     protected Contract _devilByTheWell;
     protected Contract _jennyOTheWoods;
     protected Contract _beastOfHonorton;

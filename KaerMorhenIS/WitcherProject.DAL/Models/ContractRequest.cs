@@ -15,7 +15,7 @@ public class ContractRequest
 
     public int PersonId { get; set; }
 
-    [ForeignKey(nameof(PersonId))] public virtual Person Applicant { get; set; }
+    [ForeignKey(nameof(PersonId))] public virtual Person Person { get; set; }
 
     public int ContractId { get; set; }
 

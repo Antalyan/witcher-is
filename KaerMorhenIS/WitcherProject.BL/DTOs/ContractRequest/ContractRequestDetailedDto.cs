@@ -14,13 +14,13 @@ public class ContractRequestDetailedDto
 
     public ContractRequestState? State { get; set; }
 
-    public PersonSimpleDto Applicant { get; set; }
+    public PersonSimpleDto Person { get; set; }
 
     public ContractSimpleDto Contract { get; set; }
 
     protected bool Equals(ContractRequestDetailedDto other)
     {
-        return Id == other.Id && Nullable.Equals(CreatedOn, other.CreatedOn) && Text == other.Text && State == other.State && Applicant.Equals(other.Applicant) && Contract.Equals(other.Contract);
+        return Id == other.Id && Nullable.Equals(CreatedOn, other.CreatedOn) && Text == other.Text && State == other.State && Person.Equals(other.Person) && Contract.Equals(other.Contract);
     }
 
     public override bool Equals(object? obj)
@@ -33,6 +33,6 @@ public class ContractRequestDetailedDto
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, CreatedOn, Text, State, Applicant, Contract);
+        return HashCode.Combine(Id, CreatedOn, Text, State, Person, Contract);
     }
 }
