@@ -44,15 +44,15 @@ public class ContractRequestService : IContractRequestService
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByStateAsync(ContractRequestState state, int? pageNumber = null)
         => await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto()
-            { State = state, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
+            { State = state, SortAscending = false, RequestedPageNumber = pageNumber});
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByContractAsync(int contractId, int? pageNumber = null)
         => await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto()
-            { ContractId = contractId, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
+            { ContractId = contractId, SortAscending = false, RequestedPageNumber = pageNumber});
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByPersonAsync(int personId, int? pageNumber = null)
         => await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto()
-            { PersonId = personId, SortCriteria = "CreatedOn", SortAscending = false, RequestedPageNumber = pageNumber});
+            { PersonId = personId, SortAscending = false, RequestedPageNumber = pageNumber});
 
     public async Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto)
     {

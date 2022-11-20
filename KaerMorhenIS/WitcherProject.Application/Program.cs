@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WitcherProject.BL.QueryObjects;
+using WitcherProject.BL.Services.Implementations;
+using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Query;
@@ -22,6 +24,11 @@ builder.Services.AddScoped<IContractQueryObject, ContractQueryObject>();
 builder.Services.AddScoped<IUnitOfWorkAuthentication, UnitOfWorkAuthentication>();
 builder.Services.AddScoped<IUnitOfWorkContracts, UnitOfWorkContracts>();
 builder.Services.AddScoped<IUnitOfWorkPersonalData, UnitOfWorkPersonalData>();
+
+builder.Services.AddScoped<IContractorService, ContractorService>();
+builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<IContractRequestService, ContractRequestService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(EFGenericRepository<>));
 

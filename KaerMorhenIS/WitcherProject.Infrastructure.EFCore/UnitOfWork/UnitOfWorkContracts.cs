@@ -15,9 +15,9 @@ namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
 public class UnitOfWorkContracts : IUnitOfWorkContracts
 {
-    private readonly DbContext _context;
+    private readonly KaerMorhenDBContext _context;
 
-    public UnitOfWorkContracts(DbContext context, 
+    public UnitOfWorkContracts(KaerMorhenDBContext context, 
         IGenericRepository<Person> personRepository,
         IGenericRepository<Contract> contractRepository, 
         IGenericRepository<Contractor> contractorRepository,

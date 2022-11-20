@@ -11,8 +11,6 @@ public class ContractRequestFilterDto
     public int? PersonId { get; set; }
     
     public int? RequestedPageNumber { get; set; }
-    
-    public string? SortCriteria { get; set; }
-    
+
     public bool SortAscending { get; set; }
 }
