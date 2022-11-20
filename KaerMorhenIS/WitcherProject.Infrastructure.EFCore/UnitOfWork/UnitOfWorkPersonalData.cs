@@ -1,8 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.Repository;
-using WitcherProject.Infrastructure.UnitOfWork;
 
 namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
@@ -16,21 +15,22 @@ public class UnitOfWorkPersonalData : IUnitOfWorkPersonalData
 {
     private readonly KaerMorhenDBContext _context;
 
-    private IGenericRepository<Person>? _personRepository;
-    private IGenericRepository<Role>? _roleRepository;
-    private IGenericRepository<RoleToPerson>? _roleToPersonRepository;
-
-    public UnitOfWorkPersonalData(KaerMorhenDBContext context)
+    public UnitOfWorkPersonalData(KaerMorhenDBContext context, 
+        IGenericRepository<Person> personRepository, 
+        IGenericRepository<Role> roleRepository, 
+        IGenericRepository<RoleToPerson> roleToPersonRepository)
     {
         _context = context;
+        PersonRepository = personRepository;
+        RoleRepository = roleRepository;
+        RoleToPersonRepository = roleToPersonRepository;
     }
 
-    public IGenericRepository<Person> PersonRepository =>
-        _personRepository ??= new EFGenericRepository<Person>(_context);
+    public IGenericRepository<Person> PersonRepository { get; }
 
-    public IGenericRepository<Role> RoleRepository => _roleRepository ??= new EFGenericRepository<Role>(_context);
+    public IGenericRepository<Role> RoleRepository { get; }
 
-    public IGenericRepository<RoleToPerson> RoleToPersonRepository => _roleToPersonRepository ??= new EFGenericRepository<RoleToPerson>(_context);
+    public IGenericRepository<RoleToPerson> RoleToPersonRepository { get; }
 
     private bool _disposed;
     protected virtual async ValueTask DisposeAsync(bool disposing)

@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
-using WitcherProject.DAL.Models.Enums;
 using WitcherProject.Infrastructure.EFCore.Repository;
+using WitcherProject.Shared.Enums;
 using Xunit;
 
 namespace WitcherProject.Infrastructure.EFCore.Tests;
@@ -110,7 +110,7 @@ public class EFGenericRepositoryTests: EFGenericTest
         {
             new()
             {
-                Name = insertedContractName, Description = "Look everywhere!", State = ContractState.Accepted,
+                Name = insertedContractName, Description = "Look everywhere!", State = ContractState.Open,
                 Location = "White Orchard", Deadline = new DateTime(2050, 12, 1)
             }
         };

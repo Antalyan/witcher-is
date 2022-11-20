@@ -1,8 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.Repository;
-using WitcherProject.Infrastructure.UnitOfWork;
 
 namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
@@ -13,15 +12,14 @@ namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 public class UnitOfWorkAuthentication : IUnitOfWorkAuthentication
 {
     private readonly KaerMorhenDBContext _context;
-    
-    private IGenericRepository<Person>? _personRepository;
 
-    public UnitOfWorkAuthentication(KaerMorhenDBContext context)
+    public UnitOfWorkAuthentication(KaerMorhenDBContext context, IGenericRepository<Person> personRepository)
     {
         _context = context;
+        PersonRepository = personRepository;
     }
-    
-    public IGenericRepository<Person> PersonRepository => _personRepository ??= new EFGenericRepository<Person>(_context);
+
+    public IGenericRepository<Person> PersonRepository { get; }
 
 
     private bool _disposed;

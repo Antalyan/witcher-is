@@ -18,7 +18,10 @@ public class KaerMorhenDBContext : DbContext
     {
     }
 
-
+    public KaerMorhenDBContext()
+    {
+        
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         /* Setup the connection table */

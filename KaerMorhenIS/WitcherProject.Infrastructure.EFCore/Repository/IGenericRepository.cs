@@ -1,4 +1,4 @@
-﻿namespace WitcherProject.Infrastructure.Repository;
+﻿namespace WitcherProject.Infrastructure.EFCore.Repository;
 
 public interface IGenericRepository<TEntity> where TEntity : class
 {

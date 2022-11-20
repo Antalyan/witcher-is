@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL;
-using WitcherProject.Infrastructure.Repository;
 
 namespace WitcherProject.Infrastructure.EFCore.Repository;
 

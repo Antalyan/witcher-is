@@ -1,8 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.Repository;
-using WitcherProject.Infrastructure.UnitOfWork;
 
 namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
@@ -18,25 +17,29 @@ public class UnitOfWorkContracts : IUnitOfWorkContracts
 {
     private readonly KaerMorhenDBContext _context;
 
-    private IGenericRepository<Person>? _personRepository;
-    private IGenericRepository<Contract>? _contractRepository;
-    private IGenericRepository<Contractor>? _contractorRepository;
-    private IGenericRepository<ContractRequest>? _contractRequestRepository;
-
-    public UnitOfWorkContracts(KaerMorhenDBContext context)
+    public UnitOfWorkContracts(KaerMorhenDBContext context, 
+        IGenericRepository<Person> personRepository,
+        IGenericRepository<Contract> contractRepository, 
+        IGenericRepository<Contractor> contractorRepository,
+        IGenericRepository<ContractRequest> contractRequestRepository)
     {
         _context = context;
+        PersonRepository = personRepository;
+        ContractRepository = contractRepository;
+        ContractorRepository = contractorRepository;
+        ContractRequestRepository = contractRequestRepository;
     }
-    
-    public IGenericRepository<Contract> ContractRepository => _contractRepository ??= new EFGenericRepository<Contract>(_context);
 
-    public IGenericRepository<Contractor> ContractorRepository => _contractorRepository ??= new EFGenericRepository<Contractor>(_context);
+    public IGenericRepository<Contract> ContractRepository { get; }
 
-    public IGenericRepository<ContractRequest> ContractRequestRepository =>_contractRequestRepository ??= new EFGenericRepository<ContractRequest>(_context);
+    public IGenericRepository<Contractor> ContractorRepository { get; }
 
-    public IGenericRepository<Person> PersonRepository => _personRepository ??= new EFGenericRepository<Person>(_context);
+    public IGenericRepository<ContractRequest> ContractRequestRepository { get; }
+
+    public IGenericRepository<Person> PersonRepository { get; }
 
     private bool _disposed;
+
     protected virtual async ValueTask DisposeAsync(bool disposing)
     {
         if (!_disposed)
@@ -46,9 +49,10 @@ public class UnitOfWorkContracts : IUnitOfWorkContracts
                 await _context.DisposeAsync();
             }
         }
+
         _disposed = true;
     }
-    
+
     public async ValueTask DisposeAsync()
     {
         await DisposeAsync(true);
