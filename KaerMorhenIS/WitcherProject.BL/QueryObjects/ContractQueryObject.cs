@@ -36,11 +36,6 @@ public class ContractQueryObject: IContractQueryObject
 
         switch (filter.SortCriteria)
         {
-            case null:
-            {
-                _contractQuery.OrderBy(x => x.Id, filter.SortAscending);
-                break;
-            }
             case "StartDate":
             {
                 _contractQuery.OrderBy(x => x.StartDate, filter.SortAscending);
@@ -60,10 +55,6 @@ public class ContractQueryObject: IContractQueryObject
             {
                 _contractQuery.OrderBy(x => x.Deadline, filter.SortAscending);
                 break;
-            }
-            default:
-            {
-                throw new ArgumentException($@"Filtering by {filter.SortCriteria} not supported");
             }
         }
 
