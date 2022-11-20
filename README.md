@@ -37,3 +37,5 @@ Information system enables:
 * Create migration: *dotnet ef migrations add <jmenomigrace>* OR using plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
 * Update database according to chosen migration: *dotnet ef database update* OR using plugin... *Update Database*
 * Data should be visible in DB
+
+* Starting app: https://www.jetbrains.com/help/rider/Running_IISExpress.html
