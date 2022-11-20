@@ -9,7 +9,6 @@ namespace WitcherProject.BL.Test;
 
 public static class BlTestDataInitalizator
 {
-
     public static Contractor GetContractorDal(int id)
     {
         switch (id)
@@ -120,10 +119,9 @@ public static class BlTestDataInitalizator
                 };
             default:
                 throw new ArgumentException("Name not found in method");
-
         }
     }
-    
+
     public static ContractorDto GetContractorDto(int id)
     {
         switch (id)
@@ -161,9 +159,9 @@ public static class BlTestDataInitalizator
                     Login = "whitewolf",
                     Name = "Geralt",
                     Surname = "of Rivia",
-                    Contracts = new List<ContractSimpleDto>{GetContractSimpleDto("The Beast of Honorton")}
+                    Contracts = new List<ContractSimpleDto> { GetContractSimpleDto("The Beast of Honorton") }
                 };
-            
+
             case "Lambert":
                 return new PersonCompleteDto
                 {
@@ -174,12 +172,12 @@ public static class BlTestDataInitalizator
                     Login = "jobForVesemir",
                     Name = "Lambert"
                 };
-            
+
             default:
                 throw new ArgumentException("Name not found in method");
         }
     }
-    
+
     public static PersonSimpleDto GetPersonSimpleDto(string name)
     {
         switch (name)
@@ -197,8 +195,8 @@ public static class BlTestDataInitalizator
                 throw new ArgumentException("Name not found in method");
         }
     }
-    
-     public static ContractDetailedDto GetContractDetailedDto(string name)
+
+    public static ContractDetailedDto GetContractDetailedDto(string name)
     {
         var odolanDto = GetContractorDto(1);
         var geraltDto = GetPersonSimpleDto("Geralt");
@@ -249,10 +247,9 @@ public static class BlTestDataInitalizator
                 };
             default:
                 throw new ArgumentException("Name not found in method");
-
         }
     }
-     
+
     public static ContractSimpleDto GetContractSimpleDto(string name)
     {
         switch (name)
@@ -277,7 +274,6 @@ public static class BlTestDataInitalizator
                 };
             default:
                 throw new ArgumentException("Name not found in method");
-
         }
     }
 }

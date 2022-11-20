@@ -35,30 +35,27 @@ public class PersonServiceTest
 
         var beastOfHonorton = BlTestDataInitalizator.GetContractDal("The Beast of Honorton");
         _geralt.Contracts = new List<Contract> { beastOfHonorton };
-            
+
         _geraltCompleteDto = BlTestDataInitalizator.GetPersonCompleteDto("Geralt");
 
         _lambertCompleteDto = BlTestDataInitalizator.GetPersonCompleteDto("Lambert");
-
-
     }
 
-    [Fact]
-    public void PersonCompleteDto_To_Person_MapAll()
-    {
-        var transformToDto = _geralt.Adapt<PersonCompleteDto>();
-        var transformToDal = _geraltCompleteDto.Adapt<Person>();
-        //
-        // Assert.Equal(_geralt, transformToDal);
-        // Assert.Equal(transformToDto, _geraltCompleteDto);
-
-    }
+    // [Fact]
+    // public void PersonCompleteDto_To_Person_MapAll()
+    // {
+    //     var transformToDto = _geralt.Adapt<PersonCompleteDto>();
+    //     var transformToDal = _geraltCompleteDto.Adapt<Person>();
+    //     
+    //     Assert.Equal(_geralt, transformToDal);
+    //     Assert.Equal(transformToDto, _geraltCompleteDto);
+    // }
 
     [Fact]
     public async Task AssigntRoleToUserAsync_RoleIsAssigned()
     {
         var mockPersonUow = new Mock<IUnitOfWorkPersonalData>();
-        
+
         var geraltWitcherRoleToPerson = new RoleToPerson()
         {
             Role = _witcherRole,
@@ -81,11 +78,11 @@ public class PersonServiceTest
         };
 
         await personService.AssignRoleToUserAsync(roleToPersonDto);
-        
+
         mockPersonUow.Verify(mow => mow.RoleToPersonRepository.Insert(geraltWitcherRoleToPerson), Times.Once);
     }
-    
-    
+
+
     [Fact]
     public async Task DisableUserByIdAsync_Person_IsDisabled()
     {
@@ -102,8 +99,8 @@ public class PersonServiceTest
 
         mockPersonUow.Verify(mow => mow.PersonRepository.Update(disableLambert), Times.Once);
     }
-    
-    
+
+
     [Fact]
     public async Task DisableUserByIdAsync_PersonWrongId_IsNotDisabled()
     {
@@ -118,22 +115,20 @@ public class PersonServiceTest
 
         await Assert.ThrowsAsync<NullReferenceException>(() => (personService.DisableUserByIdAsync(1)));
     }
-    
+
     [Fact]
     public async Task GetAllUserAsync_ReturnEach()
     {
         var mockPersonUow = new Mock<IUnitOfWorkPersonalData>();
 
-        mockPersonUow.Setup(pow => pow.PersonRepository.GetAll().Result).Returns(new List<Person>{_geralt, _lambert});
+        mockPersonUow.Setup(pow => pow.PersonRepository.GetAll().Result)
+            .Returns(new List<Person> { _geralt, _lambert });
 
         var personService = new PersonService(mockPersonUow.Object);
 
         var result = await personService.GetAllUsersAsync();
-        
+
         Assert.Equal(_geraltCompleteDto, result.First());
         Assert.Equal(_lambertCompleteDto, result.Last());
     }
-
-    
-
 }
