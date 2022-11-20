@@ -24,9 +24,9 @@ public class ContractRequestQueryObject: IContractRequestQueryObject
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> ExecuteQuery(ContractRequestFilterDto filter)
     {
-        _contractRequestQuery.Filter(contract => filter.State != null && contract.State == filter.State);
-        _contractRequestQuery.Filter(contract => filter.ContractId != null && contract.ContractId == filter.ContractId);
-        _contractRequestQuery.Filter(contract => filter.PersonId != null && contract.PersonId == filter.PersonId);
+        _contractRequestQuery.Filter(contract => filter.State == null || contract.State == filter.State);
+        _contractRequestQuery.Filter(contract => filter.ContractId == null || contract.ContractId == filter.ContractId);
+        _contractRequestQuery.Filter(contract => filter.PersonId == null || contract.PersonId == filter.PersonId);
 
         if (filter.RequestedPageNumber != null)
         {

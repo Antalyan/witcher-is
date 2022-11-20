@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using System.ComponentModel;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.DAL.Models;
@@ -18,15 +19,15 @@ public class ContractQueryObject: IContractQueryObject
 
     public async Task<IEnumerable<ContractDetailedDto>> ExecuteQuery(ContractFilterDto filter)
     {
-        _contractQuery.Filter(contract => !string.IsNullOrEmpty(filter.Name) && contract.Name == filter.Name);
-        _contractQuery.Filter(contract => !string.IsNullOrEmpty(filter.Description) && contract.Description == filter.Description);
-        _contractQuery.Filter(contract => filter.State != null && contract.State == filter.State);
-        _contractQuery.Filter(contract => filter.StartDate != null && contract.StartDate == filter.StartDate);
-        _contractQuery.Filter(contract => filter.EndDate != null && contract.EndDate == filter.EndDate);
-        _contractQuery.Filter(contract => filter.Deadline != null && contract.Deadline == filter.Deadline);
-        _contractQuery.Filter(contract => !string.IsNullOrEmpty(filter.Location) && contract.Location == filter.Location);
-        _contractQuery.Filter(contract => filter.ContractorId != null && contract.ContractorId == filter.ContractorId);
-        _contractQuery.Filter(contract => filter.PersonId != null && contract.PersonId == filter.PersonId);
+        _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Name) || contract.Name == filter.Name);
+        _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Description) || contract.Description == filter.Description);
+        _contractQuery.Filter(contract => filter.State == null || contract.State == filter.State);
+        _contractQuery.Filter(contract => filter.StartDate == null || contract.StartDate == filter.StartDate);
+        _contractQuery.Filter(contract => filter.EndDate == null || contract.EndDate == filter.EndDate);
+        _contractQuery.Filter(contract => filter.Deadline == null || contract.Deadline == filter.Deadline);
+        _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Location) || contract.Location == filter.Location);
+        _contractQuery.Filter(contract => filter.ContractorId == null || contract.ContractorId == filter.ContractorId);
+        _contractQuery.Filter(contract => filter.PersonId == null || contract.PersonId == filter.PersonId);
 
         if (filter.RequestedPageNumber != null)
         {
@@ -35,9 +36,10 @@ public class ContractQueryObject: IContractQueryObject
 
         if (filter.SortCriteria != null)
         {
-            _contractQuery.OrderBy(contract => contract.GetType().GetProperties().First(
-                    prop => prop.Name == filter.SortCriteria),
-                filter.SortAscending);
+            // PropertyDescriptor? prop = TypeDescriptor.GetProperties(typeof(Contract)).Find(filter.SortCriteria, true);
+            // _contractQuery.OrderBy(x => prop.GetValue(x), filter.SortAscending);
+            System.Reflection.PropertyInfo prop = typeof(Contract).GetProperty(filter.SortCriteria);
+            _contractQuery.OrderBy(x => prop.GetValue(x, null));
         }
 
         var returnedContracts = await _contractQuery.ExecuteAsync();

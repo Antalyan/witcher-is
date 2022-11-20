@@ -5,10 +5,10 @@ namespace WitcherProject.Infrastructure.EFCore.Repository;
 
 public class EFGenericRepository<TEntity>: IGenericRepository<TEntity> where TEntity: class
 {
-    private readonly DbContext _context;
+    private readonly KaerMorhenDBContext _context;
     private readonly DbSet<TEntity> _dbSet;
 
-    public EFGenericRepository(DbContext context)
+    public EFGenericRepository(KaerMorhenDBContext context)
     {
         _context = context;
         _dbSet = context.Set<TEntity>();

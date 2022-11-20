@@ -13,9 +13,9 @@ namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
 public class UnitOfWorkPersonalData : IUnitOfWorkPersonalData
 {
-    private readonly DbContext _context;
+    private readonly KaerMorhenDBContext _context;
 
-    public UnitOfWorkPersonalData(DbContext context, 
+    public UnitOfWorkPersonalData(KaerMorhenDBContext context, 
         IGenericRepository<Person> personRepository, 
         IGenericRepository<Role> roleRepository, 
         IGenericRepository<RoleToPerson> roleToPersonRepository)

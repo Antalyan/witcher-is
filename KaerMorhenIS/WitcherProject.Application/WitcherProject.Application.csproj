@@ -24,4 +24,8 @@
       <ProjectReference Include="..\WitcherProject.DAL\WitcherProject.DAL.csproj" />
       <ProjectReference Include="..\WitcherProject.Infrastructure.EFCore\WitcherProject.Infrastructure.EFCore.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="TestingWebRequest.Tests" />
+    </ItemGroup>
 </Project>
