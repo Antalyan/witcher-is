@@ -11,9 +11,9 @@ namespace WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
 public class UnitOfWorkAuthentication : IUnitOfWorkAuthentication
 {
-    private readonly DbContext _context;
+    private readonly KaerMorhenDBContext _context;
 
-    public UnitOfWorkAuthentication(DbContext context, IGenericRepository<Person> personRepository)
+    public UnitOfWorkAuthentication(KaerMorhenDBContext context, IGenericRepository<Person> personRepository)
     {
         _context = context;
         PersonRepository = personRepository;
