@@ -13,6 +13,8 @@ public interface IPersonService
 
     Task<IEnumerable<PersonCompleteDto>> GetAllUsersAsync();
 
+    Task<PersonCompleteDto> GetPersonById(int personId);
+
     Task DisableUserByIdAsync(int userId);
 
 
