@@ -1,6 +1,40 @@
 ﻿@page "/PersonalInfo"
+@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.Person
+
+@inject IPersonService PersonService
+
 <h3>PersonalInfo</h3>
 
+@if (person == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <EditForm Model="@person">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div class="d-flex bd-highlight mb-3">
+            <InputText @bind-Value="@person.Login" readonly="true"></InputText>
+            <InputText @bind-Value="@person.Name"></InputText>
+            <InputText @bind-Value="@person.Surname"></InputText>
+            <InputTextArea @bind-Value="@person.Cv"></InputTextArea>
+            <InputDate @bind-Value="@person.Birthdate"></InputDate>
+        </div>
+        <button type="submit">Edit</button>
+    </EditForm>
+}
+
 @code {
-    
+    private PersonCompleteDto person;
+
+    protected override async Task OnInitializedAsync()
+    {
+    //TODO: replace by real id of logged in person
+        person = await PersonService.GetPersonById(1);
+    }
+
 }
