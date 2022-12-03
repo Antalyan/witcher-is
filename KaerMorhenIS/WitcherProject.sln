@@ -14,9 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.BL.Test", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.Shared", "WitcherProject.Shared\WitcherProject.Shared.csproj", "{44313C52-0169-4DDB-8445-E45A252BF69B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{BE89AEE0-8E79-4542-87EC-99FA23192E41}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTest", "MiniTest\MiniTest.csproj", "{CDBDA071-7C9E-4A2D-B2E3-476054594843}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.PresentationLayer", "WitcherProject.PresentationLayer\WitcherProject.PresentationLayer.csproj", "{BE89AEE0-8E79-4542-87EC-99FA23192E41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,9 +54,5 @@ Global
 		{BE89AEE0-8E79-4542-87EC-99FA23192E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE89AEE0-8E79-4542-87EC-99FA23192E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE89AEE0-8E79-4542-87EC-99FA23192E41}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDBDA071-7C9E-4A2D-B2E3-476054594843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDBDA071-7C9E-4A2D-B2E3-476054594843}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDBDA071-7C9E-4A2D-B2E3-476054594843}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDBDA071-7C9E-4A2D-B2E3-476054594843}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

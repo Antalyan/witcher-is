@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+        <RootNamespace>BlazorApp1</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WitcherProject.Application\WitcherProject.Application.csproj" />
+      <ProjectReference Include="..\WitcherProject.BL\WitcherProject.BL.csproj" />
+      <ProjectReference Include="..\WitcherProject.DAL\WitcherProject.DAL.csproj" />
+      <ProjectReference Include="..\WitcherProject.Infrastructure.EFCore\WitcherProject.Infrastructure.EFCore.csproj" />
+      <ProjectReference Include="..\WitcherProject.Shared\WitcherProject.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
