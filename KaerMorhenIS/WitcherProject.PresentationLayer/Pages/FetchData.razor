@@ -1,0 +1,80 @@
+﻿@page "/fetchdata"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using WitcherProject.BL.DTOs.Contract
+@using WitcherProject.BL.Services.Implementations
+@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.Shared.Enums
+@inject IContractService ContractService
+
+<h1>Contracts</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (contracts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>State</th>
+            <th>Assigned to</th>
+            <th>Summary</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var cont in contracts)
+        {
+            <tr>
+                <td>@cont.Name.</td>
+                <td>@cont.State</td>
+                <td>Person: @(cont.Person?.Name + " " + cont.Person?.Surname)</td>
+                <td>Requests: @cont.ContractRequests.Count</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <h4>FILTERED</h4>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Deadline</th>
+            <th>Contractor</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var cont in contractsFiltered)
+        {
+            <tr>
+                <td>@cont.Name.</td>
+                <td>@cont.StartDate.</td>
+                <td>@cont.EndDate.</td>
+                <td>@cont.Deadline.</td>
+                <td>@(cont.Contractor?.Name + " " + cont.Contractor?.Surname).</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<ContractDetailedDto> contracts;
+    private IEnumerable<ContractDetailedDto> contractsFiltered;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contracts = await ContractService.GetAllContractsAsync();
+        contractsFiltered = await ContractService.GetContractsByStateAsync(ContractState.Open);
+    }
+
+}
