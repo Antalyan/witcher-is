@@ -1,0 +1,71 @@
+﻿@page "/Contracts"
+@using WitcherProject.BL.Services.Interfaces
+@using Mapster;
+@using WitcherProject.BL.DTOs.Contract
+
+@inject IContractService ContractService
+
+<h3>Contracts</h3>
+
+@if (contracts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>State</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Deadline</th>
+            <th>Location</th>
+            <th>Assigned to</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var cont in contracts)
+        {
+            <tr>
+                <td>@cont.Name.</td>
+                <td>@cont.Description.</td>
+                <td>@cont.State</td>
+                <td>@cont.StartDate</td>
+                <td>@cont.EndDate</td>
+                <td>@cont.Deadline</td>
+                <td>@cont.Location</td>
+                <td>@(cont.Person != null ? cont.Person.Name + " " + cont.Person?.Surname : null) </td>
+                <td>
+                    <div class="hstack gap-3">
+                        <button class="btn btn-outline-primary rounded-circle">
+                            <i class="bi bi-eye" title="Details"></i>
+                        </button>
+                        <button class="btn btn-outline-primary rounded-circle">
+                            <i class="bi bi-pencil" title="Edit"></i>
+                        </button>
+                        <button class="btn btn-outline-primary rounded-circle">
+                            <i class="bi bi-dash" title="Delete"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<ContractDetailedDto> contracts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contracts = await ContractService.GetAllContractsAsync();
+    }
+
+}

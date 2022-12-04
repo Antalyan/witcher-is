@@ -30,27 +30,27 @@ else
         @* </div> *@
 
         <div>
-            <label class="form-label">
-                Login: <InputText class="form-control" @bind-Value="@person.Login" DisplayName="login" readonly="true"></InputText>
+            <label class="form-label col-sm-10 col-md-4">
+                Login: <InputText class="form-control" @bind-Value="@person.Login" DisplayName="login" disabled></InputText>
             </label>
         </div>
         <div>
-            <label class="form-label">
+            <label class="form-label col-sm-10 col-md-4">
                 Name: <InputText class="form-control" @bind-Value="@person.Name" DisplayName="name"></InputText>
             </label>
         </div>
         <div>
-            <label class="form-label">
+            <label class="form-label col-sm-10 col-md-4">
                 Surname: <InputText class="form-control" @bind-Value="@person.Surname" DisplayName="surname"></InputText>
             </label>
         </div>
         <div>
-            <label class="form-label">
+            <label class="form-label col-sm-10 col-md-4">
                 Cv: <InputTextArea class="form-control" @bind-Value="@person.Cv" DisplayName="cv"></InputTextArea>
             </label>
         </div>
         <div>
-            <label class="form-label">
+            <label class="form-label col-sm-10 col-md-4">
                 Birthdate: <InputDate class="form-control" @bind-Value="@person.Birthdate" DisplayName="birthdate"></InputDate>
             </label>
         </div>
