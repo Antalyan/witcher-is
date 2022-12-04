@@ -57,6 +57,12 @@ public class PersonService : IPersonService
         return returnedPerson.Adapt<PersonCompleteDto>();
     }
 
+    public async Task<PersonCompleteDto> GetPersonById(int personId)
+    {
+        var returnedPerson = await _personUow.PersonRepository.GetById(personId);
+        return returnedPerson.Adapt<PersonCompleteDto>();
+    }
+
     public async Task DisableUserByIdAsync(int userId)
     {
         var userToDisable = await _personUow.PersonRepository.GetById(userId);
