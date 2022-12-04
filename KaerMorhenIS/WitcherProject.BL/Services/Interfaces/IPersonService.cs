@@ -17,8 +17,6 @@ public interface IPersonService
 
     Task<PersonCompleteDto> GetPersonById(int personId);
 
-    Task<PersonCompleteDto> GetPersonById(int personId);
-
     Task DisableUserByIdAsync(int userId);
 
 
