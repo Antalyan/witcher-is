@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.Application", "WitcherProject.Application\WitcherProject.Application.csproj", "{387876E6-2F07-41EC-A115-AC52FD464055}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.Infrastructure.EFCore", "WitcherProject.Infrastructure.EFCore\WitcherProject.Infrastructure.EFCore.csproj", "{6C649009-ADE3-402A-BFED-E465665CC921}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WitcherProject.DAL", "WitcherProject.DAL\WitcherProject.DAL.csproj", "{C4179911-8E7F-4548-9F31-D02A091FC181}"
@@ -22,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{387876E6-2F07-41EC-A115-AC52FD464055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{387876E6-2F07-41EC-A115-AC52FD464055}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{387876E6-2F07-41EC-A115-AC52FD464055}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{387876E6-2F07-41EC-A115-AC52FD464055}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6C649009-ADE3-402A-BFED-E465665CC921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C649009-ADE3-402A-BFED-E465665CC921}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C649009-ADE3-402A-BFED-E465665CC921}.Release|Any CPU.ActiveCfg = Release|Any CPU

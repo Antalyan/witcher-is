@@ -1,6 +1,7 @@
 ﻿@page "/PersonalInfo"
 @using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.BL.DTOs.Person
+@using Mapster;
 
 @inject IPersonService PersonService
 
@@ -14,17 +15,46 @@
 }
 else
 {
-    <EditForm Model="@person">
+    <EditForm Model="@person" OnValidSubmit="UpdatePersonalData">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
-        <div class="d-flex bd-highlight mb-3">
-            <InputText @bind-Value="@person.Login" readonly="true"></InputText>
-            <InputText @bind-Value="@person.Name"></InputText>
-            <InputText @bind-Value="@person.Surname"></InputText>
-            <InputTextArea @bind-Value="@person.Cv"></InputTextArea>
-            <InputDate @bind-Value="@person.Birthdate"></InputDate>
+        @* <div class="d-flex flex-column bd-highlight mb-3"> *@
+        @*     <div> *@
+        @*         <InputText p-2 mb-2 @bind-Value="@person.Login" readonly="true"></InputText> *@
+        @*     </div> *@
+        @*     <InputText class="p-2 mb-2" @bind-Value="@person.Login" readonly="true"></InputText> *@
+        @*     <InputText class="p-2 mb-2"  @bind-Value="@person.Name"></InputText> *@
+        @*     <InputText class="p-2 mb-2" @bind-Value="@person.Surname"></InputText> *@
+        @*     <InputTextArea class="p-2 mb-2" @bind-Value="@person.Cv"></InputTextArea> *@
+        @*     <InputDate class="p-2 mb-2" @bind-Value="@person.Birthdate"></InputDate> *@
+        @* </div> *@
+
+        <div>
+            <label class="form-label">
+                Login: <InputText class="form-control" @bind-Value="@person.Login" DisplayName="login" readonly="true"></InputText>
+            </label>
         </div>
-        <button type="submit">Edit</button>
+        <div>
+            <label class="form-label">
+                Name: <InputText class="form-control" @bind-Value="@person.Name" DisplayName="name"></InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label">
+                Surname: <InputText class="form-control" @bind-Value="@person.Surname" DisplayName="surname"></InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label">
+                Cv: <InputTextArea class="form-control" @bind-Value="@person.Cv" DisplayName="cv"></InputTextArea>
+            </label>
+        </div>
+        <div>
+            <label class="form-label">
+                Birthdate: <InputDate class="form-control" @bind-Value="@person.Birthdate" DisplayName="birthdate"></InputDate>
+            </label>
+        </div>
+        <button class="btn btn-primary" type="submit">Edit</button>
     </EditForm>
 }
 
@@ -37,4 +67,8 @@ else
         person = await PersonService.GetPersonById(1);
     }
 
+    private async Task UpdatePersonalData()
+    {
+        await PersonService.UpdateUserAsync(person.Adapt<PersonUpdateDto>());
+    }
 }

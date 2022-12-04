@@ -35,7 +35,6 @@ public class PersonService : IPersonService
     public async Task UpdateUserAsync(PersonUpdateDto personUpdateDto)
     {
         var updatedUser = personUpdateDto.Adapt<Person>();
-        
         _personUow.PersonRepository.Update(updatedUser);
         await _personUow.CommitAsync();
     }
