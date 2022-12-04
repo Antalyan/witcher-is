@@ -12,6 +12,8 @@ public interface IPersonService
     Task UpdateUserAsync(PersonUpdateDto personUpdateDto);
 
     Task<IEnumerable<PersonCompleteDto>> GetAllUsersAsync();
+    
+    Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsersAsync();
 
     Task<PersonCompleteDto> GetPersonById(int personId);
 

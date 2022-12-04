@@ -2,8 +2,14 @@
 @using WitcherProject.BL.Services.Interfaces
 @using Mapster;
 @using WitcherProject.BL.DTOs.Contract
+@using WitcherProject.BL.DTOs.Contractor
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.BL.Services.Implementations
+@using WitcherProject.Shared.Enums
 
 @inject IContractService ContractService
+@inject IContractorService ContractorService
+@inject IPersonService PersonService
 
 <h3>Contracts</h3>
 
@@ -15,6 +21,74 @@
 }
 else
 {
+    <div class="row align-items-center justify-content-center">
+        <EditForm Model=@filter OnValidSubmit="Filter">
+            <div class="row g-3">
+                <div class="col-auto">
+                    <label class="form-label">
+                        Login:
+                        <InputText class="form-control" @bind-Value=@filter.Name>
+                        </InputText>
+                    </label>
+                </div>
+
+                <div class="col-auto">
+                    <label class="form-label">
+                        State:
+                        <InputSelect class="form-control" @bind-Value=@filter.State>
+                             <option value="">All</option>
+                            @foreach (var state in Enum.GetNames(typeof(ContractState)))
+                            {
+                                <option value=@state>@state</option>
+                            }
+                        </InputSelect>
+                    </label>
+                </div>
+
+                <div class="col-auto">
+                    <label class="form-label">
+                        Deadline:
+                        <InputDate class="form-control col" @bind-Value=@filter.Deadline>
+                        </InputDate>
+                    </label>
+                </div>
+
+                <div class="col-auto">
+                    <label class="form-label">
+                        Assigned person:
+                        <InputSelect class="form-control col" @bind-Value=@filter.PersonId>
+                             <option value="">All</option>
+                            @foreach (var person in allPersons)
+                            {
+                                <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
+                            }
+                        </InputSelect>
+                    </label>
+                </div>
+
+                <div class="col-auto">
+                    <label class="form-label">
+                        Contractor:
+                        <InputSelect class="form-control col" @bind-Value=@filter.ContractorId>
+                                <option value="">All</option>
+                            @foreach (var contractor in allContractors)
+                            {
+                                <option value=@contractor.Id>@(contractor.Name + " " + contractor.Surname)</option>
+                            }
+                        </InputSelect>
+                    </label>
+                </div>
+
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit">Filter</button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit" @onclick=Reset>Reset</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+
     <table class="table">
         <thead>
         <tr>
@@ -47,10 +121,13 @@ else
                             <i class="bi bi-eye" title="Details"></i>
                         </button>
                         <button class="btn btn-outline-primary rounded-circle">
+                            <i class="bi bi-envelope" title="Send request"></i>
+                        </button>
+                        <button class="btn btn-outline-primary rounded-circle">
                             <i class="bi bi-pencil" title="Edit"></i>
                         </button>
                         <button class="btn btn-outline-primary rounded-circle">
-                            <i class="bi bi-dash" title="Delete"></i>
+                            <i class="bi bi-x" title="Delete"></i>
                         </button>
                     </div>
                 </td>
@@ -62,8 +139,23 @@ else
 
 @code {
     private IEnumerable<ContractDetailedDto> contracts;
+    private IEnumerable<PersonSimpleDto> allPersons;
+    private IEnumerable<ContractorDto> allContractors;
+    private ContractFilterDto filter = new ContractFilterDto();
 
     protected override async Task OnInitializedAsync()
+    {
+        contracts = await ContractService.GetAllContractsAsync();
+        allPersons = await PersonService.GetAllSimpleUsersAsync();
+        allContractors = await ContractorService.GetAllContractorsAsync();
+    }
+
+    private async Task Filter()
+    {
+        contracts = await ContractService.GetContractsFilteredAsync(filter);
+    }
+
+    private async Task Reset()
     {
         contracts = await ContractService.GetAllContractsAsync();
     }

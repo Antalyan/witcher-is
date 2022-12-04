@@ -44,6 +44,12 @@ public class PersonService : IPersonService
         var returnedPersons = await _personUow.PersonRepository.GetAll();
         return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
     }
+    
+    public async Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsersAsync()
+    {
+        var returnedPersons = await _personUow.PersonRepository.GetAll();
+        return returnedPersons.Select(person => person.Adapt<PersonSimpleDto>());
+    }
 
     public async Task<PersonCompleteDto> GetPersonById(int personId)
     {
