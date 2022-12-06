@@ -1,0 +1,131 @@
+﻿@page "/AdminPage"
+
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.IdentityModel.Tokens
+@using NuGet.Versioning
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.DAL.Models
+@using WitcherProject.PresentationLayer.Model
+@using WitcherProject.Shared.Enums
+<h3>AdminPage</h3>
+
+@inject RoleManager<IdentityRole<int>> _roleManager
+@inject IPersonService PersonService
+@inject UserManager<Person> _userManager
+
+@if (roles.IsNullOrEmpty() || users.IsNullOrEmpty())
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var role in roles)
+        {
+            <tr>
+                <td>@role.Id.</td>
+                <td>@role.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <EditForm OnValidSubmit="OnRoleSubmit" Model="createRole">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <label class="form-label col-sm-10 col-md-4">
+            Role name: <InputText class="form-control" @bind-Value="@createRole.Name" DisplayName="Role name"></InputText>
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+    </EditForm>
+
+@foreach (var role in roles)
+{
+    <h3>@role.Name</h3>
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>UserName</th>
+            <th>Name</th>
+            <th>Surname</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in users[role.Name])
+        {
+            <tr>
+                <td>@user.Id.</td>
+                <td>@user.UserName</td>
+                <td>@user.Name</td>
+                <td>@user.Surname</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+}
+
+    <EditForm OnValidSubmit="OnRoleUserSubmit" Model="roleUserModel">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <label class="form-label col-sm-10 col-md-4">
+            User name: <InputText class="form-control" @bind-Value="@roleUserModel.UserName" DisplayName="User name"></InputText>
+        </label>
+        <label class="form-label col-sm-10 col-md-4">
+            Role name: <InputText class="form-control" @bind-Value="@roleUserModel.RoleName" DisplayName="Role name"></InputText>
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+    </EditForm>
+}
+
+@code {
+
+    private List<IdentityRole<int>> roles;
+
+    private Dictionary<string, IList<Person>> users = new Dictionary<string, IList<Person>>();
+
+    private IdentityRole<int> createRole = new ();
+
+    private RoleUserModel roleUserModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = _roleManager.Roles.ToList();
+
+        foreach (var role in roles)
+        {
+            var result =  await _userManager.GetUsersInRoleAsync(role.Name);
+            users.Add(role.Name, result);
+        }
+
+    }
+
+    private async Task OnRoleSubmit()
+    {
+        await _roleManager.CreateAsync(createRole);
+        createRole = new IdentityRole<int>();
+        roles = _roleManager.Roles.ToList();
+    }
+    
+    private async Task OnRoleUserSubmit()
+    {
+        var user = await _userManager.FindByNameAsync(roleUserModel.UserName);
+        await _userManager.AddToRoleAsync(user, roleUserModel.RoleName);
+    }
+
+}
