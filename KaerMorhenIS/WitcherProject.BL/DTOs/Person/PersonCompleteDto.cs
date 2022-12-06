@@ -1,13 +1,11 @@
-﻿using WitcherProject.BL.DTOs.Contract;
+﻿using Microsoft.AspNetCore.Identity;
+using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.DTOs.ContractRequest;
 
 namespace WitcherProject.BL.DTOs.Person;
 
-public class PersonCompleteDto
+public class PersonCompleteDto : IdentityUser<int>
 {
-    public int Id { get; set; }
-    public string Login { get; set; }
-    public string PasswordHash { get; set; }
     public string Name { get; set; }
     public string? Surname { get; set; }
     public string? Cv { get; set; }
@@ -19,7 +17,7 @@ public class PersonCompleteDto
 
     protected bool Equals(PersonCompleteDto other)
     {
-        var simpleArgsEqual = Id == other.Id && Login == other.Login && PasswordHash == other.PasswordHash &&
+        var simpleArgsEqual = Id == other.Id && PasswordHash == other.PasswordHash &&
                      Name == other.Name && Surname == other.Surname &&
                      Cv == other.Cv && Birthdate.Equals(other.Birthdate) && IsActive == other.IsActive;
         var contractsEqual = Contracts is null ? other.Contracts is null : Contracts.SequenceEqual(other.Contracts);
@@ -44,7 +42,6 @@ public class PersonCompleteDto
     {
         var hashCode = new HashCode();
         hashCode.Add(Id);
-        hashCode.Add(Login);
         hashCode.Add(PasswordHash);
         hashCode.Add(Name);
         hashCode.Add(Surname);

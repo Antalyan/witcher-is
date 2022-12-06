@@ -43,7 +43,7 @@ public static class BlTestDataInitalizator
                     Birthdate = new DateTime(1336, 12, 12),
                     Cv = "White wolf, butcherOfBlaviken",
                     IsActive = true,
-                    Login = "whitewolf",
+                    UserName = "whitewolf",
                     Name = "Geralt",
                     Surname = "of Rivia"
                 };
@@ -53,8 +53,8 @@ public static class BlTestDataInitalizator
                     Id = 2,
                     Birthdate = new DateTime(1356, 02, 05),
                     Cv = "what a prick",
-                    IsActive = true,
-                    Login = "jobForVesemir",
+                    IsActive = true, 
+                    UserName= "jobForVesemir",
                     Name = "Lambert"
                 };
 
@@ -156,7 +156,7 @@ public static class BlTestDataInitalizator
                     Birthdate = new DateTime(1336, 12, 12),
                     Cv = "White wolf, butcherOfBlaviken",
                     IsActive = true,
-                    Login = "whitewolf",
+                    UserName = "whitewolf",
                     Name = "Geralt",
                     Surname = "of Rivia",
                     Contracts = new List<ContractSimpleDto> { GetContractSimpleDto("The Beast of Honorton") }
@@ -169,7 +169,7 @@ public static class BlTestDataInitalizator
                     Birthdate = new DateTime(1356, 02, 05),
                     Cv = "what a prick",
                     IsActive = true,
-                    Login = "jobForVesemir",
+                    UserName = "jobForVesemir",
                     Name = "Lambert"
                 };
 

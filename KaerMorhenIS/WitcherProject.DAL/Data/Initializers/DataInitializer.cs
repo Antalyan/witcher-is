@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL.Models;
 using WitcherProject.Shared.Enums;
 
@@ -14,11 +16,13 @@ public static class DbInitializer
             Name = "Geralt",
             Surname = "ofRivia",
             Cv = "ButcherofBlaviken",
-            Login = "wolf",
-            PasswordHash = "1111",
+            UserName = "wolf",
             IsActive = true,
-            Birthdate = DateTime.Now
+            Birthdate = DateTime.Now,
+            
         };
+
+        geralt.PasswordHash = new PasswordHasher<Person>().HashPassword(geralt, "GeraltOfRevia123");
         var odolan = new Contractor() { Id = 1, Name = "Odolan", Surname = "White" };
         var noonWraithContract = new Contract()
         {
@@ -34,8 +38,7 @@ public static class DbInitializer
             Person = null
         };
 
-        var masterRole = new Role { Id = 1, RoleName = "Master" };
-
+        var masterRole = new IdentityRole<int>() { Id = 1, Name = "Master" };
 
         modelBuilder.Entity<Person>()
             .HasData(geralt);
@@ -46,12 +49,9 @@ public static class DbInitializer
         modelBuilder.Entity<Contract>()
             .HasData(noonWraithContract);
 
-        modelBuilder.Entity<Role>()
+        modelBuilder.Entity<IdentityRole<int>>()
             .HasData(masterRole);
-
-        modelBuilder.Entity<RoleToPerson>()
-            .HasData(new RoleToPerson { Id = 1, RoleId = masterRole.Id, PersonId = geralt.Id });
-
+        
         modelBuilder.Entity<ContractRequest>()
             .HasData(new ContractRequest
             {

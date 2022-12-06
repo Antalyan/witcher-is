@@ -1,9 +1,14 @@
 ﻿@page "/PersonalInfo"
+@attribute [Authorize]
 @using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.BL.DTOs.Person
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @using Mapster;
+@using Microsoft.AspNetCore.Identity
+@using WitcherProject.DAL.Models
 
 @inject IPersonService PersonService
+@inject UserManager<Person> _userManager
 
 <h3>PersonalInfo</h3>
 
@@ -31,7 +36,7 @@ else
 
         <div>
             <label class="form-label col-sm-10 col-md-4">
-                Login: <InputText class="form-control" @bind-Value="@person.Login" DisplayName="login" disabled></InputText>
+                Login: <InputText class="form-control" @bind-Value="@person.UserName" DisplayName="login" disabled></InputText>
             </label>
         </div>
         <div>
@@ -64,7 +69,10 @@ else
     protected override async Task OnInitializedAsync()
     {
     //TODO: replace by real id of logged in person
-        person = await PersonService.GetPersonById(1);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authUser = authState.User.Identity.Name;
+        var person_Dal = await _userManager.FindByNameAsync(authUser);
+        person = person_Dal.Adapt<PersonCompleteDto>();
     }
 
     private async Task UpdatePersonalData()

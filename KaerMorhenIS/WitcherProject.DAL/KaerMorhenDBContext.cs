@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL.Data.Initializers;
 using WitcherProject.DAL.Models;
 
 namespace WitcherProject.DAL;
 
-public class KaerMorhenDBContext : DbContext
+public class KaerMorhenDBContext : IdentityDbContext<Person, IdentityRole<int>, int>
 {
     public DbSet<Person> Persons { get; set; }
     public DbSet<Contract> Contracts { get; set; }

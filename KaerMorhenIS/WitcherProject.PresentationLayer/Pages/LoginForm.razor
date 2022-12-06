@@ -1,0 +1,63 @@
+﻿@page "/login"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Identity
+@using WitcherProject.DAL.Models
+@using WitcherProject.PresentationLayer.Model
+
+
+@inject SignInManager<Person> _signInManager
+@inject UserManager<Person> _userManager
+@inject NavigationManager _navigationManager
+
+
+<EditForm OnValidSubmit="OnSubmit" Model="@loginModel">
+    <DataAnnotationsValidator/>
+            <ValidationSummary/>
+    <label class="form-label col-sm-10 col-md-4">
+        Login: <InputText class="form-control" @bind-Value="@loginModel.UserName" DisplayName="Login"></InputText>
+    </label>
+
+    <label class="form-label col-sm-10 col-md-4">
+        Password: <InputText class="form-control" @bind-Value="@loginModel.Password" DisplayName="Password"></InputText>
+    </label>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    @if (!string.IsNullOrEmpty(loginModel.Error))
+    {
+        <div class="alert alert-danger mt-2 mb-2" role="alert">
+            @loginModel.Error
+        </div>
+    }
+</EditForm>
+@code {
+
+
+    private LoginModel loginModel = new();
+    
+
+    private async Task OnSubmit()
+    {
+        // LamberLambert152_
+        loginModel.Error = null;
+        var userInDatabase = await _userManager.FindByNameAsync(loginModel.UserName);
+        if (userInDatabase is null)
+        {
+            loginModel.Error = "Username does not exist";
+        }
+        else
+        {
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(userInDatabase, loginModel.Password, false);
+            if (signInResult.Succeeded)
+            {
+                var key = BlazorCookieLoginMiddleware<Person>.AnnounceLogin(loginModel);
+                _navigationManager.NavigateTo($"/login?key={key}", true);
+            }
+            else
+            {
+                loginModel.Error = "Password or username does not match";
+            }
+
+            _navigationManager.NavigateTo("/");
+        }
+    }
+}
