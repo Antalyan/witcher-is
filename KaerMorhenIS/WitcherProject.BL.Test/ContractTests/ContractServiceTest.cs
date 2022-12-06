@@ -1,14 +1,11 @@
 ﻿using Mapster;
 using Moq;
 using WitcherProject.BL.DTOs.Contract;
-using WitcherProject.BL.DTOs.Contractor;
-using WitcherProject.BL.DTOs.Person;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Implementations;
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Shared.Enums;
 using Xunit;
@@ -92,7 +89,7 @@ public class ContractServiceTest
             Location = "White Orchard",
         };
 
-        var mockUoW = new UnitOfWork(new Mock<KaerMorhenDBContext>().Object);
+        var mockUoW = new EFUnitOfWork(new Mock<KaerMorhenDBContext>().Object);
         mockUnitOfWorkProvider.Setup(provider => provider.CreateUow()).Returns(mockUoW);
         mockContractRepository.Setup(repo => repo.Insert(It.IsAny<Contract>()))
             .Callback(() => repositoryContracts.Add(contractAddDto.Adapt<Contract>()));
@@ -114,7 +111,7 @@ public class ContractServiceTest
         var mockContractorRepository = new Mock<IGenericRepository<Contractor>>();
         var mockContractRequestRepository = new Mock<IGenericRepository<ContractRequest>>();
 
-        var mockUoW = new UnitOfWork(new Mock<KaerMorhenDBContext>().Object);
+        var mockUoW = new EFUnitOfWork(new Mock<KaerMorhenDBContext>().Object);
         mockUnitOfWorkProvider.Setup(provider => provider.CreateUow()).Returns(mockUoW);
         mockContractRepository.Setup(repo => repo.Update(It.IsAny<Contract>()))
             .Verifiable();
@@ -150,7 +147,7 @@ public class ContractServiceTest
 
         var contractForDelete = _jennyOTheWoods;
 
-        var mockUoW = new UnitOfWork(new Mock<KaerMorhenDBContext>().Object);
+        var mockUoW = new EFUnitOfWork(new Mock<KaerMorhenDBContext>().Object);
         mockUnitOfWorkProvider.Setup(provider => provider.CreateUow()).Returns(mockUoW);
         mockContractRepository.Setup(repo => repo.Delete(_jennyOTheWoods.Id))
             .Callback(() => contractForDelete = null);

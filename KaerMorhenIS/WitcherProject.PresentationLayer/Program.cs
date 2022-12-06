@@ -3,10 +3,8 @@ using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Implementations;
 using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.DAL;
-using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Query;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Infrastructure.Query;
 
@@ -26,10 +24,6 @@ builder.Services.AddTransient<IContractRequestQueryObject, ContractRequestQueryO
 builder.Services.AddTransient<IContractQueryObject, ContractQueryObject>();
 
 builder.Services.AddScoped<IUnitOfWorkProvider, EFUnitOfWorkProvider>();
-
-// builder.Services.AddScoped<IUnitOfWorkAuthentication, UnitOfWorkAuthentication>();
-// builder.Services.AddScoped<IUnitOfWorkContracts, UnitOfWorkContracts>();
-// builder.Services.AddScoped<IUnitOfWorkPersonalData, UnitOfWorkPersonalData>();
 
 builder.Services.AddTransient<IContractorService, ContractorService>();
 builder.Services.AddTransient<IContractService, ContractService>();

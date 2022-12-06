@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WitcherProject.DAL;
+﻿using WitcherProject.DAL;
 
 namespace WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 
-public class UnitOfWork: IUnitOfWork
+public class EFUnitOfWork: IUnitOfWork
 {
     public KaerMorhenDBContext Context { get; }
-    public UnitOfWork(KaerMorhenDBContext context)
+    public EFUnitOfWork(KaerMorhenDBContext context)
     {
         Context = context;
     }

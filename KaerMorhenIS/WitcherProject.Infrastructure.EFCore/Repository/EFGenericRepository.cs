@@ -17,7 +17,7 @@ public class EFGenericRepository<TEntity>: IGenericRepository<TEntity> where TEn
 
     private void InitUow()
     {
-        var uow = (UnitOfWorkProvider.UnitOfWork) _provider.GetUow();
+        var uow = (UnitOfWorkProvider.EFUnitOfWork) _provider.GetUow();
         _context = uow.Context;
         _dbSet = _context.Set<TEntity>();
     }

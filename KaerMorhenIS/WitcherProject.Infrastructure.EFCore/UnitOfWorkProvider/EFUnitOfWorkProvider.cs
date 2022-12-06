@@ -2,7 +2,6 @@
 using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 
 namespace WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 
@@ -15,12 +14,12 @@ public class EFUnitOfWorkProvider: IUnitOfWorkProvider
     }
     
     private KaerMorhenDBContext? _context;
-    private UnitOfWork _uow;
+    private EFUnitOfWork _uow;
     
     public IUnitOfWork CreateUow()
     {
         _context = _factory.CreateDbContext();
-        _uow = new UnitOfWork(_context);
+        _uow = new EFUnitOfWork(_context);
         return _uow;
     }
     
