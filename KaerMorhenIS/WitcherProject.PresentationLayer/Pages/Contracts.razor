@@ -168,7 +168,7 @@ else
     private IEnumerable<ContractorDto> allContractors;
     private ContractFilterDto filter;
 
-    private async void SetPageNumber(int number)
+    private async Task SetPageNumber(int number)
     {
         filter.RequestedPageNumber = number;
         contracts = await ContractService.GetContractsFilteredAsync(filter);
@@ -179,7 +179,6 @@ else
         if (filter.RequestedPageNumber > 1)
         {
             filter.RequestedPageNumber--;
-            filter.RequestedPageNumber = filter.RequestedPageNumber;
             contracts = await ContractService.GetContractsFilteredAsync(filter);
         }
     }
@@ -187,7 +186,6 @@ else
     private async Task Next()
     {
         filter.RequestedPageNumber++;
-        filter.RequestedPageNumber = filter.RequestedPageNumber;
         contracts = await ContractService.GetContractsFilteredAsync(filter);
     }
 
@@ -208,7 +206,8 @@ else
 
     private async Task Reset()
     {
-        contracts = await ContractService.GetAllContractsAsync();
+        filter = new ContractFilterDto {RequestedPageNumber = 1};
+        contracts = await ContractService.GetContractsFilteredAsync(filter);
     }
 
 }
