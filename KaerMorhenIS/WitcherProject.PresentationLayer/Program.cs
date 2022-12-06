@@ -7,6 +7,7 @@ using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Query;
 using WitcherProject.Infrastructure.EFCore.Repository;
 using WitcherProject.Infrastructure.EFCore.UnitOfWork;
+using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Infrastructure.Query;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,20 +15,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddDbContext<KaerMorhenDBContext>((options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")).UseLazyLoadingProxies()));
+// builder.Services.AddDbContext<KaerMorhenDBContext>((options =>
+//     options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")).UseLazyLoadingProxies()),   
+//     ServiceLifetime.Transient);
+builder.Services.AddDbContextFactory<KaerMorhenDBContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")));
 
 builder.Services.AddTransient(typeof(IQuery<>), typeof(EFQuery<>));
-builder.Services.AddScoped<IContractRequestQueryObject, ContractRequestQueryObject>();
-builder.Services.AddScoped<IContractQueryObject, ContractQueryObject>();
+builder.Services.AddTransient<IContractRequestQueryObject, ContractRequestQueryObject>();
+builder.Services.AddTransient<IContractQueryObject, ContractQueryObject>();
 
-builder.Services.AddScoped<IUnitOfWorkAuthentication, UnitOfWorkAuthentication>();
-builder.Services.AddScoped<IUnitOfWorkContracts, UnitOfWorkContracts>();
-builder.Services.AddScoped<IUnitOfWorkPersonalData, UnitOfWorkPersonalData>();
+builder.Services.AddScoped<IUnitOfWorkProvider, EFUnitOfWorkProvider>();
+
+// builder.Services.AddScoped<IUnitOfWorkAuthentication, UnitOfWorkAuthentication>();
+// builder.Services.AddScoped<IUnitOfWorkContracts, UnitOfWorkContracts>();
+// builder.Services.AddScoped<IUnitOfWorkPersonalData, UnitOfWorkPersonalData>();
 
 builder.Services.AddScoped<IContractorService, ContractorService>();
 builder.Services.AddScoped<IContractService, ContractService>();
-builder.Services.AddScoped<IContractRequestService, ContractRequestService>();
+// builder.Services.AddScoped<IContractRequestService, ContractRequestService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(EFGenericRepository<>));

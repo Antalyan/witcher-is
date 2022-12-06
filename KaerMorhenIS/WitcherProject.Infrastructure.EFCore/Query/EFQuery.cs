@@ -1,18 +1,19 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL;
+using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Infrastructure.Query;
 
 namespace WitcherProject.Infrastructure.EFCore.Query;
 
 public class EFQuery<TEntity>: IQuery<TEntity> where TEntity: class
 {
-    private readonly KaerMorhenDBContext _context;
+    private KaerMorhenDBContext _context;
     private IQueryable<TEntity> _query;
 
-    public EFQuery(KaerMorhenDBContext dbContext)
+    public EFQuery(IDbContextFactory<KaerMorhenDBContext> contextFactory)
     {
-        _context = dbContext;
+        _context = contextFactory.CreateDbContext();
         _query = _context.Set<TEntity>().AsQueryable();
     }
 
