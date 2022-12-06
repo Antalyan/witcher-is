@@ -31,10 +31,10 @@ builder.Services.AddScoped<IUnitOfWorkProvider, EFUnitOfWorkProvider>();
 // builder.Services.AddScoped<IUnitOfWorkContracts, UnitOfWorkContracts>();
 // builder.Services.AddScoped<IUnitOfWorkPersonalData, UnitOfWorkPersonalData>();
 
-builder.Services.AddScoped<IContractorService, ContractorService>();
-builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddTransient<IContractorService, ContractorService>();
+builder.Services.AddTransient<IContractService, ContractService>();
 // builder.Services.AddScoped<IContractRequestService, ContractRequestService>();
-builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddTransient<IPersonService, PersonService>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(EFGenericRepository<>));
 
