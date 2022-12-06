@@ -2,13 +2,10 @@
 using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Interfaces;
-using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Shared.Enums;
-using Contract = WitcherProject.DAL.Models.Contract;
 
 namespace WitcherProject.BL.Services.Implementations;
 
@@ -22,9 +19,7 @@ public class ContractService : IContractService
 
     public ContractService(IUnitOfWorkProvider unitOfWorkProvider,
         IContractQueryObject contractQueryObject,
-        IGenericRepository<Contract> contractRepository,
-        IGenericRepository<Contractor> contractorRepository,
-        IGenericRepository<ContractRequest> contractRequestRepository)
+        IGenericRepository<Contract> contractRepository)
     {
         _unitOfWorkProvider = unitOfWorkProvider;
         _contractQueryObject = contractQueryObject;
@@ -48,20 +43,17 @@ public class ContractService : IContractService
 
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         return await _contractQueryObject.ExecuteQuery(contractFilterDto);
     }
 
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState state, int? pageNumber)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         return await _contractQueryObject.ExecuteQuery(new ContractFilterDto
             { State = state, SortCriteria = "StartDate", SortAscending = false, RequestedPageNumber = pageNumber });
     }
 
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         return await _contractQueryObject.ExecuteQuery(new ContractFilterDto
         {
             PersonId = personId, SortCriteria = "StartDate", SortAscending = false, RequestedPageNumber = pageNumber

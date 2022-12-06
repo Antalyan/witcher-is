@@ -1,11 +1,8 @@
 ﻿using Mapster;
-using WitcherProject.BL.DTOs;
 using WitcherProject.BL.DTOs.Person;
 using WitcherProject.BL.Services.Interfaces;
-using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 
 namespace WitcherProject.BL.Services.Implementations;

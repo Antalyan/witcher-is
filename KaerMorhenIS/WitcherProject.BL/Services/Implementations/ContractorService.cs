@@ -1,10 +1,8 @@
 ﻿using Mapster;
 using WitcherProject.BL.DTOs.Contractor;
 using WitcherProject.BL.Services.Interfaces;
-using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Repository;
-using WitcherProject.Infrastructure.EFCore.UnitOfWork;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 
 namespace WitcherProject.BL.Services.Implementations;
@@ -13,19 +11,13 @@ public class ContractorService: IContractorService
 {
     private readonly IUnitOfWorkProvider _unitOfWorkProvider;
     
-    private readonly IGenericRepository<Contract> _contractRepository;
     private readonly IGenericRepository<Contractor> _contractorRepository;
-    private readonly IGenericRepository<ContractRequest> _contractRequestRepository;
 
     public ContractorService(IUnitOfWorkProvider unitOfWorkProvider,
-        IGenericRepository<Contract> contractRepository, 
-        IGenericRepository<Contractor> contractorRepository,
-        IGenericRepository<ContractRequest> contractRequestRepository)
+        IGenericRepository<Contractor> contractorRepository)
     {
         _unitOfWorkProvider = unitOfWorkProvider;
-        _contractRepository = contractRepository;
         _contractorRepository = contractorRepository;
-        _contractRequestRepository = contractRequestRepository;
     }
     
     public async Task CreateContractorAsync(ContractorDto contractDto)
