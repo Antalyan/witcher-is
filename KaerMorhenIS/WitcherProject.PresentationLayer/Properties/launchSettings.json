@@ -12,13 +12,11 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7130",
+      "applicationUrl": "https://localhost:7131;https://localhost:7132",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "jsWebView2Debugging": true,
-      "hotReloadEnabled": true,
-      "hotReloadProfile": "aspnetcore"
+      "jsWebView2Debugging": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -26,11 +24,6 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
-    },
-    "Watch": {
-      "commandName": "Executable",
-      "executablePath": "dotnet.exe",
-      "commandLineArgs": "watch run debug --launch-profile Debug"
     }
   }
 }

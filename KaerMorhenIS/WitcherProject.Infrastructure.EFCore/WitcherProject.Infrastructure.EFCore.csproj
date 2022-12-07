@@ -13,9 +13,4 @@
     <ItemGroup>
       <ProjectReference Include="..\WitcherProject.DAL\WitcherProject.DAL.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.10" />
-    </ItemGroup>
-
 </Project>

@@ -19,7 +19,7 @@ public class ContractQueryObject: IContractQueryObject
 
     public async Task<IEnumerable<ContractDetailedDto>> ExecuteQuery(ContractFilterDto filter)
     {
-        _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Name) || contract.Name == filter.Name);
+        _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Name) || contract.Name.Contains(filter.Name));
         _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Description) || contract.Description == filter.Description);
         _contractQuery.Filter(contract => filter.State == null || contract.State == filter.State);
         _contractQuery.Filter(contract => filter.StartDate == null || contract.StartDate == filter.StartDate);

@@ -1,44 +1,50 @@
 ﻿using Mapster;
-using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.DTOs.ContractRequest;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Interfaces;
-using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
-using WitcherProject.Infrastructure.EFCore.UnitOfWork;
+using WitcherProject.Infrastructure.EFCore.Repository;
+using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.Services.Implementations;
 
 public class ContractRequestService : IContractRequestService
 {
-    private readonly IUnitOfWorkContracts _contractsUow;
+    private readonly IUnitOfWorkProvider _unitOfWorkProvider;
+    
     private readonly IContractRequestQueryObject _contractRequestQueryObject;
-
-
-    public ContractRequestService(IUnitOfWorkContracts contractsUow, IContractRequestQueryObject contractRequestQueryObject)
+    
+    private readonly IGenericRepository<ContractRequest> _contractRequestRepository;
+    
+    public ContractRequestService(IUnitOfWorkProvider unitOfWorkProvider,
+        IContractRequestQueryObject contractRequestQueryObject,
+        IGenericRepository<ContractRequest> contractRequestRepository)
     {
-        _contractsUow = contractsUow;
+        _unitOfWorkProvider = unitOfWorkProvider;
         _contractRequestQueryObject = contractRequestQueryObject;
+        _contractRequestRepository = contractRequestRepository;
     }
-
     public async Task CreateContractRequestAsync(ContractRequestAddDto contractRequestAddDto)
     {
+        await using var uow = _unitOfWorkProvider.CreateUow();
         var requestToInsert = contractRequestAddDto.Adapt<ContractRequest>();
         requestToInsert.CreatedOn = DateTime.Now;
-        await _contractsUow.ContractRequestRepository.Insert(requestToInsert);
-        await _contractsUow.CommitAsync();
+        await _contractRequestRepository.Insert(requestToInsert);
+        await uow.CommitAsync();
     }
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetAllContractRequestsAsync()
     {
-        var returnedRequests = await _contractsUow.ContractRequestRepository.GetAll();
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        var returnedRequests = await _contractRequestRepository.GetAll();
         return returnedRequests.Select(request => request.Adapt<ContractRequestDetailedDto>());
     }
 
     public async Task<ContractRequestDetailedDto> GetContractRequestByIdAsync(int requestId)
     {
-        var returnedRequests = await _contractsUow.ContractRequestRepository.GetById(requestId);
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        var returnedRequests = await _contractRequestRepository.GetById(requestId);
         return returnedRequests.Adapt<ContractRequestDetailedDto>();
     }
 
@@ -56,13 +62,15 @@ public class ContractRequestService : IContractRequestService
 
     public async Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto)
     {
-        _contractsUow.ContractRequestRepository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
-        await _contractsUow.CommitAsync();
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        _contractRequestRepository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
+        await uow.CommitAsync();
     }
 
     public async Task DeleteContractRequestAsync(int requestId)
     {
-        await _contractsUow.ContractRequestRepository.Delete(requestId);
-        await _contractsUow.CommitAsync();
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        await _contractRequestRepository.Delete(requestId);
+        await uow.CommitAsync();
     }
 }

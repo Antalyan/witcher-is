@@ -21,12 +21,12 @@
 }
 else
 {
-    <div class="row align-items-center justify-content-center">
+    <div>
         <EditForm Model=@filter OnValidSubmit="Filter">
             <div class="row g-3">
                 <div class="col-auto">
                     <label class="form-label">
-                        Login:
+                        Name:
                         <InputText class="form-control" @bind-Value=@filter.Name>
                         </InputText>
                     </label>
@@ -36,7 +36,7 @@ else
                     <label class="form-label">
                         State:
                         <InputSelect class="form-control" @bind-Value=@filter.State>
-                             <option value="">All</option>
+                            <option value="">All</option>
                             @foreach (var state in Enum.GetNames(typeof(ContractState)))
                             {
                                 <option value=@state>@state</option>
@@ -57,7 +57,7 @@ else
                     <label class="form-label">
                         Assigned person:
                         <InputSelect class="form-control col" @bind-Value=@filter.PersonId>
-                             <option value="">All</option>
+                            <option value="">All</option>
                             @foreach (var person in allPersons)
                             {
                                 <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
@@ -70,7 +70,7 @@ else
                     <label class="form-label">
                         Contractor:
                         <InputSelect class="form-control col" @bind-Value=@filter.ContractorId>
-                                <option value="">All</option>
+                            <option value="">All</option>
                             @foreach (var contractor in allContractors)
                             {
                                 <option value=@contractor.Id>@(contractor.Name + " " + contractor.Surname)</option>
@@ -135,17 +135,66 @@ else
         }
         </tbody>
     </table>
+    <nav class="d-flex justify-content-end" aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item page-pre" @onclick="Previous">
+                <a class="page-link" href="javascript:void(0)">Previous</a>
+            </li>
+            <li class="page-item @IsActive(1)" @onclick="() => SetPageNumber(1)">
+                <a class="page-link" href="javascript:void(0)">1</a>
+            </li>
+            <li class="page-item @IsActive(2)" @onclick="() => SetPageNumber(2)">
+                <a class="page-link" href="javascript:void(0)">2</a>
+            </li>
+            @if (filter.RequestedPageNumber > 2)
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0)">...</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" href="javascript:void(0)">@filter.RequestedPageNumber</a>
+                </li>
+            }
+            <li class="page-item" @onclick="Next">
+                <a class="page-link" href="javascript:void(0)">Next</a>
+            </li>
+        </ul>
+    </nav>
 }
 
 @code {
     private IEnumerable<ContractDetailedDto> contracts;
     private IEnumerable<PersonSimpleDto> allPersons;
     private IEnumerable<ContractorDto> allContractors;
-    private ContractFilterDto filter = new ContractFilterDto();
+    private ContractFilterDto filter;
+
+    private async Task SetPageNumber(int number)
+    {
+        filter.RequestedPageNumber = number;
+        contracts = await ContractService.GetContractsFilteredAsync(filter);
+    }
+
+    private async Task Previous()
+    {
+        if (filter.RequestedPageNumber > 1)
+        {
+            filter.RequestedPageNumber--;
+            contracts = await ContractService.GetContractsFilteredAsync(filter);
+        }
+    }
+
+    private async Task Next()
+    {
+        filter.RequestedPageNumber++;
+        contracts = await ContractService.GetContractsFilteredAsync(filter);
+    }
+
+    private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "";
 
     protected override async Task OnInitializedAsync()
     {
-        contracts = await ContractService.GetAllContractsAsync();
+        filter = new ContractFilterDto { RequestedPageNumber = 1 };
+        contracts = await ContractService.GetContractsFilteredAsync(filter);
         allPersons = await PersonService.GetAllSimpleUsersAsync();
         allContractors = await ContractorService.GetAllContractorsAsync();
     }
@@ -157,7 +206,8 @@ else
 
     private async Task Reset()
     {
-        contracts = await ContractService.GetAllContractsAsync();
+        filter = new ContractFilterDto {RequestedPageNumber = 1};
+        contracts = await ContractService.GetContractsFilteredAsync(filter);
     }
 
 }
