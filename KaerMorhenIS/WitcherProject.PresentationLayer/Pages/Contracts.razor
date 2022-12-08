@@ -1,10 +1,10 @@
 ﻿@page "/Contracts"
+@attribute [Authorize(Roles = RoleNames.Witcher)]
 @using WitcherProject.BL.Services.Interfaces
-@using Mapster;
 @using WitcherProject.BL.DTOs.Contract
 @using WitcherProject.BL.DTOs.Contractor
 @using WitcherProject.BL.DTOs.Person
-@using WitcherProject.BL.Services.Implementations
+@using WitcherProject.Shared
 @using WitcherProject.Shared.Enums
 
 @inject IContractService ContractService

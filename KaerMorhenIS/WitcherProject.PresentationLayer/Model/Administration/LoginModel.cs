@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace WitcherProject.PresentationLayer.Model
+namespace WitcherProject.PresentationLayer.Model.Administration
 {
     public class LoginModel 
     {

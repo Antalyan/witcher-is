@@ -38,8 +38,10 @@ public static class DbInitializer
             Person = null
         };
 
-        var masterRole = new IdentityRole<int>() { Id = 1, Name = "Master" };
+        var userManager = new Role() { Id = 1, Name = "UserManager" };
 
+        
+       
         modelBuilder.Entity<Person>()
             .HasData(geralt);
 
@@ -49,8 +51,15 @@ public static class DbInitializer
         modelBuilder.Entity<Contract>()
             .HasData(noonWraithContract);
 
-        modelBuilder.Entity<IdentityRole<int>>()
-            .HasData(masterRole);
+        modelBuilder.Entity<Role>()
+            .HasData(userManager);
+
+        modelBuilder.Entity<UserRole>()
+            .HasData(new UserRole()
+            {
+                RoleId = userManager.Id,
+                UserId = geralt.Id
+            });
         
         modelBuilder.Entity<ContractRequest>()
             .HasData(new ContractRequest

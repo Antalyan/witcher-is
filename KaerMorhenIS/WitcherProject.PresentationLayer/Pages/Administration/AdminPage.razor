@@ -1,0 +1,157 @@
+﻿@page "/AdminPage"
+@attribute [Authorize(Roles = RoleNames.UserManager + "," + RoleNames.Admin)] 
+
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.IdentityModel.Tokens
+@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.DAL.Models
+@using WitcherProject.PresentationLayer.Model
+@using WitcherProject.PresentationLayer.Model.Administration
+@using WitcherProject.Shared
+@using Microsoft.AspNetCore.Components
+
+@inject RoleManager<Role> _roleManager
+@inject IPersonService PersonService
+@inject UserManager<Person> _userManager
+
+@if (roles.IsNullOrEmpty() || userWithRoles.IsNullOrEmpty())
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <h3>Users</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>UserName</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>IsActive</th>
+            <th>Roles</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in userWithRoles)
+        {
+            <tr>
+                <td>@user.Id.</td>
+                <td>@user.UserName</td>
+                <td>@user.Name</td>
+                <td>@user.Surname</td>
+                <td>@user.IsActive</td>
+                <td> @(!user.UserRoles.IsNullOrEmpty() ? user.UserRoles.Select(ur => ur.Role.Name).Aggregate((x, y) => x + ", " + y) : "")</td>
+
+            </tr>
+        }
+        </tbody>
+    </table>
+
+}
+
+<EditForm OnValidSubmit="OnRoleUserSubmit" Model="roleUserModel">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <label class="form-label col-sm-10 col-md-4">
+        User name: <InputText class="form-control" @bind-Value="@roleUserModel.UserName" DisplayName="User name"></InputText>
+    </label>
+    <label class="form-label col-sm-10 col-md-4">
+        Role name: <InputText class="form-control" @bind-Value="@roleUserModel.RoleName" DisplayName="Role name"></InputText>
+    </label>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+        
+    @if (!string.IsNullOrEmpty(roleUserModel.Error))
+    {
+        <div class="alert alert-danger mt-2 mb-2" role="alert">
+            @roleUserModel.Error
+        </div>
+    }
+</EditForm>
+
+<h3>Role</h3>
+
+<table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var role in roles)
+        {
+            <tr>
+                <td>@role.Id.</td>
+                <td>@role.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <EditForm OnValidSubmit="OnRoleSubmit" Model="createRole">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <label class="form-label col-sm-10 col-md-4">
+            Role name: <InputText class="form-control" @bind-Value="@createRole.Name" DisplayName="Role name"></InputText>
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+    </EditForm>
+
+
+@code {
+
+    private List<Role> roles= new ();
+
+    private List<Person> userWithRoles = new ();
+
+    private Role createRole = new ();
+
+    private RoleUserModel roleUserModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = _roleManager.Roles.ToList();
+
+        userWithRoles = await _userManager.Users
+            .Include(u => u.UserRoles)!
+            .ThenInclude(ur => ur.Role)
+            .ToListAsync();
+    }
+
+    private async Task OnRoleSubmit()
+    {
+        await _roleManager.CreateAsync(createRole);
+        createRole = new Role();
+        roles = _roleManager.Roles.ToList();
+    }
+    
+    private async Task OnRoleUserSubmit()
+    {
+        roleUserModel.Error = null;
+        var user = await _userManager.FindByNameAsync(roleUserModel.UserName);
+        if (user is null)
+        {
+            roleUserModel.Error = "Cannot find user in database";
+            return;
+        }
+        var result = await _userManager.AddToRoleAsync(user, roleUserModel.RoleName);
+        if (result.Succeeded)
+        {
+            var res_2 = _userManager.Users.Include(u => u.UserRoles)!
+                .ThenInclude(ur => ur.Role).First(u => u.Id == user.Id);
+            var index = userWithRoles.FindIndex(p => p.Id == res_2.Id);
+            userWithRoles[index] = res_2;
+        }
+        else
+        {
+            roleUserModel.Error = result.Errors.FirstOrDefault()?.Description;
+        }
+        roleUserModel = new RoleUserModel();
+    }
+
+}

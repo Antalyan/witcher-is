@@ -68,7 +68,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-    //TODO: replace by real id of logged in person
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var authUser = authState.User.Identity.Name;
         var person_Dal = await _userManager.FindByNameAsync(authUser);

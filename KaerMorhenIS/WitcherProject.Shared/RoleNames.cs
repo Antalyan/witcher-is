@@ -1,11 +1,13 @@
-﻿namespace WitcherProject.Shared.Enums;
+﻿namespace WitcherProject.Shared;
 
 public static class RoleNames
 {
-    public const string ADMIN_ROLE_NAME = "Admin";
+    public const string Admin = "Admin";
 
-    public const string MASTER_ROLE_NAME = "MASTER";
+    public const string UserManager = "UserManager";
     
-    public const string WITCHER_ROLE_NAME = "Witcher";
+    public const string Witcher = "Witcher";
+
+    public const string ContractManager = "ContractManager";
 
 }

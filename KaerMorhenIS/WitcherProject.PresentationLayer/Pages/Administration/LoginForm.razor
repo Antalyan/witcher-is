@@ -3,6 +3,8 @@
 @using Microsoft.AspNetCore.Identity
 @using WitcherProject.DAL.Models
 @using WitcherProject.PresentationLayer.Model
+@using WitcherProject.PresentationLayer.Model.Administration
+@using Microsoft.AspNetCore.Components
 
 
 @inject SignInManager<Person> _signInManager
@@ -38,6 +40,8 @@
     private async Task OnSubmit()
     {
         // LamberLambert152_
+        // OldWolf1*
+        //YoungSkell*55
         loginModel.Error = null;
         var userInDatabase = await _userManager.FindByNameAsync(loginModel.UserName);
         if (userInDatabase is null)

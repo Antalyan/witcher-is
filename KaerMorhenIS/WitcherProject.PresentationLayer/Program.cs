@@ -9,6 +9,8 @@ using WitcherProject.Infrastructure.EFCore.Query;
 using WitcherProject.Infrastructure.EFCore.Repository;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Infrastructure.Query;
+using WitcherProject.PresentationLayer.Model;
+using WitcherProject.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,8 +35,20 @@ builder.Services.AddTransient<IContractService, ContractService>();
 builder.Services.AddTransient<IPersonService, PersonService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(EFGenericRepository<>));
 
-builder.Services.AddAuthorizationCore();
-builder.Services.AddIdentity<Person, IdentityRole<int>>()
+builder.Services.AddAuthorizationCore(
+    options =>
+    {
+        options.AddPolicy(RoleNames.Witcher,
+            authBuilder => { authBuilder.RequireRole(RoleNames.Witcher); });
+        options.AddPolicy(RoleNames.UserManager,
+            authBuilder => { authBuilder.RequireRole(RoleNames.UserManager);});
+        options.AddPolicy(RoleNames.Admin,
+            authBuilder => { authBuilder.RequireRole(RoleNames.Admin);});
+        options.AddPolicy(RoleNames.ContractManager,
+            authBuilder => { authBuilder.RequireRole(RoleNames.ContractManager);});
+    });
+
+builder.Services.AddIdentity<Person, Role>()
     .AddEntityFrameworkStores<KaerMorhenDBContext>()
     .AddDefaultTokenProviders();  
 
@@ -77,6 +91,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -84,7 +99,7 @@ app.UseAuthorization();
 app.UseStaticFiles();
 
 app.UseMiddleware<BlazorCookieLoginMiddleware<Person>>();
-app.UseRouting();
+
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

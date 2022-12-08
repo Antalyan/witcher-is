@@ -13,9 +13,10 @@ public class Person : IdentityUser<int>
 
     public virtual List<Contract> Contracts { get; set; }
     
-    public virtual List<RoleToPerson> RoleToPersons { get; set; }
     
     public virtual List<ContractRequest>? ContractRequests { get; set; }
+    
+    public virtual List<UserRole>?  UserRoles { get; set; }
 
     protected bool Equals(Person other)
     {

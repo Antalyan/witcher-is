@@ -30,7 +30,7 @@ public class PersonService : IPersonService
     public async Task AssignRoleToUserAsync(RoleToPersonDto roleToPersonDto)
     {
         //TODO: update after authentication
-        var newUserRole = roleToPersonDto.Adapt<RoleToPerson>();    
+        var newUserRole = roleToPersonDto.Adapt<UserRole>();    
         
         await using var uow = _unitOfWorkProvider.CreateUow();
         // await personUow.RoleToPersonRepository.Insert(newUserRole); // todo - will this work since the mapper most probably won't create Role Role and Person Person properties of the RoleToPerson class?
