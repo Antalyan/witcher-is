@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace WitcherProject.PresentationLayer.Model.Administration;
 
-public class RegisterModel
+public class RegisterModel : BaseModel
 {
     [Required(ErrorMessage = "Login is required!")]
     public string UserName { get; set; }
@@ -14,7 +14,7 @@ public class RegisterModel
     [DataType(DataType.Password)]
     public string Password { get; set; }
     
-    [Required]
+    [Required(ErrorMessage = "Password does not match!")]
     [MinLength(6, ErrorMessage = "Password must have at least six characters")]
     [DataType(DataType.Password)]
     [Compare(nameof(Password), ErrorMessage = "Password does not match!")]
@@ -30,8 +30,6 @@ public class RegisterModel
     public DateTime Birthdate { get; set; }
 
     public bool IsActive { get; set; } = true;
-    
-    public string? Error { get; set; }
 
-    
+
 }

@@ -3,7 +3,7 @@
 
 namespace WitcherProject.PresentationLayer.Model.Administration
 {
-    public class LoginModel 
+    public class LoginModel : BaseModel
     {
         [Required]
         public string UserName { get; set; }
@@ -11,8 +11,6 @@ namespace WitcherProject.PresentationLayer.Model.Administration
         public string Password { get; set; }
         
         public DateTime LoginStarted { get; set; }
-
-        public string Error { get; set; }
     }
 
 }

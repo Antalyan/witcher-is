@@ -1,19 +1,26 @@
 ﻿@page "/RegisterUser"
 @attribute [Authorize(Roles = RoleNames.UserManager + "," + RoleNames.Admin)]
-@using WitcherProject.PresentationLayer.Model
+
 @using WitcherProject.DAL.Models
-@using Microsoft.AspNetCore.Identity
 @using WitcherProject.PresentationLayer.Model.Administration
 @using WitcherProject.Shared
 @using Microsoft.AspNetCore.Components
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.BL.Services.Interfaces
+
+@inject IPersonService _personService
+
 <h3>Register new user</h3>
 
-@inject SignInManager<Person> _signInManager
-@inject UserManager<Person> _userManager
+@if (!string.IsNullOrEmpty(showLoginSuccess))
+{
+    <div class="alert alert-success mt-2 mb-2" role="alert">
+        <p>@showLoginSuccess registration was succesfull.</p>
+    </div>
+}
 
 <EditForm Model="@registerModel" OnValidSubmit="OnRegisterSubmit">
         <DataAnnotationsValidator/>
-        <ValidationSummary/>
 
         @if (!string.IsNullOrEmpty(registerModel.Error))
             {
@@ -71,34 +78,44 @@
 
     private RegisterModel registerModel = new();
 
+    private string showLoginSuccess;
 
     private async Task OnRegisterSubmit()
     {
+        showLoginSuccess = null;
         registerModel.Error = null;
         if (registerModel.Password.Any(char.IsUpper) && registerModel.Password.Any(char.IsDigit))
         {
-            var result = await _userManager.CreateAsync(new Person()
+            try
             {
-                UserName = registerModel.UserName,
-                Name = registerModel.Name,
-                Surname = registerModel.Surname,
-                Cv = registerModel.Cv,
-                Birthdate = registerModel.Birthdate,
-                IsActive = true
-            }, registerModel.Password);
-            if (!result.Succeeded)
+                await _personService.CreateUserAsync(RegisterModelToCreateNewDto(), registerModel.Password);
+                showLoginSuccess = registerModel.UserName;
+                registerModel = new RegisterModel();
+                StateHasChanged();
+            } catch (Exception e)
             {
-                registerModel.Error = result.Errors.FirstOrDefault()?.Description;
+                registerModel.Error = e.Message;
             }
-            StateHasChanged();
         }
         else
         {
             registerModel.Error = "Password must contain upperCharacter and digit.";
-           
         }
         
         
+    }
+
+    private PersonCreateNewDto RegisterModelToCreateNewDto()
+    {
+        return new PersonCreateNewDto
+        {
+            UserName = registerModel.UserName,
+            Name = registerModel.Name,
+            Surname = registerModel.Surname ?? "",
+            Cv = registerModel.Cv ?? "",
+            Birthdate = registerModel.Birthdate,
+            IsActive = true
+        };
     }
 
 }

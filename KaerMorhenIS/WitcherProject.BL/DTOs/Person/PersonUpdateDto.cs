@@ -9,5 +9,4 @@ public class PersonUpdateDto : IdentityUser<int>
     public string? Cv { get; set; }
     public DateTime Birthdate { get; set; }
     public bool IsActive { get; set; }
-    public virtual List<RoleToPersonDto> RoleToPersons { get; set; }
 }

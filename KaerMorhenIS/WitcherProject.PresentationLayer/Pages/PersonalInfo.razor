@@ -34,6 +34,12 @@ else
         @*     <InputDate class="p-2 mb-2" @bind-Value="@person.Birthdate"></InputDate> *@
         @* </div> *@
 
+         @if (!string.IsNullOrEmpty(error))
+        {
+            <div class="alert alert-danger mt-2 mb-2" role="alert">
+                @error
+            </div>
+        }
         <div>
             <label class="form-label col-sm-10 col-md-4">
                 Login: <InputText class="form-control" @bind-Value="@person.UserName" DisplayName="login" disabled></InputText>
@@ -66,12 +72,21 @@ else
 @code {
     private PersonCompleteDto person;
 
+    private string error;
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var authUser = authState.User.Identity.Name;
-        var person_Dal = await _userManager.FindByNameAsync(authUser);
-        person = person_Dal.Adapt<PersonCompleteDto>();
+        try
+        {
+            person = await PersonService.GetPersonByLogin(authUser);
+        }
+        catch (Exception e)
+        {
+            error = e.Message;
+        }
+        
     }
 
     private async Task UpdatePersonalData()

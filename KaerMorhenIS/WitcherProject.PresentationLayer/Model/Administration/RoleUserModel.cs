@@ -2,7 +2,7 @@
 
 namespace WitcherProject.PresentationLayer.Model.Administration;
 
-public class RoleUserModel
+public class RoleUserModel : BaseModel
 {
     [Required]
     public string UserName { get; set; }
@@ -10,5 +10,4 @@ public class RoleUserModel
     [Required]
     public string RoleName { get; set; }
     
-    public string? Error { get; set; }
 }

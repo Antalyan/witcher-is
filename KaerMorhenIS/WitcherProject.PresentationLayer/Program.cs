@@ -1,5 +1,8 @@
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WitcherProject.BL.DTOs;
+using WitcherProject.BL.DTOs.Person;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Implementations;
 using WitcherProject.BL.Services.Interfaces;
@@ -22,6 +25,17 @@ builder.Services.AddServerSideBlazor();
 //     ServiceLifetime.Transient);
 builder.Services.AddDbContextFactory<KaerMorhenDBContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")));
+
+var config = TypeAdapterConfig.GlobalSettings;
+config.ForType<Role, RoleDto>().TwoWays()
+    .Map(rd => rd.UserRoleDtos, r => r.UserRoles).PreserveReference(true);
+config.ForType<Person, PersonCompleteDto>().TwoWays()
+    .Map(pcd => pcd.UserRoleDtos, p => p.UserRoles).PreserveReference(true)
+    .Map(pcd => pcd.Contracts, p => p.Contracts).PreserveReference(true);
+
+
+
+
 
 builder.Services.AddTransient(typeof(IQuery<>), typeof(EFQuery<>));
 builder.Services.AddTransient<IContractRequestQueryObject, ContractRequestQueryObject>();

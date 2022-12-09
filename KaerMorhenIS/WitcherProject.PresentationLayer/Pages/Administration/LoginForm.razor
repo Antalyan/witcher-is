@@ -5,10 +5,12 @@
 @using WitcherProject.PresentationLayer.Model
 @using WitcherProject.PresentationLayer.Model.Administration
 @using Microsoft.AspNetCore.Components
+@using WitcherProject.BL.Services.Interfaces
+@using Mapster
 
 
 @inject SignInManager<Person> _signInManager
-@inject UserManager<Person> _userManager
+@inject IPersonService _personService
 @inject NavigationManager _navigationManager
 
 
@@ -43,25 +45,30 @@
         // OldWolf1*
         //YoungSkell*55
         loginModel.Error = null;
-        var userInDatabase = await _userManager.FindByNameAsync(loginModel.UserName);
+        var userInDatabase = await _personService.GetPersonByLogin(loginModel.UserName);
+        
         if (userInDatabase is null)
         {
             loginModel.Error = "Username does not exist";
+            return;
+        }
+        if (!userInDatabase.IsActive)
+        {
+            loginModel.Error = "Your account is deactivated: Try contact your witcher school support!";
+            return;
+        }
+        var signInResult = await _signInManager.CheckPasswordSignInAsync(userInDatabase.Adapt<Person>(), loginModel.Password, false);
+        if (signInResult.Succeeded)
+        {
+            var key = BlazorCookieLoginMiddleware<Person>.AnnounceLogin(loginModel);
+            _navigationManager.NavigateTo($"/login?key={key}", true);
         }
         else
         {
-            var signInResult = await _signInManager.CheckPasswordSignInAsync(userInDatabase, loginModel.Password, false);
-            if (signInResult.Succeeded)
-            {
-                var key = BlazorCookieLoginMiddleware<Person>.AnnounceLogin(loginModel);
-                _navigationManager.NavigateTo($"/login?key={key}", true);
-            }
-            else
-            {
-                loginModel.Error = "Password or username does not match";
-            }
-
-            _navigationManager.NavigateTo("/");
+            loginModel.Error = "Password or username does not match";
         }
+
+        _navigationManager.NavigateTo("/");
+    }
     }
 }
