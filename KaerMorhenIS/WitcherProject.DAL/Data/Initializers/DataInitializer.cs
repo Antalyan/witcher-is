@@ -19,9 +19,10 @@ public static class DbInitializer
             UserName = "wolf",
             IsActive = true,
             Birthdate = DateTime.Now,
-            
+            NormalizedUserName = "WOLF",
+            SecurityStamp = Guid.NewGuid().ToString()
         };
-
+        
         geralt.PasswordHash = new PasswordHasher<Person>().HashPassword(geralt, "GeraltOfRevia123");
         var odolan = new Contractor() { Id = 1, Name = "Odolan", Surname = "White" };
         var noonWraithContract = new Contract()
