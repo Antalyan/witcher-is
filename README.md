@@ -39,3 +39,11 @@ Information system enables:
 * Data should be visible in DB
 
 * Starting app: https://www.jetbrains.com/help/rider/Running_IISExpress.html
+
+## Running Blazor in hot-reload mode
+
+* Use command `dotnet watch run --version 6`
+
+OR
+
+* Install .NET Watch Run Configuration plugin and create a new edit configuration based on this plugin with program arguments `--version 6`
