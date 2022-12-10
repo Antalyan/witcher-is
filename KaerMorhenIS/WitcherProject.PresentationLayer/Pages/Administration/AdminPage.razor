@@ -12,8 +12,9 @@
 @using WitcherProject.BL.DTOs
 @using WitcherProject.BL.DTOs.Person
 @using Castle.Core.Internal
+@using WitcherProject.BL.Services.Implementations
 
-@inject IServiceScopeFactory ScopeFactory
+@inject IPersonService PersonService
 @inject NavigationManager _navigationManager
 
 
@@ -139,23 +140,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        using var scope = ScopeFactory.CreateScope();
-        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
-            roles = await PersonService.GetRoles();
-
-        using var scope2 = ScopeFactory.CreateScope();
-        {
-            var PersonService2 = scope2.ServiceProvider.GetRequiredService<IPersonService>();
-            userWithRoles = await PersonService2.GetAllUserWithRoles();
-        }
-
+        
+        roles = await PersonService.GetRoles();
+        userWithRoles = await PersonService.GetAllUserWithRoles();
     }
 
     private async Task OnRoleSubmit()
     {
         createRoleError = null;
-        using var scope = ScopeFactory.CreateScope();
-        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         try
         {
             await PersonService.CreateRole(createRole);
@@ -170,8 +162,6 @@ else
     
     private async Task OnRoleUserSubmit()
     {
-        using var scope = ScopeFactory.CreateScope();
-        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         roleUserModel.Error = null;
         try
         {
@@ -186,8 +176,6 @@ else
 
     private async Task Disable(PersonCompleteDto person)
     {
-        using var scope = ScopeFactory.CreateScope();
-        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         await PersonService.DisableUserByIdAsync(person.Id);
         userWithRoles = await PersonService.GetAllUserWithRoles();
         StateHasChanged();
@@ -195,8 +183,6 @@ else
     
     private async Task Enable(PersonCompleteDto person)
     {
-        using var scope = ScopeFactory.CreateScope();
-        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         person.IsActive = true;
         await PersonService.UpdateUserAsync(person.Adapt<PersonUpdateDto>());
         userWithRoles = await PersonService.GetAllUserWithRoles();
