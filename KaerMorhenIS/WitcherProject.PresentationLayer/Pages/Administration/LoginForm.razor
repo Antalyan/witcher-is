@@ -12,7 +12,7 @@
 @inject SignInManager<Person> _signInManager
 @inject IPersonService _personService
 @inject NavigationManager _navigationManager
-
+@inject ILogger<LoginForm> logger
 
 <EditForm OnValidSubmit="OnSubmit" Model="@loginModel">
     <DataAnnotationsValidator/>
@@ -37,24 +37,35 @@
 
 
     private LoginModel loginModel = new();
-    
+
+    public static bool loginLock = false;
 
     private async Task OnSubmit()
     {
         // LamberLambert152_
         // OldWolf1*
         //YoungSkell*55
+
+        if (loginLock)
+        {
+            logger.LogWarning("Login method invoked too many times, chill please!");
+            return;
+        }
+        loginLock = true;
+        
         loginModel.Error = null;
         var userInDatabase = await _personService.GetPersonByLogin(loginModel.UserName);
         
         if (userInDatabase is null)
         {
             loginModel.Error = "Username does not exist";
+            loginLock = false;
             return;
         }
         if (!userInDatabase.IsActive)
         {
             loginModel.Error = "Your account is deactivated: Try contact your witcher school support!";
+            loginLock = false;
             return;
         }
         var signInResult = await _signInManager.CheckPasswordSignInAsync(userInDatabase.Adapt<Person>(), loginModel.Password, false);
@@ -67,8 +78,6 @@
         {
             loginModel.Error = "Password or username does not match";
         }
-
-        _navigationManager.NavigateTo("/");
-    }
+        loginLock = false;
     }
 }
