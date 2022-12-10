@@ -30,18 +30,14 @@ public class PersonService : IPersonService
     public async Task CreateUserAsync(PersonCreateNewDto personCreateNewDto, string password)
     {
         var newUser = personCreateNewDto.Adapt<Person>();
-
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var callResult = await _userManager.CreateAsync(newUser, password);
         if (!callResult.Succeeded)
             throw new ApplicationException(ConvertUtil.AggregateErrors(callResult.Errors));
-        await uow.CommitAsync();
     }
 
     
     public async Task AssignRoleToUserAsync(string login, string roleName)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var userRoleAssignedTo = await _userManager.FindByNameAsync(login);
         if (userRoleAssignedTo is null)
         {
@@ -49,16 +45,13 @@ public class PersonService : IPersonService
         }
         var assignResult = await _userManager.AddToRoleAsync(userRoleAssignedTo, roleName);
         if (!assignResult.Succeeded) throw new ApplicationException(ConvertUtil.AggregateErrors(assignResult.Errors));
-        await uow.CommitAsync();
     }
 
     public async Task UpdateUserAsync(PersonUpdateDto personUpdateDto)
     {
         var updatedPerson = await _userManager.FindByNameAsync(personUpdateDto.UserName);
-        await using var uow = _unitOfWorkProvider.CreateUow();
         UpdatePerson(updatedPerson, personUpdateDto);
         await _userManager.UpdateAsync(updatedPerson);
-        await uow.CommitAsync();
     }
 
     public async Task<IEnumerable<PersonCompleteDto>> GetAllUsersAsync()
@@ -71,7 +64,9 @@ public class PersonService : IPersonService
     
     public async Task<IEnumerable<PersonCompleteDto>> GetAllUserWithRoles()
     {
-        var returnedPersons = _userManager.Users.Include(u => u.UserRoles)!.ThenInclude(ur => ur.Role);
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        var returnedPersons = _userManager.Users.Include(u => u.UserRoles)!.ThenInclude(ur => ur.Role).ToList();
+        await uow.CommitAsync();
         return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
     }
     
@@ -79,6 +74,7 @@ public class PersonService : IPersonService
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPersons = await _personRepository.GetAll();
+        await uow.CommitAsync();
         return returnedPersons.Select(person => person.Adapt<PersonSimpleDto>());
     }
 
@@ -86,12 +82,12 @@ public class PersonService : IPersonService
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPerson = await _personRepository.GetById(personId);
+        await uow.CommitAsync();
         return returnedPerson.Adapt<PersonCompleteDto>();
     }
     
     public async Task<PersonCompleteDto> GetPersonByLogin(string login)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPerson = await _userManager.FindByNameAsync(login);
         return returnedPerson.Adapt<PersonCompleteDto>();
     }
@@ -99,25 +95,22 @@ public class PersonService : IPersonService
 
     public async Task DisableUserByIdAsync(int userId)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var userToDisable = await _userManager.FindByIdAsync(userId.ToString());
         userToDisable.IsActive = false;
         await _userManager.UpdateAsync(userToDisable);
-        await uow.CommitAsync();
     }
 
-    public async Task<List<RoleDto>> GetRoles()
+    public async Task<IEnumerable<RoleDto>> GetRoles()
     {
+        await using var uow = _unitOfWorkProvider.CreateUow();
         var inter = _roleManager.Roles.ToList();
-       return inter.Adapt<List<RoleDto>>();
+        return inter.Adapt<IEnumerable<RoleDto>>();
     }
 
     public async Task CreateRole(RoleDto roleDto)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var createResult = await _roleManager.CreateAsync(roleDto.Adapt<Role>());
         if(!createResult.Succeeded) throw new ApplicationException(ConvertUtil.AggregateErrors(createResult.Errors));
-        await uow.CommitAsync();
     }
 
     private void UpdatePerson(Person update, PersonUpdateDto toUpdate)

@@ -1,5 +1,5 @@
 ﻿@page "/Contracts"
-@attribute [Authorize(Roles = RoleNames.Witcher)]
+@* @attribute [Authorize(Roles = RoleNames.Witcher)] *@
 @using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.BL.DTOs.Contract
 @using WitcherProject.BL.DTOs.Contractor
@@ -209,5 +209,4 @@ else
         filter = new ContractFilterDto {RequestedPageNumber = 1};
         contracts = await ContractService.GetContractsFilteredAsync(filter);
     }
-
 }

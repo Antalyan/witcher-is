@@ -1,7 +1,6 @@
 ﻿@page "/AdminPage"
 @attribute [Authorize(Roles = RoleNames.UserManager + "," + RoleNames.Admin)] 
 
-
 @using Microsoft.IdentityModel.Tokens
 @using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.DAL.Models
@@ -14,7 +13,7 @@
 @using WitcherProject.BL.DTOs.Person
 @using Castle.Core.Internal
 
-@inject IPersonService PersonService
+@inject IServiceScopeFactory ScopeFactory
 @inject NavigationManager _navigationManager
 
 
@@ -128,7 +127,7 @@ else
 
 @code {
 
-    private List<RoleDto> roles= new ();
+    private IEnumerable<RoleDto> roles;
 
     private IEnumerable<PersonCompleteDto> userWithRoles;
 
@@ -140,13 +139,23 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        roles = await PersonService.GetRoles();
-        userWithRoles = await PersonService.GetAllUserWithRoles();
+        using var scope = ScopeFactory.CreateScope();
+        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
+            roles = await PersonService.GetRoles();
+
+        using var scope2 = ScopeFactory.CreateScope();
+        {
+            var PersonService2 = scope2.ServiceProvider.GetRequiredService<IPersonService>();
+            userWithRoles = await PersonService2.GetAllUserWithRoles();
+        }
+
     }
 
     private async Task OnRoleSubmit()
     {
         createRoleError = null;
+        using var scope = ScopeFactory.CreateScope();
+        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         try
         {
             await PersonService.CreateRole(createRole);
@@ -161,6 +170,8 @@ else
     
     private async Task OnRoleUserSubmit()
     {
+        using var scope = ScopeFactory.CreateScope();
+        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         roleUserModel.Error = null;
         try
         {
@@ -175,6 +186,8 @@ else
 
     private async Task Disable(PersonCompleteDto person)
     {
+        using var scope = ScopeFactory.CreateScope();
+        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         await PersonService.DisableUserByIdAsync(person.Id);
         userWithRoles = await PersonService.GetAllUserWithRoles();
         StateHasChanged();
@@ -182,6 +195,8 @@ else
     
     private async Task Enable(PersonCompleteDto person)
     {
+        using var scope = ScopeFactory.CreateScope();
+        var PersonService = scope.ServiceProvider.GetRequiredService<IPersonService>();
         person.IsActive = true;
         await PersonService.UpdateUserAsync(person.Adapt<PersonUpdateDto>());
         userWithRoles = await PersonService.GetAllUserWithRoles();

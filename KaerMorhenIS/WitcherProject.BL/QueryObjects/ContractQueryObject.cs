@@ -67,6 +67,9 @@ public class ContractQueryObject: IContractQueryObject
             }
         }
 
+        _contractQuery.Include("Person");
+        _contractQuery.Include("Contractor");
+
         var returnedContracts = await _contractQuery.ExecuteAsync();
         return returnedContracts.Select(contract => contract.Adapt<ContractDetailedDto>());
     }

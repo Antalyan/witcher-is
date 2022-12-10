@@ -29,7 +29,6 @@ public class ContractService : IContractService
     public async Task CreateContractAsync(ContractAddDto contractAddDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        contractAddDto.State = contractAddDto.PersonId != null ? ContractState.Assigned : ContractState.Created;
         await _contractRepository.Insert(contractAddDto.Adapt<Contract>());
         await uow.CommitAsync();
     }
@@ -41,6 +40,13 @@ public class ContractService : IContractService
         return returnedContracts.Select(contract => contract.Adapt<ContractDetailedDto>());
     }
 
+    public async Task<ContractDetailedDto> GetContractByIdAsync(int requestId)
+    {
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        var returnedRequests = await _contractRepository.GetById(requestId);
+        return returnedRequests.Adapt<ContractDetailedDto>();
+    }
+    
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto)
     {
         return await _contractQueryObject.ExecuteQuery(contractFilterDto);

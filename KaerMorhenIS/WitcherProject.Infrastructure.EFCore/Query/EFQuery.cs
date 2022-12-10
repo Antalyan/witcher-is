@@ -41,6 +41,13 @@ public class EFQuery<TEntity>: IQuery<TEntity> where TEntity: class
         _query = _query.Skip((page - 1) * pageSize).Take(pageSize);
         return this;
     }
+    public IQuery<TEntity> Include(string attribute)
+    {
+        CheckOnStart();
+        _query = _query.Include(attribute);
+        return this;
+    }
+    
 
     private void CheckOnStart()
     {

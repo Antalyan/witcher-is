@@ -23,7 +23,7 @@ public interface IPersonService
 
     Task DisableUserByIdAsync(int userId);
     
-    Task<List<RoleDto>> GetRoles();
+    Task<IEnumerable<RoleDto>> GetRoles();
 
     Task CreateRole(RoleDto roleDto);
 

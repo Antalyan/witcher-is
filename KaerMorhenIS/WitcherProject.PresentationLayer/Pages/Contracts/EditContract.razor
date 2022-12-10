@@ -1,0 +1,164 @@
+﻿@* @page "/contracts/{id: int}" *@
+@* @using WitcherProject.BL.Services.Interfaces *@
+@* @using WitcherProject.Shared.Enums *@
+@* @using WitcherProject.BL.DTOs.Contract *@
+@* @using WitcherProject.BL.DTOs.Contractor *@
+@* @using WitcherProject.BL.DTOs.Person *@
+@* $1$ @attribute [Authorize] #1# *@
+@* @inject AuthenticationStateProvider AuthenticationStateProvider *@
+@* @using Microsoft.AspNetCore.Authorization *@
+@* @using WitcherProject.Shared *@
+@* @using Mapster *@
+@* @inject IAuthorizationService AuthorizationService *@
+@* *@
+@* @inject IContractService ContractService *@
+@* @inject IPersonService PersonService *@
+@* @inject IContractorService ContractorService *@
+@* *@
+@* <h3>Contract detail</h3> *@
+@* *@
+@* @if (contract == null) *@
+@* { *@
+@*     <p> *@
+@*         <em>Loading...</em> *@
+@*     </p> *@
+@* } *@
+@* else *@
+@* { *@
+@*     <EditForm Model="@contract" OnValidSubmit="SaveContract"> *@
+@*         <DataAnnotationsValidator/> *@
+@*         <ValidationSummary/> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 Name: <InputText class="form-control" @bind-Value="@contract.Name" DisplayName="contract"></InputText> *@
+@*             </label> *@
+@*         </div> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 Description: <InputText class="form-control" @bind-Value="@contract.Description" DisplayName="description"></InputText> *@
+@*             </label> *@
+@*         </div> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 State: *@
+@*                 <AuthorizeView Roles=@(RoleNames.ContractManager + "," + RoleNames.Admin)> *@
+@*                     <Authorized Context="ctx"> *@
+@*                         <InputSelect class="form-control" @bind-Value=@contract.State> *@
+@*                             <option value="">All</option> *@
+@*                             @foreach (var state in Enum.GetNames(typeof(ContractState))) *@
+@*                             { *@
+@*                                 <option value=@state>@state</option> *@
+@*                             } *@
+@*                         </InputSelect> *@
+@*                     </Authorized> *@
+@*                 </AuthorizeView> *@
+@*                 <AuthorizeView Roles=@(RoleNames.Witcher)> *@
+@*                     <Authorized Context="ctx"> *@
+@*                         <InputSelect class="form-control" @bind-Value=@contract.State disabled> *@
+@*                             <option value=@ContractState.Assigned>@ContractState.Assigned</option> *@
+@*                         </InputSelect> *@
+@*                     </Authorized> *@
+@*                 </AuthorizeView> *@
+@*             </label> *@
+@*         </div> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 Start date: *@
+@*                 <InputDate class="form-control" @bind-Value=@contract.StartDate DisplayName="start date"> *@
+@*                 </InputDate> *@
+@*             </label> *@
+@*         </div> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 Deadline: *@
+@*                 <InputDate class="form-control" @bind-Value=@contract.Deadline DisplayName="deadline"> *@
+@*                 </InputDate> *@
+@*             </label> *@
+@*         </div> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 Location: <InputText class="form-control" @bind-Value="@contract.Location" DisplayName="location"></InputText> *@
+@*             </label> *@
+@*         </div> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 Assigned person: *@
+@*                 <AuthorizeView Roles=@(RoleNames.ContractManager + "," + RoleNames.Admin)> *@
+@*                     <Authorized Context="ctx"> *@
+@*                         <InputSelect class="form-control" @bind-Value=@contract.PersonId> *@
+@*                             <option value=""></option> *@
+@*                             @foreach (var person in allPersons) *@
+@*                             { *@
+@*                                 <option value=@person.Id>@(person.Name + " " + person.Surname)</option> *@
+@*                             } *@
+@*                         </InputSelect> *@
+@*                     </Authorized> *@
+@*                 </AuthorizeView> *@
+@*                 <AuthorizeView Roles=@(RoleNames.Witcher)> *@
+@*                     <Authorized Context="ctx"> *@
+@*                         <InputSelect class="form-control" @bind-Value=@contract.PersonId disabled> *@
+@*                             <option value=@authenticationStateTask.Result.User>@(@authenticationStateTask.Result.User.Identity.Name)</option> *@
+@*                         </InputSelect> *@
+@*                     </Authorized> *@
+@*                 </AuthorizeView> *@
+@*             </label> *@
+@*         </div> *@
+@*         <div> *@
+@*             <label class="form-label col-sm-10 col-md-4 pb-2"> *@
+@*                 Contractor: *@
+@*                 <InputSelect class="form-control col" @bind-Value=@contract.ContractorId> *@
+@*                     <option value=""></option> *@
+@*                     @foreach (var contractor in allContractors) *@
+@*                     { *@
+@*                         <option value=@contractor.Id>@(contractor.Name + " " + contractor.Surname)</option> *@
+@*                     } *@
+@*                 </InputSelect> *@
+@*             </label> *@
+@*         </div> *@
+@*         <button class="btn btn-primary" type="submit">Save</button> *@
+@*     </EditForm> *@
+@* } *@
+@* *@
+@* @code { *@
+@* *@
+@*     [Parameter] *@
+@*     public int Id { get; set; } *@
+@* *@
+@*     [CascadingParameter] *@
+@*     private Task<AuthenticationState> authenticationStateTask { get; set; } *@
+@* *@
+@*     private bool _canEditAll; *@
+@*     private bool _canEditAsOwn; *@
+@*      *@
+@*     private ContractDetailedDto contract; *@
+@*     //TODO restrict person according to rules *@
+@*     private IEnumerable<PersonSimpleDto> allPersons; *@
+@*     private IEnumerable<ContractorDto> allContractors; *@
+@* *@
+@* *@
+@*     protected override async Task OnInitializedAsync() *@
+@*     { *@
+@*         contract = await ContractService.GetContractByIdAsync(Id); *@
+@*         allPersons = await PersonService.GetAllSimpleUsersAsync(); *@
+@*         allContractors = await ContractorService.GetAllContractorsAsync(); *@
+@*     } *@
+@* *@
+@*     private async Task SaveContract() *@
+@*     { *@
+@*         await ContractService.UpdateContractAsync(contract.Adapt<ContractUpdateDto>()); *@
+@*     } *@
+@* *@
+@*     private async Task<bool> CanEditAll() *@
+@*     { *@
+@*         v *@
+@*         return user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin); *@
+@*     } *@
+@* *@
+@*     private async Task<bool> CanEditOwn() *@
+@*     { *@
+@*         var user = (await authenticationStateTask).User; *@
+@*         var person = await PersonService.GetPersonByLogin(user.Identity.Name); *@
+@*         return user.IsInRole(RoleNames.Witcher) && Id == person.id;  *@
+@*     } *@
+@* *@
+@* } *@

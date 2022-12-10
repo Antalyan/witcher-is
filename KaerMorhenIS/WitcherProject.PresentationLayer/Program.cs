@@ -20,11 +20,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-// builder.Services.AddDbContext<KaerMorhenDBContext>((options =>
-//     options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")).UseLazyLoadingProxies()),   
-//     ServiceLifetime.Transient);
+builder.Services.AddDbContext<KaerMorhenDBContext>((options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase"))),   
+    ServiceLifetime.Transient);
 builder.Services.AddDbContextFactory<KaerMorhenDBContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")), ServiceLifetime.Transient);
 
 var config = TypeAdapterConfig.GlobalSettings;
 config.ForType<Role, RoleDto>().TwoWays()
@@ -76,7 +76,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
     options.Lockout.MaxFailedAccessAttempts = 10;
     options.Lockout.AllowedForNewUsers = true;
-
+    
     // User settings
     options.User.RequireUniqueEmail = false;
 });
