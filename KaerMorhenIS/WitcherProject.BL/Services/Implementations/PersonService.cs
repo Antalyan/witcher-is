@@ -65,12 +65,12 @@ public class PersonService : IPersonService
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPersons = await _personRepository.GetAll();
+        await uow.CommitAsync();
         return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
     }
     
     public async Task<IEnumerable<PersonCompleteDto>> GetAllUserWithRoles()
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPersons = _userManager.Users.Include(u => u.UserRoles)!.ThenInclude(ur => ur.Role);
         return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
     }
@@ -81,7 +81,6 @@ public class PersonService : IPersonService
         var returnedPersons = await _personRepository.GetAll();
         return returnedPersons.Select(person => person.Adapt<PersonSimpleDto>());
     }
-
 
     public async Task<PersonCompleteDto> GetPersonById(int personId)
     {

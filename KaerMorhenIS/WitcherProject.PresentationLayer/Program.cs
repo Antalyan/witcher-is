@@ -34,9 +34,6 @@ config.ForType<Person, PersonCompleteDto>().TwoWays()
     .Map(pcd => pcd.Contracts, p => p.Contracts).PreserveReference(true);
 
 
-
-
-
 builder.Services.AddTransient(typeof(IQuery<>), typeof(EFQuery<>));
 builder.Services.AddTransient<IContractRequestQueryObject, ContractRequestQueryObject>();
 builder.Services.AddTransient<IContractQueryObject, ContractQueryObject>();
