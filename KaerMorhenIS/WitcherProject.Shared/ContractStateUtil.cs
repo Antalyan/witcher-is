@@ -8,4 +8,9 @@ public static class ContractStateUtil
     {
         return new List<ContractState> { ContractState.Assigned, ContractState.Resolved, ContractState.Unresolved };
     }
+    
+    public static IEnumerable<ContractState> GetAllStates()
+    {
+        return Enum.GetValues(typeof(ContractState)).Cast<ContractState>();
+    }
 }

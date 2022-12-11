@@ -4,6 +4,12 @@ namespace WitcherProject.BL.DTOs.Contract;
 
 public class ContractFilterDto
 {
+    public int? Id
+    {
+        get;
+        set;
+    }
+    
     public string? Name { get; set; }
 
     public string? Description { get; set; }

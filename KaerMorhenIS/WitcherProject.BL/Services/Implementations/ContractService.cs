@@ -40,11 +40,10 @@ public class ContractService : IContractService
         return returnedContracts.Select(contract => contract.Adapt<ContractDetailedDto>());
     }
 
-    public async Task<ContractDetailedDto> GetContractByIdAsync(int requestId)
+    public async Task<ContractDetailedDto> GetContractByIdAsync(int contractId)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedRequests = await _contractRepository.GetById(requestId);
-        return returnedRequests.Adapt<ContractDetailedDto>();
+        //TODO implement include person and contractor
+        return (await _contractQueryObject.ExecuteQuery(new ContractFilterDto {Id = contractId})).First();
     }
     
     public async Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto)

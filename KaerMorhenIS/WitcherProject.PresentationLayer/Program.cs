@@ -20,9 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddDbContext<KaerMorhenDBContext>((options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase"))),   
-    ServiceLifetime.Transient);
 builder.Services.AddDbContextFactory<KaerMorhenDBContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")), ServiceLifetime.Transient);
 

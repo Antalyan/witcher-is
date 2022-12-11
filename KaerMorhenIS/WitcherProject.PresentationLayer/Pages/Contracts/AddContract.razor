@@ -1,22 +1,20 @@
 ﻿@page "/contracts/add"
 @using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.Shared
 @using WitcherProject.Shared.Enums
 @using WitcherProject.BL.DTOs.Contract
 @using WitcherProject.BL.DTOs.Contractor
 @using WitcherProject.BL.DTOs.Person
-@* @attribute [Authorize] *@
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@using Microsoft.AspNetCore.Authorization
-@using WitcherProject.Shared
-@inject IAuthorizationService AuthorizationService
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
 
 @inject IContractService ContractService
 @inject IPersonService PersonService
 @inject IContractorService ContractorService
+@inject NavigationManager NavigationManager
 
 <h3>New contract</h3>
 
-@if (allPersons == null)
+@if (contractorOptions == null)
 {
     <p>
         <em>Loading...</em>
@@ -29,85 +27,69 @@ else
         <ValidationSummary/>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
-                Name: <InputText class="form-control" @bind-Value="@contract.Name" DisplayName="contract"></InputText>
+                Name: <InputText class="form-control" @bind-Value="contract.Name" DisplayName="contract"></InputText>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
-                Description: <InputText class="form-control" @bind-Value="@contract.Description" DisplayName="description"></InputText>
+                Description: <InputText class="form-control" @bind-Value="contract.Description" DisplayName="description"></InputText>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 State:
-                <AuthorizeView Roles=@(RoleNames.ContractManager + "," + RoleNames.Admin)>
-                    <Authorized Context="ctx">
-                        <InputSelect class="form-control" @bind-Value=@contract.State>
-                            <option value="">All</option>
-                            @foreach (var state in Enum.GetNames(typeof(ContractState)))
-                            {
-                                <option value=@state>@state</option>
-                            }
-                        </InputSelect>
-                    </Authorized>
-                </AuthorizeView>
-                <AuthorizeView Roles=@(RoleNames.Witcher)>
-                    <Authorized Context="ctx">
-                        <InputSelect class="form-control" @bind-Value=@contract.State disabled>
-                            <option value=@ContractState.Assigned>@ContractState.Assigned</option>
-                        </InputSelect>
-                    </Authorized>
-                </AuthorizeView>
+                <InputSelect class="form-control" @bind-Value="contract.State">
+                    @foreach (var state in stateOptions)
+                    {
+                        <option value=@state>@state</option>
+                    }
+                </InputSelect>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Start date:
-                <InputDate class="form-control" @bind-Value=@contract.StartDate DisplayName="start date">
+                <InputDate class="form-control" @bind-Value="contract.StartDate" DisplayName="start date">
                 </InputDate>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Deadline:
-                <InputDate class="form-control" @bind-Value=@contract.Deadline DisplayName="deadline">
+                <InputDate class="form-control" @bind-Value="contract.Deadline" DisplayName="deadline">
                 </InputDate>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
-                Location: <InputText class="form-control" @bind-Value="@contract.Location" DisplayName="location"></InputText>
+                Location: <InputText class="form-control" @bind-Value="contract.Location" DisplayName="location"></InputText>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Assigned person:
-                <AuthorizeView Roles=@(RoleNames.ContractManager + "," + RoleNames.Admin)>
-                    <Authorized Context="ctx">
-                        <InputSelect class="form-control" @bind-Value=@contract.PersonId>
-                            <option value=""></option>
-                            @foreach (var person in allPersons)
-                            {
-                                <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
-                            }
-                        </InputSelect>
-                    </Authorized>
-                </AuthorizeView>
-                <AuthorizeView Roles=@(RoleNames.Witcher)>
-                    <Authorized Context="ctx">
-                        <InputSelect class="form-control" @bind-Value=@contract.PersonId disabled>
-                            <option value=@authenticationStateTask.Result.User>@(@authenticationStateTask.Result.User.Identity.Name)</option>
-                        </InputSelect>
-                    </Authorized>
-                </AuthorizeView>
+                <InputSelect class="form-control" @bind-Value="contract.PersonId">
+                    @if (hasAllRights)
+                    {
+                        <option value=""></option>
+                    }
+                    else
+                    {
+                        <option value=@authenticationStateTask.Result.User>@(@authenticationStateTask.Result.User.Identity.Name)</option>
+                    }
+                    @foreach (var person in personOptions)
+                    {
+                        <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
+                    }
+                </InputSelect>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Contractor:
-                <InputSelect class="form-control col" @bind-Value=@contract.ContractorId>
+                <InputSelect class="form-control col" @bind-Value="contract.ContractorId">
                     <option value=""></option>
-                    @foreach (var contractor in allContractors)
+                    @foreach (var contractor in contractorOptions)
                     {
                         <option value=@contractor.Id>@(contractor.Name + " " + contractor.Surname)</option>
                     }
@@ -124,20 +106,39 @@ else
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     private ContractAddDto contract;
-    //TODO restrict person according to rules
-    private IEnumerable<PersonSimpleDto> allPersons;
-    private IEnumerable<ContractorDto> allContractors;
 
+    private bool hasAllRights;
+
+    private IEnumerable<ContractState> stateOptions;
+    private IEnumerable<PersonSimpleDto> personOptions;
+    private IEnumerable<ContractorDto> contractorOptions;
 
     protected override async Task OnInitializedAsync()
     {
+        var user = (await authenticationStateTask).User;
+        hasAllRights = user.IsInRole(RoleNames.Admin) || user.IsInRole(RoleNames.ContractManager);
+
         contract = new ContractAddDto();
-        allPersons = await PersonService.GetAllSimpleUsersAsync();
-        allContractors = await ContractorService.GetAllContractorsAsync();
+
+        stateOptions = hasAllRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates();
+    //TODO optional: replace people by only witchers
+        personOptions = hasAllRights ? await PersonService.GetAllSimpleUsersAsync() : new List<PersonSimpleDto>();
+        contractorOptions = await ContractorService.GetAllContractorsAsync();
     }
 
+    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
     private async Task SaveContract()
     {
+        var user = (await authenticationStateTask).User;
+        if (!user.IsInRole(RoleNames.Admin) && !user.IsInRole(RoleNames.ContractManager))
+        {
+            var activePerson = await PersonService.GetPersonByLogin(user.Identity.Name);
+            contract.PersonId = activePerson.Id;
+        }
+        contract.State ??= ContractState.Assigned;
+
         await ContractService.CreateContractAsync(contract);
+        NavigationManager.NavigateTo($"/contracts", true);
     }
+
 }
