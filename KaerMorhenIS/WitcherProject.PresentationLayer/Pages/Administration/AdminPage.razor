@@ -1,10 +1,7 @@
 ﻿@page "/AdminPage"
 @attribute [Authorize(Roles = RoleNames.UserManager + "," + RoleNames.Admin)] 
 
-@using Microsoft.IdentityModel.Tokens
 @using WitcherProject.BL.Services.Interfaces
-@using WitcherProject.DAL.Models
-@using WitcherProject.PresentationLayer.Model
 @using WitcherProject.PresentationLayer.Model.Administration
 @using WitcherProject.Shared
 @using Microsoft.AspNetCore.Components
@@ -12,13 +9,12 @@
 @using WitcherProject.BL.DTOs
 @using WitcherProject.BL.DTOs.Person
 @using Castle.Core.Internal
-@using WitcherProject.BL.Services.Implementations
 
 @inject IPersonService PersonService
+@inject ILogger<AdminPage> logger
 @inject NavigationManager _navigationManager
 
-
-@if (roles.IsNullOrEmpty() || userWithRoles.IsNullOrEmpty())
+@if (roles.IsNullOrEmpty() || userWithRolesModels.IsNullOrEmpty())
 {
     <p>
         <em>Loading...</em>
@@ -27,166 +23,135 @@
 else
 {
     <h3>Users</h3>
+    @if (!string.IsNullOrEmpty(createRoleError))
+    {
+        <div class="alert alert-danger mt-2 mb-2" role="alert">
+            @createRoleError
+        </div>
+    }
     <table class="table">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>UserName</th>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Roles</th>
-            <th></th>
-            
+            <th class="col-md-1">Id</th>
+            <th class="col-md-1">UserName</th>
+            <th class="col-md-1">Name</th>
+            <th class="col-md-1">Surname</th>
+            <th class="col-md-6">Roles</th>
+            <th class="col-md-2"></th>
+
         </tr>
         </thead>
         <tbody>
-        @foreach (var user in userWithRoles)
+        @foreach (var user in userWithRolesModels)
         {
             <tr class="@(!user.IsActive ? "table-secondary" : "")">
-                    <td>@user.Id.</td>
-                    <td>@user.UserName</td>
-                    <td>@user.Name</td>
-                    <td>@user.Surname</td>
-                    <td> @(!user.UserRoleDtos.IsNullOrEmpty() ? user.UserRoleDtos.Select(ur => ur.Role.Name).Aggregate((x, y) => x + ", " + y) : "")</td>
-                    <td>
-                        @if (user.IsActive)
-                        {
-                            <button class="btn btn-outline-danger rounded-circle" onclick="@(() => Disable(user))">
-                                <i class="bi bi-x" title="Disable"></i>
-                            </button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-outline-success " onclick="@(() => Enable(user))">
-                                <i class="bi bi-check" title="Enable"></i>
-                            </button>
-                        }
-                    </td>
+                <td>@user.Id.</td>
+                <td>@user.UserName</td>
+                <td>@user.Name</td>
+                <td>@user.Surname</td>
+                <td>
+                    <RadzenDropDown @bind-Value="@(user.RoleNames)" Multiple="true" Placeholder="Select role..." Data=roleString
+                                    MaxSelectedLabels="6" Chips="true" @onblur="@(() => OnRoleUserSubmit(user))" Class="w-100"/>
+                </td>
+                <td class="hstack gap-3">
+                    
+                    <button class="btn btn-outline-primary " onclick="@(() => PersonDetailEdit(user))">
+                        <i class="bi bi-pencil" title="Edit"></i>
+                    </button>
+                    @if (user.IsActive)
+                    {
+                        <button class="btn btn-outline-danger" onclick="@(() => Disable(user.Adapt<PersonCompleteDto>()))">
+                            <i class="bi bi-x" title="Disable"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-success " onclick="@(() => Enable(user.Adapt<PersonUpdateDto>()))">
+                            <i class="bi bi-check" title="Enable"></i>
+                        </button>
+                    }
 
-        </tr>
+                </td>
+
+            </tr>
         }
         </tbody>
     </table>
 
 }
 
-<EditForm OnValidSubmit="OnRoleUserSubmit" Model="roleUserModel">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
-    <label class="form-label col-sm-10 col-md-4">
-        User name: <InputText class="form-control" @bind-Value="@roleUserModel.UserName" DisplayName="User name"></InputText>
-    </label>
-    <label class="form-label col-sm-10 col-md-4">
-        Role name: <InputText class="form-control" @bind-Value="@roleUserModel.RoleName" DisplayName="Role name"></InputText>
-    </label>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
-        
-    @if (!string.IsNullOrEmpty(roleUserModel.Error))
-    {
-        <div class="alert alert-danger mt-2 mb-2" role="alert">
-            @roleUserModel.Error
-        </div>
-    }
-</EditForm>
-
-<h3>Role</h3>
-
-<table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var role in roles)
-        {
-            <tr>
-                <td>@role.Id.</td>
-                <td>@role.Name</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-
-    <EditForm OnValidSubmit="OnRoleSubmit" Model="createRole">
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
-        @if (!string.IsNullOrEmpty(createRoleError))
-        {
-            <div class="alert alert-danger mt-2 mb-2" role="alert">
-                @createRoleError
-            </div>
-        }
-        <label class="form-label col-sm-10 col-md-4">
-            Role name: <InputText class="form-control" @bind-Value="@createRole.Name" DisplayName="Role name"></InputText>
-        </label>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
-    </EditForm>
-
 
 @code {
 
     private IEnumerable<RoleDto> roles;
-
-    private IEnumerable<PersonCompleteDto> userWithRoles;
-
-    private RoleDto createRole = new ();
-
-    private RoleUserModel roleUserModel = new();
-
+    
+    private IEnumerable<string> roleString;
+    private IEnumerable<RoleUserModel> userWithRolesModels = new List<RoleUserModel>();
+    
     private string createRoleError = "" ;
+
+    private static bool changeRoleLock = false;
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         roles = await PersonService.GetRoles();
-        userWithRoles = await PersonService.GetAllUserWithRoles();
+         roleString = roles.Select(r => r.Name);
+        await FetchUserWitchRoles();
     }
 
-    private async Task OnRoleSubmit()
+    private async Task OnRoleUserSubmit(RoleUserModel roleUserModel)
     {
+        if (changeRoleLock)
+        {
+            logger.LogWarning("Too many calls of Role change");
+            return;
+        }
+        changeRoleLock = true;
         createRoleError = null;
         try
         {
-            await PersonService.CreateRole(createRole);
+            await PersonService.UpdateRoleToUserAsync(roleUserModel.UserName,
+                roleUserModel.RoleNames.ToList());
+            changeRoleLock = false;
             StateHasChanged();
         }
         catch (Exception e)
         {
             createRoleError = e.Message;
         }
-        
     }
     
-    private async Task OnRoleUserSubmit()
-    {
-        roleUserModel.Error = null;
-        try
-        {
-            await PersonService.AssignRoleToUserAsync(roleUserModel.UserName, roleUserModel.RoleName);
-            this.StateHasChanged();
-        }
-        catch (Exception e)
-        {
-            roleUserModel.Error = e.Message;
-        }
-    }
-
     private async Task Disable(PersonCompleteDto person)
     {
         await PersonService.DisableUserByIdAsync(person.Id);
-        userWithRoles = await PersonService.GetAllUserWithRoles();
+        await FetchUserWitchRoles();
         StateHasChanged();
     }
     
-    private async Task Enable(PersonCompleteDto person)
+    private async Task Enable(PersonUpdateDto person)
     {
         person.IsActive = true;
         await PersonService.UpdateUserAsync(person.Adapt<PersonUpdateDto>());
-        userWithRoles = await PersonService.GetAllUserWithRoles();
+        await FetchUserWitchRoles();
         StateHasChanged();
     }
 
+    private async Task FetchUserWitchRoles()
+    {
+        userWithRolesModels = new List<RoleUserModel>();
+        var userWithRoles = await PersonService.GetAllUserWithRoles();
+        foreach (var userWithRole in userWithRoles)
+        {
+            var roleUserModel = userWithRole.Adapt<RoleUserModel>();
+            roleUserModel.RoleNames = userWithRole.UserRoleDtos.Select(usr => usr.Role.Name);
+            userWithRolesModels = userWithRolesModels.Append(roleUserModel);
+        }
+    }
+    
+
+    private void PersonDetailEdit(RoleUserModel roleUserModel)
+    {
+        _navigationManager.NavigateTo($"/editPerson/{roleUserModel.Id}");
+    }
 }

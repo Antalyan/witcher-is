@@ -3,16 +3,13 @@
 @using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.BL.DTOs.Person
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@using Mapster;
-@using Microsoft.AspNetCore.Identity
-@using WitcherProject.DAL.Models
+@using WitcherProject.PresentationLayer.Pages.Administration
 
 @inject IPersonService PersonService
-@inject UserManager<Person> _userManager
 
 <h3>PersonalInfo</h3>
 
-@if (person == null)
+@if (authenticatedPerson == null)
 {
     <p>
         <em>Loading...</em>
@@ -20,77 +17,27 @@
 }
 else
 {
-    <EditForm Model="@person" OnValidSubmit="UpdatePersonalData">
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
-        @* <div class="d-flex flex-column bd-highlight mb-3"> *@
-        @*     <div> *@
-        @*         <InputText p-2 mb-2 @bind-Value="@person.Login" readonly="true"></InputText> *@
-        @*     </div> *@
-        @*     <InputText class="p-2 mb-2" @bind-Value="@person.Login" readonly="true"></InputText> *@
-        @*     <InputText class="p-2 mb-2"  @bind-Value="@person.Name"></InputText> *@
-        @*     <InputText class="p-2 mb-2" @bind-Value="@person.Surname"></InputText> *@
-        @*     <InputTextArea class="p-2 mb-2" @bind-Value="@person.Cv"></InputTextArea> *@
-        @*     <InputDate class="p-2 mb-2" @bind-Value="@person.Birthdate"></InputDate> *@
-        @* </div> *@
-
-         @if (!string.IsNullOrEmpty(error))
-        {
-            <div class="alert alert-danger mt-2 mb-2" role="alert">
-                @error
-            </div>
-        }
-        <div>
-            <label class="form-label col-sm-10 col-md-4">
-                Login: <InputText class="form-control" @bind-Value="@person.UserName" DisplayName="login" disabled></InputText>
-            </label>
-        </div>
-        <div>
-            <label class="form-label col-sm-10 col-md-4">
-                Name: <InputText class="form-control" @bind-Value="@person.Name" DisplayName="name"></InputText>
-            </label>
-        </div>
-        <div>
-            <label class="form-label col-sm-10 col-md-4">
-                Surname: <InputText class="form-control" @bind-Value="@person.Surname" DisplayName="surname"></InputText>
-            </label>
-        </div>
-        <div>
-            <label class="form-label col-sm-10 col-md-4">
-                Cv: <InputTextArea class="form-control" @bind-Value="@person.Cv" DisplayName="cv"></InputTextArea>
-            </label>
-        </div>
-        <div>
-            <label class="form-label col-sm-10 col-md-4">
-                Birthdate: <InputDate class="form-control" @bind-Value="@person.Birthdate" DisplayName="birthdate"></InputDate>
-            </label>
-        </div>
-        <button class="btn btn-primary" type="submit">Edit</button>
-    </EditForm>
+    <EditFormComponent person="authenticatedPerson" personEditError="@authError"/>
 }
 
 @code {
-    private PersonCompleteDto person;
+    
+    private PersonCompleteDto authenticatedPerson;
 
-    private string error;
-
+    private string authError;
+    
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var authUser = authState.User.Identity.Name;
         try
         {
-            person = await PersonService.GetPersonByLogin(authUser);
+            authenticatedPerson = await PersonService.GetPersonByLogin(authUser);
         }
         catch (Exception e)
         {
-            error = e.Message;
+            authError = e.Message;
         }
-        
-    }
 
-    private async Task UpdatePersonalData()
-    {
-        await PersonService.UpdateUserAsync(person.Adapt<PersonUpdateDto>());
     }
 }

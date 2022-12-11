@@ -7,7 +7,7 @@ public interface IPersonService
 {
     Task CreateUserAsync(PersonCreateNewDto personCreateNewDto, string password);
 
-    Task AssignRoleToUserAsync(string login, string roleName);
+    Task UpdateRoleToUserAsync(string login, List<string> newRoleNames);
 
     Task UpdateUserAsync(PersonUpdateDto personUpdateDto);
 

@@ -12,10 +12,10 @@
 
 <h3>Register new user</h3>
 
-@if (!string.IsNullOrEmpty(showLoginSuccess))
+@if (!string.IsNullOrEmpty(showRegisterSuccess))
 {
     <div class="alert alert-success mt-2 mb-2" role="alert">
-        <p>@showLoginSuccess registration was succesfull.</p>
+        <p>@showRegisterSuccess registration was succesfull.</p>
     </div>
 }
 
@@ -78,18 +78,18 @@
 
     private RegisterModel registerModel = new();
 
-    private string showLoginSuccess;
+    private string showRegisterSuccess;
 
     private async Task OnRegisterSubmit()
     {
-        showLoginSuccess = null;
+        showRegisterSuccess = null;
         registerModel.Error = null;
         if (registerModel.Password.Any(char.IsUpper) && registerModel.Password.Any(char.IsDigit))
         {
             try
             {
                 await _personService.CreateUserAsync(RegisterModelToCreateNewDto(), registerModel.Password);
-                showLoginSuccess = registerModel.UserName;
+                showRegisterSuccess = registerModel.UserName;
                 registerModel = new RegisterModel();
                 StateHasChanged();
             } catch (Exception e)

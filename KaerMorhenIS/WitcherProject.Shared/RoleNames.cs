@@ -9,5 +9,10 @@ public static class RoleNames
     public const string Witcher = "Witcher";
 
     public const string ContractManager = "ContractManager";
+    
+    public static string GetRoles(string[] roles)
+    {
+        return roles.Aggregate((x, y) => x + ", " + y);
+    }
 
 }

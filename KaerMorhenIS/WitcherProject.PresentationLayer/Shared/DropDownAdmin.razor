@@ -1,4 +1,5 @@
-﻿<AuthorizeView>
+﻿@using WitcherProject.Shared
+<AuthorizeView Roles="@RoleNames.GetRoles(new []{RoleNames.Admin, RoleNames.UserManager})">
     <Authorized>
         <RadzenMenu>
         <RadzenMenuItem Text="Control Panel" Icon="build">
@@ -8,6 +9,3 @@
     </RadzenMenu>
     </Authorized>
     </AuthorizeView>
-@code {
-   
-}

@@ -36,15 +36,28 @@ public class PersonService : IPersonService
     }
 
     
-    public async Task AssignRoleToUserAsync(string login, string roleName)
+    public async Task UpdateRoleToUserAsync(string login, List<string> newRoleNames)
     {
         var userRoleAssignedTo = await _userManager.FindByNameAsync(login);
         if (userRoleAssignedTo is null)
         {
             throw new ApplicationException("Cannot find user in database");
         }
-        var assignResult = await _userManager.AddToRoleAsync(userRoleAssignedTo, roleName);
-        if (!assignResult.Succeeded) throw new ApplicationException(ConvertUtil.AggregateErrors(assignResult.Errors));
+        var assignedRoles = await _userManager.GetRolesAsync(userRoleAssignedTo);
+        var rolesToAdd = newRoleNames.Except(assignedRoles).ToList();
+        if (rolesToAdd.Any())
+        {
+            var assignResult = await _userManager.AddToRolesAsync(userRoleAssignedTo, rolesToAdd);
+            if (!assignResult.Succeeded)
+                throw new ApplicationException(ConvertUtil.AggregateErrors(assignResult.Errors));
+        }
+        var roleToRemove = assignedRoles.Except(newRoleNames).ToList();
+        if (roleToRemove.Any())
+        {
+            var removeResult = await _userManager.RemoveFromRolesAsync(userRoleAssignedTo, roleToRemove);
+            if (!removeResult.Succeeded)
+                throw new ApplicationException(ConvertUtil.AggregateErrors(removeResult.Errors));
+        }
     }
 
     public async Task UpdateUserAsync(PersonUpdateDto personUpdateDto)
