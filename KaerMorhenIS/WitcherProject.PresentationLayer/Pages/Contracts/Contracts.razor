@@ -10,6 +10,7 @@
 @inject IContractService ContractService
 @inject IContractorService ContractorService
 @inject IPersonService PersonService
+@inject NavigationManager NavigationManager
 
 <h3>Contracts</h3>
 
@@ -117,16 +118,20 @@ else
                 <td>@(cont.Person != null ? cont.Person.Name + " " + cont.Person?.Surname : null) </td>
                 <td>
                     <div class="hstack gap-3">
-                        <button class="btn btn-outline-primary rounded-circle">
+                        @* //TODO: there should be only Detail or Edit depending on current logged user role *@
+                        @* //TODO: fix on-click event *@
+
+                        <button class="btn btn-outline-primary rounded-circle" @onClick="() => RedirectToDetail(cont.Id)">
                             <i class="bi bi-eye" title="Details"></i>
-                        </button>
-                        <button class="btn btn-outline-primary rounded-circle">
-                            <i class="bi bi-envelope" title="Send request"></i>
                         </button>
                         <button class="btn btn-outline-primary rounded-circle">
                             <i class="bi bi-pencil" title="Edit"></i>
                         </button>
+                        @* //TODO: add action: pop-up window with request text *@
                         <button class="btn btn-outline-primary rounded-circle">
+                            <i class="bi bi-envelope" title="Send request"></i>
+                        </button>
+                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => Delete(cont.Id)">
                             <i class="bi bi-x" title="Delete"></i>
                         </button>
                     </div>
@@ -199,6 +204,14 @@ else
         allContractors = await ContractorService.GetAllContractorsAsync();
     }
 
+    private async Task Delete(int contractIdToDelete)
+    {
+        await ContractService.DeleteContractAsync(contractIdToDelete);
+
+    //StateHasChanged() didn't work
+        contracts = await ContractService.GetContractsFilteredAsync(filter);
+    }
+
     private async Task Filter()
     {
         contracts = await ContractService.GetContractsFilteredAsync(filter);
@@ -206,7 +219,13 @@ else
 
     private async Task Reset()
     {
-        filter = new ContractFilterDto {RequestedPageNumber = 1};
+        filter = new ContractFilterDto { RequestedPageNumber = 1 };
         contracts = await ContractService.GetContractsFilteredAsync(filter);
     }
+
+    private void RedirectToDetail(int contractId)
+    {
+        NavigationManager.NavigateTo($"/contracts/{contractId}", true);
+    }
+
 }
