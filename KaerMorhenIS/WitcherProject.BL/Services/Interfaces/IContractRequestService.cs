@@ -18,6 +18,8 @@ public interface IContractRequestService
     
     Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByPersonAsync(int personId, int? pageNumber);
 
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestsFilteredAsync(ContractRequestFilterDto contractRequestFilterDto);
+
     Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto);
 
     Task DeleteContractRequestAsync(int requestId);

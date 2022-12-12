@@ -60,6 +60,11 @@ public class ContractRequestService : IContractRequestService
         => await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto()
             { PersonId = personId, SortAscending = false, RequestedPageNumber = pageNumber});
 
+    public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestsFilteredAsync(ContractRequestFilterDto contractRequestFilterDto)
+    {
+        return await _contractRequestQueryObject.ExecuteQuery(contractRequestFilterDto);
+    }
+    
     public async Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();

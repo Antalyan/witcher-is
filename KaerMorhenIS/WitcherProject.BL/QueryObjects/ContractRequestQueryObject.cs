@@ -35,6 +35,9 @@ public class ContractRequestQueryObject: IContractRequestQueryObject
 
         _contractRequestQuery.OrderBy(x => x.CreatedOn, filter.SortAscending);
 
+        _contractRequestQuery.Include("Person");
+        _contractRequestQuery.Include("Contract");
+        
         var returnedRequests = await _contractRequestQuery.ExecuteAsync();
         return returnedRequests.Select(request => request.Adapt<ContractRequestDetailedDto>());
     }

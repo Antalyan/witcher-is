@@ -119,9 +119,8 @@ else
                 <td>
                     <div class="hstack gap-3">
                         @* //TODO: there should be only Detail or Edit depending on current logged user role *@
-                        @* //TODO: fix on-click event *@
-
-                        <button class="btn btn-outline-primary rounded-circle" @onClick="() => RedirectToDetail(cont.Id)">
+                        
+                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
                             <i class="bi bi-eye" title="Details"></i>
                         </button>
                         <button class="btn btn-outline-primary rounded-circle">

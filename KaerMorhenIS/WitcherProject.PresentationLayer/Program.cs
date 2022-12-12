@@ -39,7 +39,7 @@ builder.Services.AddScoped<IUnitOfWorkProvider, EFUnitOfWorkProvider>();
 
 builder.Services.AddTransient<IContractorService, ContractorService>();
 builder.Services.AddTransient<IContractService, ContractService>();
-// builder.Services.AddScoped<IContractRequestService, ContractRequestService>();
+builder.Services.AddTransient<IContractRequestService, ContractRequestService>();
 builder.Services.AddTransient<IPersonService, PersonService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(EFGenericRepository<>));
 
@@ -82,7 +82,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(25);
 
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
