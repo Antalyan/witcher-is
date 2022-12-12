@@ -33,7 +33,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Name:
                 <InputText class="form-control" @bind-Value="@contract.Name" DisplayName="contract"
-                           disabled="@_disableEdit">
+                           disabled="@(!_hasOwnerRights)">
                 </InputText>
             </label>
         </div>
@@ -41,14 +41,14 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Description:
                 <InputText class="form-control" @bind-Value="@contract.Description" DisplayName="description"
-                           disabled="@_disableEdit">
+                           disabled="@(!_hasOwnerRights)">
                 </InputText>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 State:
-                <InputSelect class="form-control" @bind-Value="contract.State" disabled="@_disableEdit">
+                <InputSelect class="form-control" @bind-Value="contract.State" disabled="@(!_hasOwnerRights)">
                     @foreach (var state in stateOptions)
                     {
                         <option value=@state>@state</option>
@@ -60,7 +60,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Start date:
                 <InputDate class="form-control" @bind-Value=@contract.StartDate DisplayName="start date"
-                           disabled="@_disableEdit">
+                           disabled="@(!_hasOwnerRights)">
                 </InputDate>
             </label>
         </div>
@@ -68,7 +68,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Deadline:
                 <InputDate class="form-control" @bind-Value=@contract.Deadline DisplayName="deadline"
-                           disabled="@_disableEdit">
+                           disabled="@(!_hasOwnerRights)">
                 </InputDate>
             </label>
         </div>
@@ -76,23 +76,18 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Location:
                 <InputText class="form-control" @bind-Value="@contract.Location" DisplayName="location"
-                           disabled="@_disableEdit">
+                           disabled="@(!_hasOwnerRights)">
                 </InputText>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Assigned person:
-                <InputSelect class="form-control" @bind-Value="@_personId" disabled="@_disableEdit">
-                    @if (_fullEdit || _disableEdit)
+                <InputSelect class="form-control" @bind-Value="@_personId" disabled="@(!_hasFullRights)">
+                    @if (_hasFullRights || !_hasOwnerRights)
                     {
                         <option value=""></option>
                     }
-                    else
-                    {
-                        <option value=@authenticationStateTask.Result.User>@(@authenticationStateTask.Result.User.Identity.Name)</option>
-                    }
-                    <option value=@_personId>@(_personId == null ? "" : contract.Person.Name + " " + contract.Person.Surname)</option>
                     @foreach (var person in personOptions)
                     {
                         <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
@@ -104,7 +99,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 @* TODO limit witcher view by id *@
                 Contractor:
-                <InputSelect class="form-control" @bind-Value="@_contractorId" disabled="@_disableEdit">
+                <InputSelect class="form-control" @bind-Value="@_contractorId" disabled="@(!_hasOwnerRights)">
                     <option value=""></option>
                     @foreach (var contractor in contractorOptions)
                     {
@@ -113,7 +108,10 @@ else
                 </InputSelect>
             </label>
         </div>
-        <button class="btn btn-primary" type="submit">Save</button>
+        @if (_hasOwnerRights)
+        {
+            <button class="btn btn-primary" type="submit">Save</button>
+        }
     </EditForm>
 }
 
@@ -125,8 +123,8 @@ else
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    private bool _disableEdit = true;
-    private bool _fullEdit = false;
+    private bool _hasOwnerRights = false;
+    private bool _hasFullRights = false;
 
     private PersonCompleteDto activePerson;
 
@@ -152,23 +150,20 @@ else
         }
 
         var user = (await authenticationStateTask).User;
+        activePerson = await PersonService.GetPersonByLogin(user.Identity.Name!);
         if (user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin))
         {
-            _disableEdit = false;
-            _fullEdit = true;
+            _hasFullRights = true;
+            _hasOwnerRights = true;
         }
-        else
+        else if (_personId == activePerson.Id)
         {
-            var activePerson = await PersonService.GetPersonByLogin(user.Identity.Name!);
-            if (contract.Person?.Id == activePerson.Id)
-            {
-                _disableEdit = false;
-            }
+            _hasOwnerRights = true;
         }
 
-        stateOptions = _fullEdit ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates();
-    //TODO optional: replace people by only witchers
-        personOptions = _fullEdit ? await PersonService.GetAllSimpleUsersAsync() : new List<PersonSimpleDto>();
+        stateOptions = _hasFullRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates();
+         //TODO optional: replace people by only witchers
+        personOptions = _hasFullRights ? await PersonService.GetAllSimpleUsersAsync() : new List<PersonSimpleDto> {activePerson.Adapt<PersonSimpleDto>()};
         contractorOptions = await ContractorService.GetAllContractorsAsync();
     }
 
