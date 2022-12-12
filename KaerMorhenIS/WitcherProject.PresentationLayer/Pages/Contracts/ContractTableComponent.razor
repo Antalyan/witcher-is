@@ -51,18 +51,21 @@ else
                     </label>
                 </div>
 
-                <div class="col-auto">
-                    <label class="form-label">
-                        Assigned person:
-                        <InputSelect class="form-control col" @bind-Value=@filter.PersonId>
-                            <option value="">All</option>
-                            @foreach (var person in allPersons)
-                            {
-                                <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
-                            }
-                        </InputSelect>
-                    </label>
-                </div>
+                @if (PersonIdLimit != null)
+                {
+                    <div class="col-auto">
+                        <label class="form-label">
+                            Assigned person:
+                            <InputSelect class="form-control col" @bind-Value=@filter.PersonId>
+                                <option value="">All</option>
+                                @foreach (var person in allPersons)
+                                {
+                                    <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
+                                }
+                            </InputSelect>
+                        </label>
+                    </div>
+                }
 
                 <div class="col-auto">
                     <label class="form-label">
