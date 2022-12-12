@@ -11,12 +11,27 @@
     font-size: 1.1rem;
 }
 
+.logo {
+    height: 150px;
+}
+
+.menu-item{ 
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .oi {
     width: 2rem;
     font-size: 1.1rem;
     vertical-align: text-top;
     top: -2px;
 }
+
+.rz-navigation-item-link{
+    color : red;
+}
+
 
 .nav-item {
     font-size: 0.9rem;
@@ -50,13 +65,4 @@
     color: white;
 }
 
-@media (min-width: 641px) {
-    .navbar-toggler {
-        display: none;
-    }
 
-    .collapse {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
-    }
-}

@@ -1,7 +1,9 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Morpheus', sans-serif;
+    background-color: #020202;
+    color: #fff;
 }
 
 h1:focus {
@@ -12,19 +14,114 @@ a, .btn-link {
     color: #0071c1;
 }
 
-.btn-primary {
+.nav-link {
+    color: #ff9c00;
+    font-size: 2rem;
+}
+
+.nav-link:hover{
+    color: #ff9c00;
+    font-weight: bolder;
+}
+
+.rz-navigation-item-link{
+    color : #f69808 !important;
+    font-size: 2rem;
+}
+
+.rz-menu-toggle{
+    color : #f69808 !important;
+}
+
+.rz-navigation-menu{
+    background-color: #020202 !important;
+    border: #f69808 !important;
+}
+
+.rz-multiselect-items{
+    color : #020202 !important;
+}
+
+.table>thead {
+    color: #f69808;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+   color: #f69808;
+}
+
+.table>tbody{
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+}
+
+.btn-primary {
+    color: #020202;
+    background-color: #ffd201;
+    border-color: #ffd201;
+}
+
+.btn-primary:focus {
+    color: #fff;
+    background-color: #020202;
+    border-color: #ff9c00;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #020202;
+    border-color: #ff9c00;
+}
+
+.form-control{
+    color: #fff;
+    background-color: #020202;
+    border-color: #ff9c00;
+}
+
+.form-control:placeholder-shown{
+    color: #ced4da;
+    background-color: #fff;
+    border-color: #ff9c00;
+}
+
+.form-control:disabled {
+    background-color: #aa8957;
+    color: #868181;
+    font-weight: bolder;
+}
+
+.text-primary{
+    color: #ff9c00!important;
+}
+
+.user-disabled{
+    background-color: #aa8957;
+    color: #868181;
 }
 
 .content {
     padding-top: 1.1rem;
+    padding-left: 5rem!important;
+    padding-right: 5rem!important;
 }
+
+
+ .footer {
+     position: fixed;
+     left: 0;
+     bottom: 0;
+     width: 100%;
+     background-color: #a6531e !important;
+     color: white !important;
+ }
+
+
 
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }
+
+
 
 .invalid {
     outline: 1px solid red;

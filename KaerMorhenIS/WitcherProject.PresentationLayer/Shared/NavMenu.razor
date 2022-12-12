@@ -1,41 +1,39 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        @* <a class="navbar-brand" href="">WitcherProject.PresentationLayer</a> *@
-        <button title="Navigation menu" class="navbar-toggler" @onclick="@ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
+﻿
+<div class="container-fluid flex">
+    
+    <div class="row">
+        <div class="justify-content-center d-flex col-md-3">
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <img class="logo" src="/images/Home_Icon.png" alt="Home">
+        </NavLink>
+        </div>
+
+        <div class="col-md-9">
+            <div class="row h-100">
+                    <div class="col-md-3  menu-item">
+                        <NavLink class="nav-link" href="personalinfo">
+                            @* TODO keep this edit only in settings, for now leave it there to fill space *@
+                            Personal info
+                        </NavLink>
+                    </div>
+                <div class="col-md-3 d-flex menu-item">
+                        <NavLink class="nav-link" href="contracts">
+                            Contracts
+                        </NavLink>
+                    </div>
+                     <div class="col-md-3 d-flex menu-item">
+                        <NavLink class="nav-link" href="contracts">
+                             Contract Requests
+                        </NavLink>
+                    </div>
+                    <div class="col-md-3 menu-item">
+                        <LoginDisplay/>
+                    </div>
+                </div>
+           
+        </div>
+    
+        </div>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="@ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="personalinfo">
-                <span class="bi bi-person-fill" aria-hidden="true"></span> Personal info
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="contracts">
-                <span class="bi bi-list-task" aria-hidden="true"></span> Contracts
-            </NavLink>
-        </div>
 
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-}

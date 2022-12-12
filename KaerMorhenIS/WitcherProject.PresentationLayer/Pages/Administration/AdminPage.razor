@@ -29,7 +29,7 @@ else
             @createRoleError
         </div>
     }
-    <table class="table">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th class="col-md-1">Id</th>
@@ -44,14 +44,14 @@ else
         <tbody>
         @foreach (var user in userWithRolesModels)
         {
-            <tr class="@(!user.IsActive ? "table-secondary" : "")">
+            <tr class="@(!user.IsActive ? "user-disabled" : "")">
                 <td>@user.Id.</td>
                 <td>@user.UserName</td>
                 <td>@user.Name</td>
                 <td>@user.Surname</td>
                 <td>
                     <RadzenDropDown @bind-Value="@(user.RoleNames)" Multiple="true" Placeholder="Select role..." Data=roleString
-                                    MaxSelectedLabels="6" Chips="true" @onblur="@(() => OnRoleUserSubmit(user))" Class="w-100"/>
+                                 Class="@(!user.IsActive ? "user-disabled" : "")"   MaxSelectedLabels="6" Chips="true" @onblur="@(() => OnRoleUserSubmit(user))"/>
                 </td>
                 <td class="hstack gap-3">
                     
