@@ -226,6 +226,7 @@ else
         allContractors = await ContractorService.GetAllContractorsAsync();
     }
 
+    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin)]
     private async Task Delete(int contractIdToDelete)
     {
         await ContractService.DeleteContractAsync(contractIdToDelete);
