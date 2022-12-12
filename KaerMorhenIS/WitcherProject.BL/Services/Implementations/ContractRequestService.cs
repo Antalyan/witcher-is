@@ -43,9 +43,11 @@ public class ContractRequestService : IContractRequestService
 
     public async Task<ContractRequestDetailedDto> GetContractRequestByIdAsync(int requestId)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedRequests = await _contractRequestRepository.GetById(requestId);
-        return returnedRequests.Adapt<ContractRequestDetailedDto>();
+        // await using var uow = _unitOfWorkProvider.CreateUow();
+        // var returnedRequests = await _contractRequestRepository.GetById(requestId);
+        // return returnedRequests.Adapt<ContractRequestDetailedDto>();
+
+        return (await _contractRequestQueryObject.ExecuteQuery(new ContractRequestFilterDto {Id = requestId})).First();
     }
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByStateAsync(ContractRequestState state, int? pageNumber = null)
