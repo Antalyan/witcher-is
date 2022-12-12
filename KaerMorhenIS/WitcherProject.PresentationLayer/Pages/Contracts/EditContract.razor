@@ -48,7 +48,7 @@ else
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 State:
-                <InputSelect class="form-control" @bind-Value="contract.State" disabled="@(!_hasOwnerRights)">
+                <InputSelect class="form-control" @bind-Value="contract.State" DisplayName="state" disabled="@(!_hasOwnerRights)">
                     @foreach (var state in stateOptions)
                     {
                         <option value=@state>@state</option>

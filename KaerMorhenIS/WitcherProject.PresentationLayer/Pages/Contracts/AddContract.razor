@@ -38,7 +38,7 @@ else
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 State:
-                <InputSelect class="form-control" @bind-Value="contract.State">
+                <InputSelect class="form-control" @bind-Value="contract.State" DisplayName="state">
                     @foreach (var state in stateOptions)
                     {
                         <option value=@state>@state</option>
@@ -72,10 +72,6 @@ else
                     @if (hasAllRights)
                     {
                         <option value=""></option>
-                    }
-                    else
-                    {
-                        <option value=@authenticationStateTask.Result.User>@(@authenticationStateTask.Result.User.Identity.Name)</option>
                     }
                     @foreach (var person in personOptions)
                     {
