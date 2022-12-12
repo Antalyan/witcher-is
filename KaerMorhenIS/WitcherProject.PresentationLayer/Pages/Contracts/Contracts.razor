@@ -1,5 +1,5 @@
-﻿@page "/Contracts"
-@* @attribute [Authorize(Roles = RoleNames.Witcher)] *@
+﻿@page "/contracts"
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
 @using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.BL.DTOs.Contract
 @using WitcherProject.BL.DTOs.Contractor
@@ -118,22 +118,29 @@ else
                 <td>@(cont.Person != null ? cont.Person.Name + " " + cont.Person?.Surname : null) </td>
                 <td>
                     <div class="hstack gap-3">
-                        @* //TODO: there should be only Detail or Edit depending on current logged user role *@
-                        @* //TODO: fix on-click event *@
-
-                        <button class="btn btn-outline-primary rounded-circle" @onClick="() => RedirectToDetail(cont.Id)">
-                            <i class="bi bi-eye" title="Details"></i>
+                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
+                            @if (HasOwnerRights(cont.Person?.Id))
+                            {
+                                <i class="bi bi-pencil" title="Edit"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-eye" title="Details"></i>
+                            }
                         </button>
-                        <button class="btn btn-outline-primary rounded-circle">
-                            <i class="bi bi-pencil" title="Edit"></i>
-                        </button>
-                        @* //TODO: add action: pop-up window with request text *@
-                        <button class="btn btn-outline-primary rounded-circle">
-                            <i class="bi bi-envelope" title="Send request"></i>
-                        </button>
-                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => Delete(cont.Id)">
-                            <i class="bi bi-x" title="Delete"></i>
-                        </button>
+                        @if (HasOwnerRights(cont.Person?.Id))
+                        {
+                            <button class="btn btn-outline-danger rounded-circle" @onclick="() => Delete(cont.Id)">
+                                <i class="bi bi-x" title="Delete"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            @* //TODO: add action: pop-up window with request text *@
+                            <button class="btn btn-outline-primary rounded-circle">
+                                <i class="bi bi-envelope" title="Send request"></i>
+                            </button>
+                        }
                     </div>
                 </td>
             </tr>
@@ -173,6 +180,12 @@ else
     private IEnumerable<ContractorDto> allContractors;
     private ContractFilterDto filter;
 
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private bool _hasAllRights = false;
+    private int _userId;
+
     private async Task SetPageNumber(int number)
     {
         filter.RequestedPageNumber = number;
@@ -196,8 +209,17 @@ else
 
     private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "";
 
+    private bool HasOwnerRights(int? assignedPersonId) => _hasAllRights || assignedPersonId == _userId;
+
     protected override async Task OnInitializedAsync()
     {
+        var user = (await authenticationStateTask).User;
+        _userId = (await PersonService.GetPersonByLogin(user.Identity.Name!)).Id;
+        if (user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin))
+        {
+            _hasAllRights = true;
+        }
+
         filter = new ContractFilterDto { RequestedPageNumber = 1 };
         contracts = await ContractService.GetContractsFilteredAsync(filter);
         allPersons = await PersonService.GetAllSimpleUsersAsync();
