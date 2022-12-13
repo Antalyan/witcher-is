@@ -1,0 +1,139 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.ContractRequest
+@using WitcherProject.Shared
+@using Mapster
+@using WitcherProject.Shared.Enums
+
+@inject IContractRequestService ContractRequestService
+@inject IPersonService PersonService
+@inject NavigationManager NavigationManager
+
+
+@if (contractRequest == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    @* based on https://stackoverflow.com/a/58256978 *@
+    <EditForm Model="@contractRequest" Context="formContext">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <AuthorizeView Roles="@RoleNames.GetRoles(new[] {RoleNames.Admin, RoleNames.ContractManager})">
+            <div>
+                <label class="form-label col-sm-10 col-md-4 pb-2">
+                    Request ID:
+                    <InputNumber class="form-control" @bind-Value="@contractRequest.Id" DisplayName="request id"
+                                 disabled="true">
+                    </InputNumber>
+                </label>
+            </div>
+        </AuthorizeView>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Contract:
+                <InputText class="form-control" @bind-Value="@contractRequest.Contract.Name" DisplayName="contract"
+                           disabled="true">
+                </InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Requesting person:
+                <InputText class="form-control" @bind-Value="@contractRequest.Person.Name" DisplayName="person"
+                           disabled="true">
+                </InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                State:
+                <InputSelect class="form-control" @bind-Value="contractRequest.State" DisplayName="state"
+                             disabled="true">
+                    @foreach (var state in stateOptions)
+                    {
+                        <option value=@state>@state</option>
+                    }
+                </InputSelect>`
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Requested on:
+                <InputDate class="form-control" @bind-Value=@contractRequest.CreatedOn DisplayName="created on"
+                           disabled="true">
+                </InputDate>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Description:
+                <InputText class="form-control" @bind-Value="@contractRequest.Text" DisplayName="description"
+                           disabled="@_disableEdit">
+                </InputText>
+            </label>
+        </div>
+        <button class="btn btn-primary" type="submit" @onclick="@(() => SaveContractRequest(formContext))">Save</button>
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public int RequestId { get; set; }
+    
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private bool _disableEdit = true;
+    private bool _fullEdit = false;
+
+    private ContractRequestDetailedDto contractRequest;
+    private IEnumerable<ContractRequestState> stateOptions;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        contractRequest = await ContractRequestService.GetContractRequestByIdAsync(RequestId);
+
+    // TODO: replace with proper claims -> loged in user can edit only his requests
+        var user = (await authenticationStateTask).User;
+        if (user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin))
+        {
+            _disableEdit = false;
+            _fullEdit = true;
+        }
+        else
+        {
+            var activePerson = await PersonService.GetPersonByLogin(user.Identity.Name!);
+            if (contractRequest.Person.Id == activePerson.Id)
+            {
+                _disableEdit = false;
+            }
+        }
+        stateOptions = ContractRequestStateUtil.GetAllStates();
+
+    }
+    
+
+    // TODO: missing authorization for currently loged in user?
+    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+    private async Task SaveContractRequest(EditContext formContext)
+    {
+        if (!formContext.Validate())
+            return;
+
+        var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
+        await ContractRequestService.UpdateContractRequestAsync(adapted);
+        NavigationManager.NavigateTo($"/contractRequests", true);
+    }
+
+    private Task UpdateContractRequest()
+    {
+        throw new NotImplementedException();
+    }
+
+}
