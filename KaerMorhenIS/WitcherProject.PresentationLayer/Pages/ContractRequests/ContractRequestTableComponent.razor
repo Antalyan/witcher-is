@@ -1,0 +1,100 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.ContractRequest
+
+
+@inject IContractRequestService ContractRequestService
+@inject NavigationManager NavigationManager
+
+@if (contractRequests == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Text</th>
+            <th>State</th>
+            <th>Created on</th>
+            <th>Requesting person</th>
+            <th>Requested contract</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var request in contractRequests)
+        {
+            <tr>
+                <td>@request.Id</td>
+                <td>@request.Text</td>
+                <td>@request.State</td>
+                <td>@request.CreatedOn</td>
+                <td>@(request.Person.Name + " " + request.Person.Surname) </td>
+                <td>@request.Contract.Name </td>
+                <td>
+                    <div class="hstack gap-3">
+                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(request.Id)">
+                            <i class="bi bi-pencil" title="Edit"></i>
+                        </button>
+                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => Delete(request.Id)">
+                            <i class="bi bi-x" title="Delete"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<ContractRequestDetailedDto> contractRequests;
+    private ContractRequestFilterDto filter;
+    
+    // currently we can filter 
+    private async Task SetPageNumber(int number)
+    {
+        filter.RequestedPageNumber = number;
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+    }
+    
+    private async Task Previous()
+    {
+        if (filter.RequestedPageNumber > 1)
+        {
+            filter.RequestedPageNumber--;
+            contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        }
+    }
+    
+    private async Task Next()
+    {
+        filter.RequestedPageNumber++;
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+    }
+    
+    private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        filter = new ContractRequestFilterDto { RequestedPageNumber = 1 };
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+    }
+
+    private async Task Delete(int contractRequestToDelete)
+    {
+        await ContractRequestService.DeleteContractRequestAsync(contractRequestToDelete);
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+    }
+
+    private void RedirectToDetail(int contractRequestId)
+    {
+        NavigationManager.NavigateTo($"/contractRequests/{contractRequestId}", true);
+    }
+
+}
