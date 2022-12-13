@@ -1,0 +1,13 @@
+﻿@page "/contractRequests/{ContractId:int}/{PersonId:int}"
+
+<h3>Create contract request</h3>
+
+<ContractRequestFormComponent ContractId="@ContractId" PersonId="@PersonId"></ContractRequestFormComponent>
+
+@code {
+    [Parameter]
+    public int ContractId { get; set; }
+    
+    [Parameter]
+    public int PersonId { get; set; }
+}

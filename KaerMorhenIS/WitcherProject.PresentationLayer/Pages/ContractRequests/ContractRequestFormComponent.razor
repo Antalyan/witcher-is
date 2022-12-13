@@ -2,10 +2,11 @@
 @using WitcherProject.BL.DTOs.ContractRequest
 @using WitcherProject.Shared
 @using Mapster
+@using WitcherProject.BL.DTOs.Person
 @using WitcherProject.Shared.Enums
 
 @inject IContractRequestService ContractRequestService
-@inject IPersonService PersonService
+@inject IContractService ContractService
 @inject NavigationManager NavigationManager
 
 
@@ -75,65 +76,93 @@ else
                 </InputText>
             </label>
         </div>
-        <button class="btn btn-primary" type="submit" @onclick="@(() => SaveContractRequest(formContext))">Save</button>
+        <button class="btn btn-primary" type="submit" @onclick="@(() => CreateContractRequest(formContext))">Send request</button>
+        <button class="btn btn-primary" type="submit" @onclick="@ApproveContractRequest">Approve request</button>
+        <button class="btn btn-primary" type="submit" @onclick="@DeclineContractRequest">Decline request</button>
     </EditForm>
 }
 
 @code {
 
-    [Parameter]
-    public int RequestId { get; set; }
-    
+    [Parameter] public int? RequestId { get; set; }
+    [Parameter] public int? ContractId { get; set; }
+    [Parameter] public int? PersonId { get; set; }
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    private bool _disableEdit = true;
-    private bool _fullEdit = false;
-
     private ContractRequestDetailedDto contractRequest;
     private IEnumerable<ContractRequestState> stateOptions;
 
+    private bool _disableEdit = true;
 
     protected override async Task OnInitializedAsync()
     {
-        contractRequest = await ContractRequestService.GetContractRequestByIdAsync(RequestId);
-
-    // TODO: replace with proper claims -> loged in user can edit only his requests
-        var user = (await authenticationStateTask).User;
-        if (user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin))
+        if (RequestId == null) // Adding new CR
         {
+            contractRequest = new ContractRequestDetailedDto();
             _disableEdit = false;
-            _fullEdit = true;
         }
-        else
+        else    // Working with existing CR
         {
-            var activePerson = await PersonService.GetPersonByLogin(user.Identity.Name!);
-            if (contractRequest.Person.Id == activePerson.Id)
-            {
-                _disableEdit = false;
-            }
+            contractRequest = await ContractRequestService.GetContractRequestByIdAsync(RequestId ?? -1);
         }
         stateOptions = ContractRequestStateUtil.GetAllStates();
-
     }
     
 
     // TODO: missing authorization for currently loged in user?
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
-    private async Task SaveContractRequest(EditContext formContext)
+    private async Task CreateContractRequest(EditContext formContext)
     {
         if (!formContext.Validate())
+        {
             return;
+        }
 
+        var adapted = contractRequest.Adapt<ContractRequestAddDto>();
+        adapted.PersonId = (int) PersonId;  // cast is ok because in create the personId is always provided
+        adapted.ContractId = (int) ContractId;
+        await ContractRequestService.CreateContractRequestAsync(adapted);
+        NavigationManager.NavigateTo($"/contractRequests", true);
+    }
+
+    // TODO: authorization
+    private async Task ApproveContractRequest()
+    {
         var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
+        adapted.State = ContractRequestState.Approved;
+        await ContractRequestService.UpdateContractRequestAsync(adapted);
+        
+        // handling approve consequences
+        // set declined for all other requesters for this particular contract
+        var filter = new ContractRequestFilterDto {State = ContractRequestState.Requested};
+        var allOpenRequestsForContract = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        foreach (var request in allOpenRequestsForContract)
+        {
+            await DeclineContractRequest(request.Adapt<ContractRequestUpdateDto>());
+        }
+
+        // change contract state to ASSIGNED and add the person to the contract
+        var requestedContract = await ContractService.GetContractByIdAsync((int) ContractId);
+        requestedContract.State = ContractState.Assigned;
+        requestedContract.Person = new PersonSimpleDto {Id = (int) PersonId};   // todo - will this work fine?
+        
+        NavigationManager.NavigateTo($"/contractRequests", true);
+    }
+    
+    // TODO: authorization
+    private async Task DeclineContractRequest()
+    {
+        var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
+        adapted.State = ContractRequestState.Declined;
         await ContractRequestService.UpdateContractRequestAsync(adapted);
         NavigationManager.NavigateTo($"/contractRequests", true);
     }
 
-    private Task UpdateContractRequest()
+    private async Task DeclineContractRequest(ContractRequestUpdateDto requestToDecline)
     {
-        throw new NotImplementedException();
+        requestToDecline.State = ContractRequestState.Declined;
+        await ContractRequestService.UpdateContractRequestAsync(requestToDecline);
     }
-
 }
