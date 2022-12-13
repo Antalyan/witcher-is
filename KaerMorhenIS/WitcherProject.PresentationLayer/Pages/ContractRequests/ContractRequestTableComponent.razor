@@ -49,13 +49,38 @@ else
         }
         </tbody>
     </table>
+    
+    <nav class="d-flex justify-content-end" aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item page-pre" @onclick="Previous">
+                <a class="page-link" href="javascript:void(0)">Previous</a>
+            </li>
+            <li class="page-item @IsActive(1)" @onclick="() => SetPageNumber(1)">
+                <a class="page-link" href="javascript:void(0)">1</a>
+            </li>
+            <li class="page-item @IsActive(2)" @onclick="() => SetPageNumber(2)">
+                <a class="page-link" href="javascript:void(0)">2</a>
+            </li>
+            @if (filter.RequestedPageNumber > 2)
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" href="javascript:void(0)">...</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" href="javascript:void(0)">@filter.RequestedPageNumber</a>
+                </li>
+            }
+            <li class="page-item" @onclick="Next">
+                <a class="page-link" href="javascript:void(0)">Next</a>
+            </li>
+        </ul>
+    </nav>
 }
 
 @code {
     private IEnumerable<ContractRequestDetailedDto> contractRequests;
     private ContractRequestFilterDto filter;
     
-    // currently we can filter 
     private async Task SetPageNumber(int number)
     {
         filter.RequestedPageNumber = number;
