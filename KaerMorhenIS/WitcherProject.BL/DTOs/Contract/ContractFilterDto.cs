@@ -11,13 +11,11 @@ public class ContractFilterDto
         set;
     }
     
-    [Required]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     public string? Description { get; set; }
     
-    [Required]
-    public ContractState State { get; set; }
+    public ContractState? State { get; set; }
 
     public DateTime? StartDate { get; set; }
 
