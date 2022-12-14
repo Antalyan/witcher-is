@@ -22,7 +22,8 @@
     </label>
 
     <label class="form-label col-sm-10 col-md-4">
-        Password: <InputText class="form-control" @bind-Value="@loginModel.Password" DisplayName="Password"></InputText>
+        Password: 
+        <RadzenPassword class="form-control" Placeholder="Enter password..." @bind-Value="@loginModel.Password" DisplayName="Password"/>
     </label>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
