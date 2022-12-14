@@ -173,6 +173,11 @@ else
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
     private async Task SaveContract()
     {
+        if (contract.State == ContractState.Open && _personId != null)
+        {
+            contract.State = ContractState.Assigned;
+        }
+        
         if (ContractId == null) //Add
         {
             var adapted = contract.Adapt<ContractAddDto>();
