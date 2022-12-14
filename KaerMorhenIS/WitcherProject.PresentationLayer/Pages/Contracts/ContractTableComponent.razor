@@ -115,7 +115,7 @@ else
                 <td>@cont.State</td>
                 <td>@cont.StartDate</td>
                 <td>@cont.EndDate</td>
-                <td>@cont.Deadline</td>
+                <td>@cont.Deadline?.ToShortDateString()</td>
                 <td>@cont.Location</td>
                 <td>@(cont.Person != null ? cont.Person.Name + " " + cont.Person?.Surname : null) </td>
                 <td>
