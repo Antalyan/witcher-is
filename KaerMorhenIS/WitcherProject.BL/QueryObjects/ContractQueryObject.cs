@@ -23,9 +23,9 @@ public class ContractQueryObject: IContractQueryObject
         _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Name) || contract.Name.Contains(filter.Name));
         _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Description) || contract.Description == filter.Description);
         _contractQuery.Filter(contract => filter.State == null || contract.State == filter.State);
-        _contractQuery.Filter(contract => filter.StartDate == null || contract.StartDate == filter.StartDate);
-        _contractQuery.Filter(contract => filter.EndDate == null || contract.EndDate == filter.EndDate);
-        _contractQuery.Filter(contract => filter.Deadline == null || contract.Deadline == filter.Deadline);
+        _contractQuery.Filter(contract => filter.StartDate == null || contract.StartDate <= filter.StartDate);
+        _contractQuery.Filter(contract => filter.EndDate == null || contract.EndDate <= filter.EndDate);
+        _contractQuery.Filter(contract => filter.Deadline == null || contract.Deadline <= filter.Deadline);
         _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Location) || contract.Location == filter.Location);
         _contractQuery.Filter(contract => filter.ContractorId == null || contract.ContractorId == filter.ContractorId);
         _contractQuery.Filter(contract => filter.PersonId == null || contract.PersonId == filter.PersonId);
