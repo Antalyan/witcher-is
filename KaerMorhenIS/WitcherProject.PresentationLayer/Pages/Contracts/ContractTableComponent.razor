@@ -110,8 +110,8 @@ else
         @foreach (var cont in contracts)
         {
             <tr>
-                <td>@cont.Name.</td>
-                <td>@cont.Description.</td>
+                <td>@cont.Name</td>
+                <td>@cont.Description</td>
                 <td>@cont.State</td>
                 <td>@cont.StartDate</td>
                 <td>@cont.EndDate</td>
@@ -130,13 +130,13 @@ else
                                 <i class="bi bi-eye" title="Details"></i>
                             }
                         </button>
-                        @if (HasOwnerRights(cont.Person?.Id))
+                        @if (_hasAllRights)
                         {
                             <button class="btn btn-outline-danger rounded-circle" @onclick="() => Delete(cont.Id)">
                                 <i class="bi bi-x" title="Delete"></i>
                             </button>
                         }
-                        else
+                        else if (!HasOwnerRights(cont.Person?.Id))
                         {
                                 @* //TODO: add action: pop-up window with request text *@
                             <button class="btn btn-outline-primary rounded-circle">

@@ -151,7 +151,6 @@ else
             }
         }
 
-        
         var user = (await authenticationStateTask).User;
         activePerson = await PersonService.GetPersonByLogin(user.Identity.Name!);
         if (user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin))
@@ -159,9 +158,10 @@ else
             _hasFullRights = true;
             _hasOwnerRights = true;
         }
-        else if (_personId == activePerson.Id)
+        else if (_personId == activePerson.Id || ContractId == null)
         {
             _hasOwnerRights = true;
+            _personId = activePerson.Id;
         }
 
         stateOptions = _hasFullRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates();
