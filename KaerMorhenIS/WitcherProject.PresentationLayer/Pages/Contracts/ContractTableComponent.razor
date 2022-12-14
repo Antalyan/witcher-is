@@ -136,7 +136,7 @@ else
                                 <i class="bi bi-x" title="Delete"></i>
                             </button>
                         }
-                        else if (!HasOwnerRights(cont.Person?.Id))
+                        else if (!HasOwnerRights(cont.Person?.Id) && cont.State == ContractState.Open)
                         {
                                 @* //TODO: add action: pop-up window with request text *@
                             <button class="btn btn-outline-primary rounded-circle">
