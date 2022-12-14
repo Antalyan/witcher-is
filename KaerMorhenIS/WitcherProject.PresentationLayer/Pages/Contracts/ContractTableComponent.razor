@@ -51,7 +51,7 @@ else
                     </label>
                 </div>
 
-                @if (PersonIdLimit != null)
+                @if (PersonIdLimit == null)
                 {
                     <div class="col-auto">
                         <label class="form-label">
@@ -99,7 +99,7 @@ else
             <th>End date</th>
             <th>Deadline</th>
             <th>Location</th>
-            @if (PersonIdLimit != null)
+            @if (PersonIdLimit == null)
             {
                 <th>Assigned to</th>
             }
