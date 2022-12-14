@@ -30,7 +30,7 @@ public class ContractService : IContractService
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         contractAddDto.StartDate = DateTime.Now;
-        if (contractAddDto.State == ContractState.Open && contractAddDto.PersonId != null)
+        if (contractAddDto.State is ContractState.Created or ContractState.Open && contractAddDto.PersonId != null)
         {
             contractAddDto.State = ContractState.Assigned;
         }
