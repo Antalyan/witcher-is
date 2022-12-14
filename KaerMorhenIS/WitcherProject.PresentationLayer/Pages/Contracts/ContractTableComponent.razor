@@ -149,7 +149,13 @@ else
         }
         </tbody>
     </table>
-    <nav class="d-flex justify-content-end" aria-label="Page navigation">
+    <nav class="d-flex justify-content-between" aria-label="Page navigation">
+        <div>
+            <button class="btn btn-outline-primary" onclick="@RedirectToAdd">
+                Add 
+                <i class="bi bi-plus-circle" title="Add"></i>
+            </button>
+        </div>
         <ul class="pagination">
             <li class="page-item page-pre" @onclick="Previous">
                 <a class="page-link" href="javascript:void(0)">Previous</a>
@@ -259,6 +265,11 @@ else
     private void RedirectToDetail(int contractId)
     {
         NavigationManager.NavigateTo($"/contracts/{contractId}", true);
+    }
+
+    private void RedirectToAdd()
+    {
+        NavigationManager.NavigateTo($"/contracts/add");
     }
 
 }

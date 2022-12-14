@@ -12,15 +12,3 @@
 <h3 class="text-primary">Contracts</h3>
 
 <ContractTableComponent/>
-
-<button class="btn btn-outline-primary" onclick="@NavigateToAdd">
-    <i class="bi bi-plus-circle" title="Add"></i>
-</button>
-
-@code {
-
-    private void NavigateToAdd()
-    {
-        NavigationManager.NavigateTo($"/contracts/add");
-    }
-}
