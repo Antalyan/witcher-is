@@ -96,7 +96,7 @@ else
     {
 
         roles = await PersonService.GetRoles();
-         roleString = roles.Select(r => r.Name);
+        roleString = roles.Select(r => r.Name);
         await FetchUserWitchRoles();
     }
 

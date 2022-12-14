@@ -10,6 +10,7 @@
 @inject IContractorService ContractorService
 @inject IPersonService PersonService
 @inject NavigationManager NavigationManager
+@inject ILogger<ContractTableComponent> Logger
 
 @if (contracts == null)
 {
@@ -223,6 +224,8 @@ else
 
     private bool HasOwnerRights(int? assignedPersonId) => _hasAllRights || assignedPersonId == _userId;
 
+    private bool _locked = false;
+
     protected override async Task OnInitializedAsync()
     {
         var user = (await authenticationStateTask).User;
@@ -253,13 +256,27 @@ else
 
     private async Task Filter()
     {
+        if (_locked)
+        {
+            Logger.LogWarning("Filter could not be performed due to race condition");
+            return;
+        }
+        _locked = true;
         contracts = await ContractService.GetContractsFilteredAsync(filter);
+        _locked = false;
     }
 
     private async Task Reset()
     {
+        if (_locked)
+        {
+            Logger.LogWarning("Reset could not be performed due to race condition");
+            return;
+        }
+        _locked = true;
         filter = new ContractFilterDto { RequestedPageNumber = 1 };
-        contracts = await ContractService.GetContractsFilteredAsync(filter);
+        contracts = await ContractService.GetContractsFilteredAsync(filter);        
+        _locked = false;
     }
 
     private void RedirectToDetail(int contractId)
