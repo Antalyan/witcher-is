@@ -35,9 +35,9 @@ else
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Description:
-                <InputText class="form-control" @bind-Value="@contract.Description" DisplayName="description"
+                <InputTextArea class="form-control" @bind-Value="@contract.Description" DisplayName="description"
                            disabled="@(!_hasOwnerRights)">
-                </InputText>
+                </InputTextArea>
             </label>
         </div>
         <div>
@@ -55,7 +55,15 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Start date:
                 <InputDate class="form-control" @bind-Value=@contract.StartDate DisplayName="start date"
-                           disabled="@(!_hasOwnerRights)">
+                           disabled>
+                </InputDate>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                End date:
+                <InputDate class="form-control" @bind-Value=@contract.EndDate DisplayName="end date"
+                           disabled>
                 </InputDate>
             </label>
         </div>
@@ -164,20 +172,15 @@ else
             _personId = activePerson.Id;
         }
 
-        stateOptions = _hasFullRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates();
-         //TODO optional: replace people by only witchers
-        personOptions = _hasFullRights ? await PersonService.GetAllSimpleUsersAsync() : new List<PersonSimpleDto> {activePerson.Adapt<PersonSimpleDto>()};
+        stateOptions = _hasFullRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates(contract.State);
+    //TODO optional: replace people by only witchers
+        personOptions = _hasFullRights ? await PersonService.GetAllSimpleUsersAsync() : new List<PersonSimpleDto> { activePerson.Adapt<PersonSimpleDto>() };
         contractorOptions = await ContractorService.GetAllContractorsAsync();
     }
 
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
     private async Task SaveContract()
     {
-        if (contract.State == ContractState.Open && _personId != null)
-        {
-            contract.State = ContractState.Assigned;
-        }
-        
         if (ContractId == null) //Add
         {
             var adapted = contract.Adapt<ContractAddDto>();
@@ -192,7 +195,12 @@ else
             adapted.ContractorId = _contractorId;
             await ContractService.UpdateContractAsync(adapted);
         }
-        
+
+        RedirectToContracts();
+    }
+
+    private void RedirectToContracts()
+    {
         NavigationManager.NavigateTo($"/contracts", true);
     }
 

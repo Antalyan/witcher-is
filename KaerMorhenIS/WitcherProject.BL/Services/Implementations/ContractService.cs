@@ -29,6 +29,11 @@ public class ContractService : IContractService
     public async Task CreateContractAsync(ContractAddDto contractAddDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
+        contractAddDto.StartDate = DateTime.Now;
+        if (contractAddDto.State == ContractState.Open && contractAddDto.PersonId != null)
+        {
+            contractAddDto.State = ContractState.Assigned;
+        }
         await _contractRepository.Insert(contractAddDto.Adapt<Contract>());
         await uow.CommitAsync();
     }
@@ -42,7 +47,6 @@ public class ContractService : IContractService
 
     public async Task<ContractDetailedDto> GetContractByIdAsync(int contractId)
     {
-        //TODO implement include person and contractor
         return (await _contractQueryObject.ExecuteQuery(new ContractFilterDto {Id = contractId})).First();
     }
     
@@ -68,6 +72,17 @@ public class ContractService : IContractService
     public async Task UpdateContractAsync(ContractUpdateDto contractUpdateDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
+        
+        if (contractUpdateDto.State == ContractState.Open && contractUpdateDto.PersonId != null)
+        {
+            contractUpdateDto.State = ContractState.Assigned;
+        }
+        if (contractUpdateDto.EndDate == null &&
+            (contractUpdateDto.State is ContractState.Cancelled or ContractState.Unresolved or ContractState.Resolved))
+        {
+            contractUpdateDto.EndDate = DateTime.Now;
+        }
+        
         _contractRepository.Update(contractUpdateDto.Adapt<Contract>());
         await uow.CommitAsync();
     }

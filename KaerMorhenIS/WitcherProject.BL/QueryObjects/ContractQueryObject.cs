@@ -39,7 +39,7 @@ public class ContractQueryObject: IContractQueryObject
         {
             case null:
             {
-                _contractQuery.OrderBy(x => x.Id, filter.SortAscending);
+                _contractQuery.OrderBy(x => x.StartDate, false);
                 break;
             }
             case "StartDate":
