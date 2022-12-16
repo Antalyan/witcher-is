@@ -76,13 +76,32 @@ else
                 </InputText>
             </label>
         </div>
-        <button class="btn btn-primary" type="submit" @onclick="@(() => CreateContractRequest(formContext))">Send request</button>
-        <button class="btn btn-primary" type="submit" @onclick="@ApproveContractRequest">Approve request</button>
-        <button class="btn btn-primary" type="submit" @onclick="@DeclineContractRequest">Decline request</button>
-    </EditForm>
+        
+        @* TODO - possible future refactor - create scenario var, set it accordingly and work with that*@
+        @if (_scenario == Scenario.NewContractRequest)
+        {
+            <button class="btn btn-primary" type="submit" @onclick="@(() => CreateContractRequest(formContext))">Send request</button>
+
+        }
+        else if (_scenario == Scenario.ExistingContractRequest)
+        {
+            <button class="btn btn-primary" type="submit" @onclick="@ApproveContractRequest">Approve request</button>
+            <button class="btn btn-primary" type="submit" @onclick="@DeclineContractRequest">Decline request</button>
+ 
+        }
+   </EditForm>
 }
 
 @code {
+    
+    // TODO possibly transfer to DAL or SHARED as a proper enum
+    private enum Scenario
+    {
+        NewContractRequest,
+        ExistingContractRequest
+    }
+
+    private Scenario _scenario;
 
     [Parameter] public int? RequestId { get; set; }
     [Parameter] public int? ContractId { get; set; }
@@ -102,10 +121,12 @@ else
         {
             contractRequest = new ContractRequestDetailedDto();
             _disableEdit = false;
+            _scenario = Scenario.NewContractRequest;
         }
         else    // Working with existing CR
         {
             contractRequest = await ContractRequestService.GetContractRequestByIdAsync(RequestId ?? -1);
+            _scenario = Scenario.ExistingContractRequest;
         }
         stateOptions = ContractRequestStateUtil.GetAllStates();
     }
@@ -123,6 +144,7 @@ else
         var adapted = contractRequest.Adapt<ContractRequestAddDto>();
         adapted.PersonId = (int) PersonId;  // cast is ok because in create the personId is always provided
         adapted.ContractId = (int) ContractId;
+        adapted.State = ContractRequestState.Requested;
         await ContractRequestService.CreateContractRequestAsync(adapted);
         NavigationManager.NavigateTo($"/contractRequests", true);
     }
@@ -136,6 +158,8 @@ else
         
         // handling approve consequences
         // set declined for all other requesters for this particular contract
+        
+        // TODO - change to filter requested on this contract ->> add this contract ID to filter
         var filter = new ContractRequestFilterDto {State = ContractRequestState.Requested};
         var allOpenRequestsForContract = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
         foreach (var request in allOpenRequestsForContract)
