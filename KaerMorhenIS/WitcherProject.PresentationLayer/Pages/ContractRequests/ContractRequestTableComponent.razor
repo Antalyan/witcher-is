@@ -1,8 +1,14 @@
 ﻿@using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.BL.DTOs.ContractRequest
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.Shared.Enums
+@using Microsoft.AspNetCore.Components
+@using WitcherProject.BL.DTOs.Contract
 
 
 @inject IContractRequestService ContractRequestService
+@inject IPersonService PersonService
+@inject IContractService ContractService
 @inject NavigationManager NavigationManager
 
 @if (contractRequests == null)
@@ -13,6 +19,66 @@
 }
 else
 {
+        <div>
+            <EditForm Model=@filter OnValidSubmit="Filter">
+                <div class="row g-3">
+                    <div class="col-auto">
+                        <label class="form-label">
+                            State:
+                            <InputSelect class="form-control" @bind-Value=@filter.State>
+                                <option value="">All</option>
+                                @foreach (var state in Enum.GetNames(typeof(ContractRequestState)))
+                                {
+                                    <option value=@state>@state</option>
+                                }
+                            </InputSelect>
+                        </label>
+                    </div>
+                    
+                    @* TODO: rework to "from" and "to" filtering?*@
+                    <div class="col-auto">
+                        <label class="form-label">
+                            Created on:
+                            <InputDate class="form-control col" @bind-Value=@filter.CreatedOn>
+                            </InputDate>
+                        </label>
+                    </div>
+    
+                        <div class="col-auto">
+                            <label class="form-label">
+                                Requesting person:
+                                <InputSelect class="form-control col" @bind-Value=@filter.PersonId>
+                                    <option value="">All</option>
+                                    @foreach (var person in allPersons)
+                                    {
+                                        <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
+                                    }
+                                </InputSelect>
+                            </label>
+                        </div>
+
+                    <div class="col-auto">
+                        <label class="form-label">
+                            Requested contract:
+                            <InputSelect class="form-control col" @bind-Value=@filter.ContractId>
+                                <option value="">All</option>
+                                @foreach (var contract in allContracts)
+                                {
+                                    <option value=@contract.Id>@(contract.Name)</option>
+                                }
+                            </InputSelect>
+                        </label>
+                    </div>
+    
+                    <div class="col-auto d-flex align-items-end pb-2">
+                        <button class="btn btn-primary form-control" type="submit">Filter</button>
+                    </div>
+                    <div class="col-auto d-flex align-items-end pb-2">
+                        <button class="btn btn-primary form-control" type="submit" @onclick=Reset>Reset</button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
     <table class="table">
         <thead>
         <tr>
@@ -79,6 +145,8 @@ else
 
 @code {
     private IEnumerable<ContractRequestDetailedDto> contractRequests;
+    private IEnumerable<PersonSimpleDto> allPersons;
+    private IEnumerable<ContractSimpleDto> allContracts;
     private ContractRequestFilterDto filter;
     
     private async Task SetPageNumber(int number)
@@ -109,6 +177,13 @@ else
     {
         filter = new ContractRequestFilterDto { RequestedPageNumber = 1 };
         contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        allPersons = await PersonService.GetAllSimpleUsersAsync();
+        allContracts = await ContractService.GetAllSimpleContractsAsync();
+    }
+    
+    private async Task Filter()
+    {
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
     }
 
     private async Task Delete(int contractRequestToDelete)
@@ -117,6 +192,13 @@ else
         contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
     }
 
+    private async Task Reset()
+    {
+        // TODO: implement better way of reseting the filter? E.g. via resetting properties to default
+        filter = new ContractRequestFilterDto() { RequestedPageNumber = 1 };
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+    }
+    
     private void RedirectToDetail(int contractRequestId)
     {
         NavigationManager.NavigateTo($"/contractRequests/{contractRequestId}", true);

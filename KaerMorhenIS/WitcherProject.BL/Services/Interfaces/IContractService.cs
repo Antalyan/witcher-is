@@ -26,4 +26,6 @@ public interface IContractService
     Task AddContractorToContractAsync(int contractId, int contractorId);
 
     Task DeleteContractAsync(int contractId);
+
+    Task<IEnumerable<ContractSimpleDto>> GetAllSimpleContractsAsync();
 }
