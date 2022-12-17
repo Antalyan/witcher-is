@@ -34,7 +34,6 @@ public class ContractRequestAdvancedService : IContractRequestAdvancedService
 
         allOpenRequestsForContract = allOpenRequestsForContract.Where(cr => cr.Id != contractRequest.Id).ToList();
         
-        
         foreach (var request in allOpenRequestsForContract)
         {
             request.State = ContractRequestState.Declined;
@@ -44,7 +43,7 @@ public class ContractRequestAdvancedService : IContractRequestAdvancedService
         // change contract state to ASSIGNED and add the person to the contract
         var requestedContract = await _contractService.GetContractByIdAsync(contractId);
         requestedContract.State = ContractState.Assigned;
-        requestedContract.Person = new PersonSimpleDto {Id = personId};   // todo - will this work fine?
+        requestedContract.Person = new PersonSimpleDto {Id = personId};
         _contractService.UpdateWithoutCommitContract(requestedContract.Adapt<ContractUpdateDto>());
 
         await uow.CommitAsync();

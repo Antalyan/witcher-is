@@ -2,12 +2,14 @@
 @using WitcherProject.BL.DTOs.ContractRequest
 @using WitcherProject.Shared
 @using Mapster
+@using WitcherProject.BL.DTOs.Contract
 @using WitcherProject.BL.DTOs.Person
 @using WitcherProject.Shared.Enums
 
 @inject IContractRequestService ContractRequestService
 @inject IContractRequestAdvancedService ContractRequestAdvancedService
 @inject IContractService ContractService
+@inject IPersonService PersonService
 @inject NavigationManager NavigationManager
 
 
@@ -23,7 +25,7 @@ else
     <EditForm Model="@contractRequest" Context="formContext">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
-        @if (RequestId != null)
+        @if (_scenario == Scenario.ExistingContractRequest)
         {
             <AuthorizeView Roles="@RoleNames.GetRoles(new[] {RoleNames.Admin, RoleNames.ContractManager})">
         
@@ -82,12 +84,11 @@ else
             </label>
         </div>
 
-        @* TODO - possible future refactor - create scenario var, set it accordingly and work with that*@
         @if (_scenario == Scenario.NewContractRequest)
         {
             <button class="btn btn-primary" type="submit" @onclick="@(() => CreateContractRequest(formContext))">Send request</button>
         }
-        else if (_scenario == Scenario.ExistingContractRequest)
+        else if (_scenario == Scenario.ExistingContractRequest && contractRequest.State == ContractRequestState.Requested)
         {
             <button class="btn btn-primary" type="submit" @onclick="@ApproveContractRequest">Approve request</button>
             <button class="btn btn-primary" type="submit" @onclick="@DeclineContractRequest">Decline request</button>
@@ -97,7 +98,7 @@ else
 
 @code {
 
-    // TODO possibly transfer to DAL or SHARED as a proper enum
+    // possibly transfer to DAL or SHARED as a proper enum
     private enum Scenario
     {
         NewContractRequest,
@@ -125,6 +126,11 @@ else
         if (RequestId == null) // Adding new CR
         {
             contractRequest = new ContractRequestDetailedDto();
+            var requestedContract = await ContractService.GetContractByIdAsync((int) ContractId);
+            var requestedPerson = await PersonService.GetPersonById((int) PersonId);
+            contractRequest.Contract = requestedContract.Adapt<ContractSimpleDto>();
+            contractRequest.Person = requestedPerson.Adapt<PersonSimpleDto>();
+            
             _disableEdit = false;
             _scenario = Scenario.NewContractRequest;
         }
@@ -137,8 +143,7 @@ else
     }
 
 
-    // TODO: missing authorization for currently loged in user?
-    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Witcher)]
     private async Task CreateContractRequest(EditContext formContext)
     {
         if (!formContext.Validate())
@@ -154,7 +159,7 @@ else
         NavigationManager.NavigateTo($"/contractRequests", true);
     }
 
-    // TODO: authorization
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.ContractManager)]
     private async Task ApproveContractRequest()
     {
         var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
@@ -165,7 +170,7 @@ else
         NavigationManager.NavigateTo($"/contractRequests", true);
     }
 
-    // TODO: authorization
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.ContractManager)]
     private async Task DeclineContractRequest()
     {
         var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
@@ -173,11 +178,4 @@ else
         await ContractRequestService.UpdateContractRequestAsync(adapted);
         NavigationManager.NavigateTo($"/contractRequests", true);
     }
-
-    private async Task DeclineContractRequest(ContractRequestUpdateDto requestToDecline)
-    {
-        requestToDecline.State = ContractRequestState.Declined;
-        await ContractRequestService.UpdateContractRequestAsync(requestToDecline);
-    }
-
 }

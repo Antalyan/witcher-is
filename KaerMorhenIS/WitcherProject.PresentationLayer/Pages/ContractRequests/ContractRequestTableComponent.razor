@@ -104,7 +104,14 @@ else
                 <td>
                     <div class="hstack gap-3">
                         <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(request.Id)">
-                            <i class="bi bi-pencil" title="Edit"></i>
+                            @if (request.State == ContractRequestState.Requested)
+                            {
+                                <i class="bi bi-pencil" title="Edit"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-eye" title="Details"></i>
+                            }
                         </button>
                         <button class="btn btn-outline-primary rounded-circle" @onclick="() => Delete(request.Id)">
                             <i class="bi bi-x" title="Delete"></i>
