@@ -142,19 +142,7 @@ public class ContractServiceTest
         
         Assert.Null(contractForDelete);
     }
-    
-    [Fact]
-    public void ContractDetailedDto_To_Contract_MapAll()
-    {
-    
-        var transformToDto = _beastOfHonorton.Adapt<ContractDetailedDto>();
-        var transformToDal = _beastOfHonortonDetailedDto.Adapt<Contract>();
-    
-        Assert.Equal(_beastOfHonorton, transformToDal);
-        Assert.Equal(transformToDto, _beastOfHonortonDetailedDto);
-        
-    }
-    
+
     [Fact]
     public async Task GetContractsFilteredAsync_Returns_Exact()
     {
