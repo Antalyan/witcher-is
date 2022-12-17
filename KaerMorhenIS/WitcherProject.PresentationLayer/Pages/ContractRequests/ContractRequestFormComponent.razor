@@ -21,6 +21,12 @@
 }
 else
 {
+    @if (!string.IsNullOrEmpty(showSuccess))
+    {
+        <div class="alert alert-success mt-4 mb-4" role="alert">
+            <p>Contract request @showSuccess.</p>
+        </div>
+    }
     @* based on https://stackoverflow.com/a/58256978 *@
     <EditForm Model="@contractRequest" Context="formContext">
         <DataAnnotationsValidator/>
@@ -89,8 +95,16 @@ else
         <AuthorizeView Roles="@RoleNames.GetRoles(new[] { RoleNames.Admin, RoleNames.ContractManager })">
             @if (_scenario == Scenario.ExistingContractRequest && contractRequest.State == ContractRequestState.Requested)
             {
-            <button class="btn btn-primary" type="submit" @onclick="@ApproveContractRequest">Approve request</button>
-            <button class="btn btn-primary" type="submit" @onclick="@DeclineContractRequest">Decline request</button>
+                <div class="d-flex col-sm-10 col-md-4 justify-content-start">
+                    <button class="btn btn-primary me-2" type="submit" @onclick="@ApproveContractRequest">
+                        Approve request
+                        <i class="bi bi-check"></i>
+                    </button>
+                    <button class="btn btn-primary" type="submit" @onclick="@DeclineContractRequest">
+                        Decline request
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
             }
         </AuthorizeView>
     </EditForm>
@@ -120,6 +134,8 @@ else
     private IEnumerable<ContractRequestState> stateOptions;
 
     private bool _disableEdit = true;
+    private string? showSuccess;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -156,7 +172,7 @@ else
         adapted.ContractId = (int)ContractId;
         adapted.State = ContractRequestState.Requested;
         await ContractRequestService.CreateContractRequest(adapted);
-        NavigationManager.NavigateTo($"/contractRequests", true);
+        showSuccess = "created";
     }
 
     [Authorize(Roles = RoleNames.Admin + "," + RoleNames.ContractManager)]
@@ -166,8 +182,7 @@ else
         adapted.State = ContractRequestState.Approved;
 
         await ContractFacade.ApproveContractRequest(adapted, adapted.ContractId, adapted.PersonId);
-
-        NavigationManager.NavigateTo($"/contractRequests", true);
+        showSuccess = "approved";
     }
 
     [Authorize(Roles = RoleNames.Admin + "," + RoleNames.ContractManager)]
@@ -176,7 +191,7 @@ else
         var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
         adapted.State = ContractRequestState.Declined;
         await ContractRequestService.UpdateContractRequest(adapted);
-        NavigationManager.NavigateTo($"/contractRequests", true);
+        showSuccess = "declined";
     }
 
 }

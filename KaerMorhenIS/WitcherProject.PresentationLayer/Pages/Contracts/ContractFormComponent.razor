@@ -22,6 +22,12 @@
 }
 else
 {
+    @if (showSuccess)
+    {
+        <div class="alert alert-success mt-4 mb-4" role="alert">
+            <p>Contract details succesfully saved.</p>
+        </div>
+    }
     <EditForm Model="@contract" OnValidSubmit="SaveContract">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
@@ -140,6 +146,8 @@ else
 
     private int? _personId;
     private int? _contractorId;
+    private bool showSuccess = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -183,13 +191,6 @@ else
     private async Task SaveContract()
     {
         await ContractFacade.SaveContract(_personId, _contractorId, contract.Adapt<ContractUpsertDto>());
-
-        RedirectToContracts();
+        showSuccess = true;
     }
-
-    private void RedirectToContracts()
-    {
-        NavigationManager.NavigateTo($"/contracts", true);
-    }
-
 }
