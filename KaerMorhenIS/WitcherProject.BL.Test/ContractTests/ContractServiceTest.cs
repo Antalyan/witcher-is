@@ -22,8 +22,6 @@ public class ContractServiceTest
     protected ContractDetailedDto _devilByTheWellDetailedDto;
     protected ContractDetailedDto _jennyOTheWoodsDetailedDto;
     protected ContractDetailedDto _beastOfHonortonDetailedDto;
-
-    protected List<ContractDetailedDto> _allContractDetailedDtos;
     
     public ContractServiceTest()
     {
@@ -40,10 +38,6 @@ public class ContractServiceTest
         _devilByTheWellDetailedDto = BlTestDataInitalizator.GetContractDetailedDto("Devil by the Well");
         _jennyOTheWoodsDetailedDto = BlTestDataInitalizator.GetContractDetailedDto("Jenny o' the Woods");
         _beastOfHonortonDetailedDto = BlTestDataInitalizator.GetContractDetailedDto("The Beast of Honorton");
-        _allContractDetailedDtos = new List<ContractDetailedDto>
-        {
-            _devilByTheWellDetailedDto, _jennyOTheWoodsDetailedDto, _beastOfHonortonDetailedDto
-        };
     }
     
     [Fact]
@@ -52,15 +46,12 @@ public class ContractServiceTest
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
         var mockContractRepository = new Mock<IGenericRepository<Contract>>();
-        var mockContractorRepository = new Mock<IGenericRepository<Contractor>>();
-        var mockContractRequestRepository = new Mock<IGenericRepository<ContractRequest>>();
 
         mockContractRepository.Setup(repo => repo.GetAll().Result)
             .Returns(_allContracts);
-        
-        var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
-            mockQueryObject.Object, mockContractRepository.Object, 
-            mockContractorRepository.Object, mockContractRequestRepository.Object);
+
+        var contractService = new ContractService(mockUnitOfWorkProvider.Object,
+            mockQueryObject.Object, mockContractRepository.Object);
         var result = await contractService.GetAllContractsAsync();
         
         Assert.Equal(3, result.Count());
@@ -72,8 +63,6 @@ public class ContractServiceTest
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
         var mockContractRepository = new Mock<IGenericRepository<Contract>>();
-        var mockContractorRepository = new Mock<IGenericRepository<Contractor>>();
-        var mockContractRequestRepository = new Mock<IGenericRepository<ContractRequest>>();
 
         var repositoryContracts = new List<Contract>();
 
@@ -94,8 +83,7 @@ public class ContractServiceTest
         mockContractRepository.Setup(repo => repo.Insert(It.IsAny<Contract>()))
             .Callback(() => repositoryContracts.Add(contractAddDto.Adapt<Contract>()));
         var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
-            mockQueryObject.Object, mockContractRepository.Object, 
-            mockContractorRepository.Object, mockContractRequestRepository.Object);
+            mockQueryObject.Object, mockContractRepository.Object);
        
         await contractService.CreateContractAsync(contractAddDto);
         
@@ -108,8 +96,6 @@ public class ContractServiceTest
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
         var mockContractRepository = new Mock<IGenericRepository<Contract>>();
-        var mockContractorRepository = new Mock<IGenericRepository<Contractor>>();
-        var mockContractRequestRepository = new Mock<IGenericRepository<ContractRequest>>();
 
         var mockUoW = new EFUnitOfWork(new Mock<KaerMorhenDBContext>().Object);
         mockUnitOfWorkProvider.Setup(provider => provider.CreateUow()).Returns(mockUoW);
@@ -117,8 +103,7 @@ public class ContractServiceTest
             .Verifiable();
         
         var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
-            mockQueryObject.Object, mockContractRepository.Object, 
-            mockContractorRepository.Object, mockContractRequestRepository.Object);
+            mockQueryObject.Object, mockContractRepository.Object);
         var contractUpdateDto = new ContractUpdateDto
         {
             ContractorId = 1,
@@ -142,8 +127,6 @@ public class ContractServiceTest
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
         var mockContractRepository = new Mock<IGenericRepository<Contract>>();
-        var mockContractorRepository = new Mock<IGenericRepository<Contractor>>();
-        var mockContractRequestRepository = new Mock<IGenericRepository<ContractRequest>>();
 
         var contractForDelete = _jennyOTheWoods;
 
@@ -153,26 +136,24 @@ public class ContractServiceTest
             .Callback(() => contractForDelete = null);
         
         var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
-            mockQueryObject.Object, mockContractRepository.Object, 
-            mockContractorRepository.Object, mockContractRequestRepository.Object);
-
+            mockQueryObject.Object, mockContractRepository.Object);
         
         await contractService.DeleteContractAsync(_jennyOTheWoods.Id);
         
         Assert.Null(contractForDelete);
     }
-    //
-    // [Fact]
-    // public void ContractDetailedDto_To_Contract_MapAll()
-    // {
-    //
-    //     var transformToDto = _beastOfHonorton.Adapt<ContractDetailedDto>();
-    //     var transformToDal = _beastOfHonortonDetailedDto.Adapt<Contract>();
-    //
-    //     Assert.Equal(_beastOfHonorton, transformToDal);
-    //     Assert.Equal(transformToDto, _beastOfHonortonDetailedDto);
-    //     
-    // }
+    
+    [Fact]
+    public void ContractDetailedDto_To_Contract_MapAll()
+    {
+    
+        var transformToDto = _beastOfHonorton.Adapt<ContractDetailedDto>();
+        var transformToDal = _beastOfHonortonDetailedDto.Adapt<Contract>();
+    
+        Assert.Equal(_beastOfHonorton, transformToDal);
+        Assert.Equal(transformToDto, _beastOfHonortonDetailedDto);
+        
+    }
     
     [Fact]
     public async Task GetContractsFilteredAsync_Returns_Exact()
@@ -180,15 +161,12 @@ public class ContractServiceTest
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
         var mockContractRepository = new Mock<IGenericRepository<Contract>>();
-        var mockContractorRepository = new Mock<IGenericRepository<Contractor>>();
-        var mockContractRequestRepository = new Mock<IGenericRepository<ContractRequest>>();
-        
+
         mockQueryObject.Setup(mqo => mqo.ExecuteQuery(It.IsAny<ContractFilterDto>()).Result)
             .Returns(new List<ContractDetailedDto>{_devilByTheWellDetailedDto, _jennyOTheWoodsDetailedDto});
         
         var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
-            mockQueryObject.Object, mockContractRepository.Object, 
-            mockContractorRepository.Object, mockContractRequestRepository.Object);
+            mockQueryObject.Object, mockContractRepository.Object);
 
         var result = await contractService.GetContractsFilteredAsync(new ContractFilterDto() { ContractorId = 1});
 

@@ -3,13 +3,13 @@
 public class PersonSimpleDto 
 {
     public int Id { get; set; }
-    public string Login { get; set; }
+    public string UserName { get; set; }
     public string Name { get; set; }
     public string? Surname { get; set; }
 
     protected bool Equals(PersonSimpleDto other)
     {
-        return Id == other.Id && Login == other.Login && Name == other.Name && Surname == other.Surname;
+        return Id == other.Id && UserName == other.UserName && Name == other.Name && Surname == other.Surname;
     }
 
     public override bool Equals(object? obj)
@@ -22,6 +22,6 @@ public class PersonSimpleDto
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, Login, Name, Surname);
+        return HashCode.Combine(Id, UserName, Name, Surname);
     }
 }

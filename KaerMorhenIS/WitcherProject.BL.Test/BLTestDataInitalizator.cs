@@ -186,7 +186,7 @@ public static class BlTestDataInitalizator
                 return new PersonSimpleDto
                 {
                     Id = 1,
-                    Login = "whitewolf",
+                    UserName = "whitewolf",
                     Name = "Geralt",
                     Surname = "of Rivia"
                 };
