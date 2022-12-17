@@ -90,6 +90,7 @@ else
             <th>Created on</th>
             <th>Requesting person</th>
             <th>Requested contract</th>
+            <th></th>
         </tr>
         </thead>
 
@@ -115,7 +116,7 @@ else
                                 <i class="bi bi-eye" title="Details"></i>
                             }
                         </button>
-                        <button class="btn btn-primary rounded-circle" @onclick="() => Delete(request.Id)">
+                        <button class="btn btn-danger rounded-circle" @onclick="() => Delete(request.Id)">
                             <i class="bi bi-x" title="Delete"></i>
                         </button>
                     </div>
