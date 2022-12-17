@@ -10,7 +10,7 @@ public interface IContractorService
 
     Task<ContractorDto> GetContractorByIdAsync(int contractorId);
 
-    Task UpdateContractAsync(ContractorDto contractorDto);
+    Task UpdateContractorAsync(ContractorDto contractorDto);
 
     Task DeleteContractorAsync(int contractId);
 }

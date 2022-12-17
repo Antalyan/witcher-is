@@ -5,7 +5,7 @@
     <RadzenMenuItem Text="Settings" Style="color: #0b5ed7" >
         <AuthorizeView Roles="@RoleNames.GetRoles(new []{RoleNames.Admin, RoleNames.UserManager})">
             <Authorized>
-                <RadzenMenuItem Text="User management" Path="/AdminPage" Icon="list"></RadzenMenuItem>
+                <RadzenMenuItem Text="Users" Path="/AdminPage" Icon="list"></RadzenMenuItem>
                 <RadzenMenuItem Text="Registration" Path="/RegisterUser" Icon="account_circle"></RadzenMenuItem>
             </Authorized>
         </AuthorizeView>

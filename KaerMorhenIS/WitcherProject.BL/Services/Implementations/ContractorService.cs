@@ -31,7 +31,8 @@ public class ContractorService: IContractorService
     public async Task<IEnumerable<ContractorDto>> GetAllContractorsAsync()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedContractors = await _contractorRepository.GetAll();
+        var returnedContractors = (await _contractorRepository.GetAll())
+            .OrderBy(contractor => contractor.Surname).ThenBy(contractor => contractor.Name);
         return returnedContractors.Select(contractor => contractor.Adapt<ContractorDto>());
     }
     
@@ -42,7 +43,7 @@ public class ContractorService: IContractorService
         return returnedContractor.Adapt<ContractorDto>();
     }
 
-    public async Task UpdateContractAsync(ContractorDto contractorDto)
+    public async Task UpdateContractorAsync(ContractorDto contractorDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         _contractorRepository.Update(contractorDto.Adapt<Contractor>());

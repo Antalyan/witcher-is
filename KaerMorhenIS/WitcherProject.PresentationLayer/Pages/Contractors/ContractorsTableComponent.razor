@@ -1,0 +1,84 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.Contract
+@using WitcherProject.BL.DTOs.Contractor
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.Shared
+@using WitcherProject.Shared.Enums
+@using Microsoft.AspNetCore.Components
+
+@inject IContractorService ContractorService
+@inject NavigationManager NavigationManager
+@inject ILogger<ContractorsTableComponent> Logger
+
+@if (contractors == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var cont in contractors)
+        {
+            <tr>
+                <td>@cont.Name</td>
+                <td>@cont.Surname</td>
+                <td>
+                    <div class="hstack gap-3">
+                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
+                            <i class="bi bi-pencil" title="Edit"></i>
+                        </button>
+                        <AuthorizeView Roles="@RoleNames.GetRoles(new []{RoleNames.Admin})">>
+                        <button class="btn btn-outline-danger rounded-circle" @onclick="() => Delete(cont.Id)">
+                            <i class="bi bi-x" title="Delete"></i>
+                        </button>
+                        </AuthorizeView>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <nav class="d-flex justify-content-between" aria-label="Page navigation">
+        <div>
+            <button class="btn btn-primary" onclick="@RedirectToAdd">
+                Add
+                <i class="bi bi-plus" title="Add"></i>
+            </button>
+        </div>
+    </nav>
+}
+
+@code {
+    private IEnumerable<ContractorDto> contractors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contractors = await ContractorService.GetAllContractorsAsync();
+    }
+
+    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin)]
+    private async Task Delete(int contractIdToDelete)
+    {
+        await ContractorService.DeleteContractorAsync(contractIdToDelete);
+        contractors = await ContractorService.GetAllContractorsAsync();
+    }
+
+    private void RedirectToDetail(int contractId)
+    {
+        NavigationManager.NavigateTo($"/contractors/{contractId}", true);
+    }
+
+    private void RedirectToAdd()
+    {
+        NavigationManager.NavigateTo($"/contractors/add");
+    }
+}

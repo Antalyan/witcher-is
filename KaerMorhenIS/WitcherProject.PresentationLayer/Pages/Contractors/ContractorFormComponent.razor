@@ -1,0 +1,76 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.Shared
+@using WitcherProject.BL.DTOs.Contractor
+
+@inject IContractorService ContractorService
+@inject NavigationManager NavigationManager
+
+@if (contractor == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <EditForm Model="@contractor" OnValidSubmit="SaveContractor">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Name:
+                <InputText class="form-control" @bind-Value="@contractor.Name" DisplayName="contract">
+                </InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Description:
+                <InputTextArea class="form-control" @bind-Value="@contractor.Surname" DisplayName="description">
+                </InputTextArea>
+            </label>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public int? ContractId { get; set; }
+    
+    private ContractorDto contractor;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (ContractId == null) //Add
+        {
+            contractor = new ContractorDto();
+        }
+        else //Edit
+        {
+            contractor = await ContractorService.GetContractorByIdAsync(ContractId ?? -1);
+        }
+    }
+
+    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+    private async Task SaveContractor()
+    {
+        if (ContractId == null) //Add
+        {
+            await ContractorService.CreateContractorAsync(contractor);
+        }
+        else //Edit
+        {
+            await ContractorService.UpdateContractorAsync(contractor);
+        }
+
+        RedirectToContractors();
+    }
+
+    private void RedirectToContractors()
+    {
+        NavigationManager.NavigateTo($"/contractors", true);
+    }
+
+}
