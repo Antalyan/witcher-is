@@ -19,15 +19,15 @@ else
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Name:
-                <InputText class="form-control" @bind-Value="@contractor.Name" DisplayName="contract">
+                <InputText class="form-control" @bind-Value="@contractor.Name" DisplayName="name">
                 </InputText>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
-                Description:
-                <InputTextArea class="form-control" @bind-Value="@contractor.Surname" DisplayName="description">
-                </InputTextArea>
+                Surname:
+                <InputText class="form-control" @bind-Value="@contractor.Surname" DisplayName="surname">
+                </InputText>
             </label>
         </div>
         <button class="btn btn-primary" type="submit">Save</button>
