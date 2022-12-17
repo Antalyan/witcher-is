@@ -51,7 +51,8 @@ else
                 <td>@user.Surname</td>
                 <td>
                     <RadzenDropDown @bind-Value="@(user.RoleNames)" Multiple="true" Placeholder="Select role..." Data=roleString
-                                 Class="@(!user.IsActive ? "user-disabled" : "")"   MaxSelectedLabels="6" Chips="true" @onblur="@(() => OnRoleUserSubmit(user))"/>
+                                    Class="@(!user.IsActive ? "user-disabled" : "")"   MaxSelectedLabels="6" Chips="true" 
+                                    Change="@(() => OnRoleUserSubmit(user))"/>
                 </td>
                 <td class="hstack gap-3 p-3">
                     

@@ -99,8 +99,7 @@ public class PersonService : IPersonService
         var returnedPerson = await _userManager.FindByNameAsync(login);
         return returnedPerson.Adapt<PersonCompleteDto>();
     }
-
-
+    
     public async Task DisableUserById(int userId)
     {
         var userToDisable = await _userManager.FindByIdAsync(userId.ToString());
