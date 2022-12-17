@@ -233,7 +233,7 @@ else
             _hasAllRights = true;
         }
 
-        filter = new ContractFilterDto { RequestedPageNumber = 1 };
+        filter = new ContractFilterDto { RequestedPageNumber = 1, Id = null };
         if (PersonIdLimit != null)
         {
             filter.PersonId = PersonIdLimit;
@@ -272,7 +272,7 @@ else
             return;
         }
         _locked = true;
-        filter = new ContractFilterDto { RequestedPageNumber = 1 };
+        filter = new ContractFilterDto { RequestedPageNumber = 1, Id = null };
         if (PersonIdLimit != null)
         {
             filter.PersonId = PersonIdLimit;
