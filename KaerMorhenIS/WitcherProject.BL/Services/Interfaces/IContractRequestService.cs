@@ -22,5 +22,7 @@ public interface IContractRequestService
 
     Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto);
 
+    void UpdateWithoutCommitContractRequest(ContractRequestUpdateDto contractRequestUpdateDto);
+
     Task DeleteContractRequestAsync(int requestId);
 }

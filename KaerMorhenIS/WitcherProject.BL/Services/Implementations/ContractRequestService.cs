@@ -74,6 +74,11 @@ public class ContractRequestService : IContractRequestService
         await uow.CommitAsync();
     }
 
+    public void UpdateWithoutCommitContractRequest(ContractRequestUpdateDto contractRequestUpdateDto)
+    {
+        _contractRequestRepository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
+    }
+
     public async Task DeleteContractRequestAsync(int requestId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();

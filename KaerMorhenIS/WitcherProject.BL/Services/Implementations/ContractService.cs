@@ -72,6 +72,11 @@ public class ContractService : IContractService
         await uow.CommitAsync();
     }
 
+    public void UpdateWithoutCommitContract(ContractUpdateDto contractUpdateDto)
+    {
+        _contractRepository.Update(contractUpdateDto.Adapt<Contract>());
+    }
+
     public async Task ChangeContractStateAsync(int contractId, ContractState state)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
