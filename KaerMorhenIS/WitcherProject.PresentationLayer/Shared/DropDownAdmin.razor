@@ -1,11 +1,20 @@
 ﻿@using WitcherProject.Shared
-<AuthorizeView Roles="@RoleNames.GetRoles(new []{RoleNames.Admin, RoleNames.UserManager})">
-    <Authorized>
-        <RadzenMenu>
-        <RadzenMenuItem Text="Control Panel" Icon="build">
-            <RadzenMenuItem Text="User management" Path="/AdminPage" Icon="list"></RadzenMenuItem>
-            <RadzenMenuItem Text="Registration" Path="/RegisterUser" Icon="account_circle"></RadzenMenuItem>
-        </RadzenMenuItem>
-    </RadzenMenu>
-    </Authorized>
-    </AuthorizeView>
+
+<RadzenMenu class="rz-background-color-black" >
+    
+    <RadzenMenuItem Text="Settings" Style="color: #0b5ed7" >
+        <AuthorizeView Roles="@RoleNames.GetRoles(new []{RoleNames.Admin, RoleNames.UserManager})">
+            <Authorized>
+                <RadzenMenuItem Text="User management" Path="/AdminPage" Icon="list"></RadzenMenuItem>
+                <RadzenMenuItem Text="Registration" Path="/RegisterUser" Icon="account_circle"></RadzenMenuItem>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView>
+            <Authorized>
+                <RadzenMenuItem Text="Personal info" Path="/personalInfo" Icon="description" ></RadzenMenuItem>
+                <RadzenMenuItem Text="Logout" Path="/logout" Icon="logout"></RadzenMenuItem>
+            </Authorized>
+        </AuthorizeView>
+    </RadzenMenuItem>
+</RadzenMenu>
+   

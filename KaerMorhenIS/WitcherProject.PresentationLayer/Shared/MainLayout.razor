@@ -1,27 +1,18 @@
 ﻿@inherits LayoutComponentBase
 
+<header>
+    <NavMenu/>
+</header>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
-
     <main>
-        <div class="top-row px-4">
-            <div class="col-m-8">
-               
-            </div>
-            <div class="col-m-2">
-                <DropDownAdmin/>    
-                </div>
-            <div class="col-md-2">
-                <LoginDisplay/>
-            </div>
-            
-        </div>
-
-        <article class="content px-4">
+        
+        <article class="content">
             @Body
         </article>
     </main>
+    <div class="footer">
+        <p class="align-content-start">Wind's howling!</p>
+        <p class="d-flex align-content-end">Version 1.0-ALPHA </p>
+    </div>
 </div>
