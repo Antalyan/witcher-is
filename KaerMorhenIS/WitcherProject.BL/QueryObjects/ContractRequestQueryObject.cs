@@ -24,9 +24,11 @@ public class ContractRequestQueryObject: IContractRequestQueryObject
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> ExecuteQuery(ContractRequestFilterDto filter)
     {
-        _contractRequestQuery.Filter(contract => filter.State == null || contract.State == filter.State);
-        _contractRequestQuery.Filter(contract => filter.ContractId == null || contract.ContractId == filter.ContractId);
-        _contractRequestQuery.Filter(contract => filter.PersonId == null || contract.PersonId == filter.PersonId);
+        _contractRequestQuery.Filter(cr => filter.Id == null || cr.Id == filter.Id);
+        _contractRequestQuery.Filter(cr => filter.State == null || cr.State == filter.State);
+        _contractRequestQuery.Filter(cr => filter.ContractId == null || cr.ContractId == filter.ContractId);
+        _contractRequestQuery.Filter(cr => filter.PersonId == null || cr.PersonId == filter.PersonId);
+        _contractRequestQuery.Filter(cr => filter.CreatedOn == null || cr.CreatedOn == filter.CreatedOn);
 
         if (filter.RequestedPageNumber != null)
         {
@@ -35,6 +37,9 @@ public class ContractRequestQueryObject: IContractRequestQueryObject
 
         _contractRequestQuery.OrderBy(x => x.CreatedOn, filter.SortAscending);
 
+        _contractRequestQuery.Include("Person");
+        _contractRequestQuery.Include("Contract");
+        
         var returnedRequests = await _contractRequestQuery.ExecuteAsync();
         return returnedRequests.Select(request => request.Adapt<ContractRequestDetailedDto>());
     }
