@@ -26,42 +26,40 @@ public class ContractService : IContractService
         _contractRepository = contractRepository;
     }
 
-    public async Task CreateContractAsync(ContractAddDto contractAddDto)
+    public async Task CreateContractWithoutCommit(ContractUpsertDto contractUpsertDto)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
-        contractAddDto.StartDate = DateTime.Now;
-        if (contractAddDto.State is ContractState.Created or ContractState.Open && contractAddDto.PersonId != null)
+        contractUpsertDto.StartDate = DateTime.Now;
+        if (contractUpsertDto.State is ContractState.Created or ContractState.Open && contractUpsertDto.PersonId != null)
         {
-            contractAddDto.State = ContractState.Assigned;
+            contractUpsertDto.State = ContractState.Assigned;
         }
-        await _contractRepository.Insert(contractAddDto.Adapt<Contract>());
-        await uow.CommitAsync();
+        await _contractRepository.Insert(contractUpsertDto.Adapt<Contract>());
     }
 
-    public async Task<IEnumerable<ContractDetailedDto>> GetAllContractsAsync()
+    public async Task<IEnumerable<ContractDetailedDto>> GetAllContracts()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedContracts = await _contractRepository.GetAll();
         return returnedContracts.Select(contract => contract.Adapt<ContractDetailedDto>());
     }
 
-    public async Task<ContractDetailedDto> GetContractByIdAsync(int contractId)
+    public async Task<ContractDetailedDto> GetContractById(int contractId)
     {
         return (await _contractQueryObject.ExecuteQuery(new ContractFilterDto {Id = contractId})).First();
     }
     
-    public async Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto)
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsFiltered(ContractFilterDto contractFilterDto)
     {
         return await _contractQueryObject.ExecuteQuery(contractFilterDto);
     }
 
-    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState state, int? pageNumber)
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByState(ContractState state, int? pageNumber)
     {
         return await _contractQueryObject.ExecuteQuery(new ContractFilterDto
             { State = state, SortCriteria = "StartDate", SortAscending = false, RequestedPageNumber = pageNumber });
     }
 
-    public async Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber)
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPerson(int personId, int? pageNumber)
     {
         return await _contractQueryObject.ExecuteQuery(new ContractFilterDto
         {
@@ -69,7 +67,7 @@ public class ContractService : IContractService
         });
     }
 
-    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByContractorAsync(int contractorId)
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByContractor(int contractorId)
     {
         return await _contractQueryObject.ExecuteQuery(new ContractFilterDto
         {
@@ -77,48 +75,43 @@ public class ContractService : IContractService
         });
     }
     
-    public async Task UpdateContractAsync(ContractUpdateDto contractUpdateDto)
+    public async void UpdateContract(ContractUpsertDto contractUpsertDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        
-        if (contractUpdateDto.State == ContractState.Open && contractUpdateDto.PersonId != null)
-        {
-            contractUpdateDto.State = ContractState.Assigned;
-        }
-        if (contractUpdateDto.EndDate == null &&
-            (contractUpdateDto.State is ContractState.Cancelled or ContractState.Unresolved or ContractState.Resolved))
-        {
-            contractUpdateDto.EndDate = DateTime.Now;
-        }
-        
-        _contractRepository.Update(contractUpdateDto.Adapt<Contract>());
+        UpdateContractWithoutCommit(contractUpsertDto);        
         await uow.CommitAsync();
     }
 
-    public void UpdateWithoutCommitContract(ContractUpdateDto contractUpdateDto)
+    public void UpdateContractWithoutCommit(ContractUpsertDto contractUpsertDto)
     {
-        _contractRepository.Update(contractUpdateDto.Adapt<Contract>());
+        if (contractUpsertDto.State == ContractState.Open && contractUpsertDto.PersonId != null)
+        {
+            contractUpsertDto.State = ContractState.Assigned;
+        }
+        if (contractUpsertDto.EndDate == null &&
+            (contractUpsertDto.State is ContractState.Cancelled or ContractState.Unresolved or ContractState.Resolved))
+        {
+            contractUpsertDto.EndDate = DateTime.Now;
+        }
+        _contractRepository.Update(contractUpsertDto.Adapt<Contract>());
     }
 
-    public async Task ChangeContractStateAsync(int contractId, ContractState state)
+    public async Task ChangeContractStateWithoutCommit(int contractId, ContractState state)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var contractToUpdate = await _contractRepository.GetById(contractId);
         contractToUpdate.State = state;
         _contractRepository.Update(contractToUpdate);
-        await uow.CommitAsync();
     }
 
-    public async Task AddPersonToContractAsync(int contractId, int personId)
+    public async Task AssignPersonToContractWithoutCommit(int contractId, int personId)
     {
-        await using var uow = _unitOfWorkProvider.CreateUow();
         var contractToUpdate = await _contractRepository.GetById(contractId);
         contractToUpdate.PersonId = personId;
+        contractToUpdate.State = ContractState.Assigned;
         _contractRepository.Update(contractToUpdate);
-        await uow.CommitAsync();
     }
 
-    public async Task AddContractorToContractAsync(int contractId, int contractorId)
+    public async Task AddContractorToContract(int contractId, int contractorId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var contractToUpdate = await _contractRepository.GetById(contractId);
@@ -127,18 +120,17 @@ public class ContractService : IContractService
         await uow.CommitAsync();
     }
 
-    public async Task DeleteContractAsync(int contractId)
+    public async Task DeleteContract(int contractId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         await _contractRepository.Delete(contractId);
         await uow.CommitAsync();
     }
 
-    public async Task<IEnumerable<ContractSimpleDto>> GetAllSimpleContractsAsync()
+    public async Task<IEnumerable<ContractSimpleDto>> GetAllSimpleContracts()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedContracts = await _contractRepository.GetAll();
-        await uow.CommitAsync();
         return returnedContracts.Select(contract => contract.Adapt<ContractSimpleDto>());
     }
 }

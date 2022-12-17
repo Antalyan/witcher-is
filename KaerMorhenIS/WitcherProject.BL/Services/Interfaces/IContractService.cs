@@ -5,31 +5,31 @@ namespace WitcherProject.BL.Services.Interfaces;
 
 public interface IContractService
 {
-    Task CreateContractAsync(ContractAddDto contractAddDto);
+    Task<IEnumerable<ContractDetailedDto>> GetAllContracts();
 
-    Task<IEnumerable<ContractDetailedDto>> GetAllContractsAsync();
+    Task<ContractDetailedDto> GetContractById(int id);
 
-    Task<ContractDetailedDto> GetContractByIdAsync(int id);
+    Task<IEnumerable<ContractDetailedDto>> GetContractsFiltered(ContractFilterDto contractFilterDto);
 
-    Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto);
+    Task<IEnumerable<ContractDetailedDto>> GetContractsByState(ContractState contractState, int? pageNumber = null);
+
+    Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPerson(int personId, int? pageNumber = null);
+
+    Task<IEnumerable<ContractDetailedDto>> GetContractsByContractor(int contractorId);
+
+    Task CreateContractWithoutCommit(ContractUpsertDto contractAddDto);
     
-    Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState contractState, int? pageNumber = null);
+    void UpdateContract(ContractUpsertDto contractUpsertDto);
+
+    void UpdateContractWithoutCommit(ContractUpsertDto contractUpsertDto);
+
+    Task ChangeContractStateWithoutCommit(int contractId, ContractState state);
+
+    Task AssignPersonToContractWithoutCommit(int contractId, int personId);
     
-    Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber = null);
-    
-    Task<IEnumerable<ContractDetailedDto>> GetContractsByContractorAsync(int contractorId);
+    Task AddContractorToContract(int contractId, int contractorId);
 
-    Task UpdateContractAsync(ContractUpdateDto contractUpdateDto);
+    Task DeleteContract(int contractId);
 
-    void UpdateWithoutCommitContract(ContractUpdateDto contractUpdateDto);
-
-    Task ChangeContractStateAsync(int contractId, ContractState state);
-
-    Task AddPersonToContractAsync(int contractId, int personId);
-    
-    Task AddContractorToContractAsync(int contractId, int contractorId);
-
-    Task DeleteContractAsync(int contractId);
-
-    Task<IEnumerable<ContractSimpleDto>> GetAllSimpleContractsAsync();
+    Task<IEnumerable<ContractSimpleDto>> GetAllSimpleContracts();
 }

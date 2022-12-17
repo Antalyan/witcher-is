@@ -188,7 +188,7 @@ else
         filter = new ContractRequestFilterDto { RequestedPageNumber = 1 };
         contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
         allPersons = await PersonService.GetAllSimpleUsersAsync();
-        allContracts = await ContractService.GetAllSimpleContractsAsync();
+        allContracts = await ContractService.GetAllSimpleContracts();
     }
     
     private async Task Filter()

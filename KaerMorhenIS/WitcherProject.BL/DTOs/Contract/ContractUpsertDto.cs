@@ -3,9 +3,9 @@ using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.DTOs.Contract;
 
-public class ContractUpdateDto
+public class ContractUpsertDto
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     [Required]
     public string Name { get; set; }

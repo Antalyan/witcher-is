@@ -126,7 +126,7 @@ else
         if (RequestId == null) // Adding new CR
         {
             contractRequest = new ContractRequestDetailedDto();
-            var requestedContract = await ContractService.GetContractByIdAsync((int) ContractId);
+            var requestedContract = await ContractService.GetContractById((int) ContractId);
             var requestedPerson = await PersonService.GetPersonById((int) PersonId);
             contractRequest.Contract = requestedContract.Adapt<ContractSimpleDto>();
             contractRequest.Person = requestedPerson.Adapt<PersonSimpleDto>();

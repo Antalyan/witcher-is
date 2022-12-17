@@ -8,4 +8,6 @@ public interface IContractFacade
     Task ApproveContractRequest(ContractRequestUpdateDto contractRequest, int contractId, int personId);
 
     Task<bool> DeleteContractorIfNotAssigned(int contractorId);
+
+    Task SaveContract(int? personId, int? contractorId, ContractUpsertDto contractDto);
 }

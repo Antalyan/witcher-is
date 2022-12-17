@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IAuthorizationService AuthorizationService
 
+@inject IContractFacade ContractFacade
 @inject IContractService ContractService
 @inject IPersonService PersonService
 @inject IContractorService ContractorService
@@ -148,7 +149,7 @@ else
         }
         else //Edit
         {
-            contract = await ContractService.GetContractByIdAsync(ContractId ?? -1);
+            contract = await ContractService.GetContractById(ContractId ?? -1);
             if (contract.Person != null)
             {
                 _personId = contract.Person.Id;
@@ -181,20 +182,7 @@ else
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
     private async Task SaveContract()
     {
-        if (ContractId == null) //Add
-        {
-            var adapted = contract.Adapt<ContractAddDto>();
-            adapted.PersonId = _personId;
-            adapted.ContractorId = _contractorId;
-            await ContractService.CreateContractAsync(adapted);
-        }
-        else //Edit
-        {
-            var adapted = contract.Adapt<ContractUpdateDto>();
-            adapted.PersonId = _personId;
-            adapted.ContractorId = _contractorId;
-            await ContractService.UpdateContractAsync(adapted);
-        }
+        await ContractFacade.SaveContract(_personId, _contractorId, contract.Adapt<ContractUpsertDto>());
 
         RedirectToContracts();
     }

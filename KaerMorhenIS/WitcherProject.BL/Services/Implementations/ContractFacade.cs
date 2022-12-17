@@ -42,21 +42,50 @@ public class ContractFacade : IContractFacade
             request.State = ContractRequestState.Declined;
             _contractRequestService.UpdateWithoutCommitContractRequest(request.Adapt<ContractRequestUpdateDto>());
         }
-
-        // change contract state to ASSIGNED and add the person to the contract
-        var requestedContract = await _contractService.GetContractByIdAsync(contractId);
-        requestedContract.State = ContractState.Assigned;
-        requestedContract.Person = new PersonSimpleDto {Id = personId};
-        _contractService.UpdateWithoutCommitContract(requestedContract.Adapt<ContractUpdateDto>());
-
+        
+        await _contractService.AssignPersonToContractWithoutCommit(contractId, personId);
         await uow.CommitAsync();
     }
 
     public async Task<bool> DeleteContractorIfNotAssigned(int contractorId)
     {
-        var assignedContracts = await _contractService.GetContractsByContractorAsync(contractorId);
+        var assignedContracts = await _contractService.GetContractsByContractor(contractorId);
         if (assignedContracts.Any()) return false;
+        
+        await using var uow = _unitOfWorkProvider.CreateUow();
         await _contractorService.DeleteContractorAsync(contractorId);
+        await uow.CommitAsync();
         return true;
+    }
+
+    public async Task SaveContract(int? personId, int? contractorId, ContractUpsertDto contractDto)
+    {
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        
+        var personChanged = contractDto.PersonId == personId;
+        contractDto.PersonId = personId;
+        contractDto.ContractorId = contractorId;
+
+        if (contractDto.Id == null) // Create
+        {
+            await _contractService.CreateContractWithoutCommit(contractDto);
+        }
+        else // Update
+        {
+            _contractService.UpdateContractWithoutCommit(contractDto);
+            if (personChanged)
+            {
+                var filter = new ContractRequestFilterDto {State = ContractRequestState.Requested, ContractId = contractDto.Id};
+                var allOpenRequestsForContract = await _contractRequestService.GetContractRequestsFilteredAsync(filter);
+        
+                foreach (var request in allOpenRequestsForContract)
+                {
+                    request.State = request.Person.Id == personId ? ContractRequestState.Approved : ContractRequestState.Declined;
+                    _contractRequestService.UpdateWithoutCommitContractRequest(request.Adapt<ContractRequestUpdateDto>());
+                }
+            }
+        }
+        
+        await uow.CommitAsync();
     }
 }

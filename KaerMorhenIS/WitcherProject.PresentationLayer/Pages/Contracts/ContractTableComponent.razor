@@ -202,7 +202,7 @@ else
     private async Task SetPageNumber(int number)
     {
         filter.RequestedPageNumber = number;
-        contracts = await ContractService.GetContractsFilteredAsync(filter);
+        contracts = await ContractService.GetContractsFiltered(filter);
     }
 
     private async Task Previous()
@@ -210,14 +210,14 @@ else
         if (filter.RequestedPageNumber > 1)
         {
             filter.RequestedPageNumber--;
-            contracts = await ContractService.GetContractsFilteredAsync(filter);
+            contracts = await ContractService.GetContractsFiltered(filter);
         }
     }
 
     private async Task Next()
     {
         filter.RequestedPageNumber++;
-        contracts = await ContractService.GetContractsFilteredAsync(filter);
+        contracts = await ContractService.GetContractsFiltered(filter);
     }
 
     private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "page-item";
@@ -240,7 +240,7 @@ else
         {
             filter.PersonId = PersonIdLimit;
         }
-        contracts = await ContractService.GetContractsFilteredAsync(filter);
+        contracts = await ContractService.GetContractsFiltered(filter);
         allPersons = await PersonService.GetAllSimpleUsersAsync();
         allContractors = await ContractorService.GetAllContractorsAsync();
     }
@@ -248,10 +248,10 @@ else
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin)]
     private async Task Delete(int contractIdToDelete)
     {
-        await ContractService.DeleteContractAsync(contractIdToDelete);
+        await ContractService.DeleteContract(contractIdToDelete);
 
-    //StateHasChanged() didn't work
-        contracts = await ContractService.GetContractsFilteredAsync(filter);
+        //StateHasChanged() didn't work
+        contracts = await ContractService.GetContractsFiltered(filter);
     }
 
     private async Task Filter()
@@ -262,7 +262,7 @@ else
             return;
         }
         _locked = true;
-        contracts = await ContractService.GetContractsFilteredAsync(filter);
+        contracts = await ContractService.GetContractsFiltered(filter);
         _locked = false;
     }
 
@@ -275,7 +275,7 @@ else
         }
         _locked = true;
         filter = new ContractFilterDto { RequestedPageNumber = 1 };
-        contracts = await ContractService.GetContractsFilteredAsync(filter);        
+        contracts = await ContractService.GetContractsFiltered(filter);        
         _locked = false;
     }
 
