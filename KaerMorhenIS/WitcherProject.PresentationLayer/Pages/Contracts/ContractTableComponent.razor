@@ -94,7 +94,6 @@ else
         <thead>
         <tr>
             <th>Name</th>
-            <th>Description</th>
             <th>State</th>
             <th>Start date</th>
             <th>End date</th>
@@ -104,6 +103,7 @@ else
             {
                 <th>Assigned to</th>
             }
+            <th>Contractor</th>
             <th></th>
         </tr>
         </thead>
@@ -112,13 +112,13 @@ else
         {
             <tr>
                 <td>@cont.Name</td>
-                <td>@cont.Description</td>
                 <td>@cont.State</td>
                 <td>@cont.StartDate</td>
                 <td>@cont.EndDate</td>
                 <td>@cont.Deadline?.ToShortDateString()</td>
                 <td>@cont.Location</td>
                 <td>@(cont.Person != null ? cont.Person.Name + " " + cont.Person?.Surname : null) </td>
+                <td>@(cont.Contractor != null ? cont.Contractor.Name + " " + cont.Contractor.Surname : null) </td>
                 <td>
                     <div class="hstack gap-3">
                         <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
