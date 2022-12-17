@@ -107,7 +107,7 @@ public static class DbInitializer
                 CreatedOn = DateTime.Now,
                 PersonId = geralt.Id,
                 ContractId = noonWraithContract.Id,
-                State = ContractRequestState.Accepted,
+                State = ContractRequestState.Approved,
                 Text = "I need money"
             });
     }

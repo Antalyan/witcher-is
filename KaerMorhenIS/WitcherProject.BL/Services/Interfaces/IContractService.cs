@@ -19,6 +19,8 @@ public interface IContractService
 
     Task UpdateContractAsync(ContractUpdateDto contractUpdateDto);
 
+    void UpdateWithoutCommitContract(ContractUpdateDto contractUpdateDto);
+
     Task ChangeContractStateAsync(int contractId, ContractState state);
 
     Task AddPersonToContractAsync(int contractId, int personId);
@@ -26,4 +28,6 @@ public interface IContractService
     Task AddContractorToContractAsync(int contractId, int contractorId);
 
     Task DeleteContractAsync(int contractId);
+
+    Task<IEnumerable<ContractSimpleDto>> GetAllSimpleContractsAsync();
 }

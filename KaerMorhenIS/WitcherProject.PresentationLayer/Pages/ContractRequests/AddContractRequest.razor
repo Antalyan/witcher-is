@@ -1,0 +1,16 @@
+﻿@page "/contractRequests/add/{ContractId:int}/{PersonId:int}"
+@using WitcherProject.Shared
+
+<h3>Create contract request</h3>
+
+@attribute [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Witcher)]
+
+<ContractRequestFormComponent ContractId="@ContractId" PersonId="@PersonId"></ContractRequestFormComponent>
+
+@code {
+    [Parameter]
+    public int ContractId { get; set; }
+    
+    [Parameter]
+    public int PersonId { get; set; }
+}

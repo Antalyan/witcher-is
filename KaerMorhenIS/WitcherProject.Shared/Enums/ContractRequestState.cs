@@ -2,8 +2,7 @@
 
 public enum ContractRequestState
 {
-    Accepted,
     Approved,
-    Processed,
-    Declined
+    Declined,
+    Requested
 }

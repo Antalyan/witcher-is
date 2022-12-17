@@ -87,6 +87,11 @@ public class ContractService : IContractService
         await uow.CommitAsync();
     }
 
+    public void UpdateWithoutCommitContract(ContractUpdateDto contractUpdateDto)
+    {
+        _contractRepository.Update(contractUpdateDto.Adapt<Contract>());
+    }
+
     public async Task ChangeContractStateAsync(int contractId, ContractState state)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
@@ -119,5 +124,13 @@ public class ContractService : IContractService
         await using var uow = _unitOfWorkProvider.CreateUow();
         await _contractRepository.Delete(contractId);
         await uow.CommitAsync();
+    }
+
+    public async Task<IEnumerable<ContractSimpleDto>> GetAllSimpleContractsAsync()
+    {
+        await using var uow = _unitOfWorkProvider.CreateUow();
+        var returnedContracts = await _contractRepository.GetAll();
+        await uow.CommitAsync();
+        return returnedContracts.Select(contract => contract.Adapt<ContractSimpleDto>());
     }
 }

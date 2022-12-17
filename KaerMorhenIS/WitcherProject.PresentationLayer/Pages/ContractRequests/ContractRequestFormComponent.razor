@@ -1,0 +1,181 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.ContractRequest
+@using WitcherProject.Shared
+@using Mapster
+@using WitcherProject.BL.DTOs.Contract
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.Shared.Enums
+
+@inject IContractRequestService ContractRequestService
+@inject IContractRequestAdvancedService ContractRequestAdvancedService
+@inject IContractService ContractService
+@inject IPersonService PersonService
+@inject NavigationManager NavigationManager
+
+
+@if (stateOptions == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    @* based on https://stackoverflow.com/a/58256978 *@
+    <EditForm Model="@contractRequest" Context="formContext">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        @if (_scenario == Scenario.ExistingContractRequest)
+        {
+            <AuthorizeView Roles="@RoleNames.GetRoles(new[] {RoleNames.Admin, RoleNames.ContractManager})">
+        
+                <div>
+                    <label class="form-label col-sm-10 col-md-4 pb-2">
+                        Request ID:
+                        <InputNumber class="form-control" @bind-Value="@contractRequest.Id" DisplayName="request id"
+                                     disabled="true">
+                        </InputNumber>
+                    </label>
+                </div>
+            </AuthorizeView>
+        }
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Contract:
+                <InputText class="form-control" @bind-Value="@contractRequest.Contract.Name" DisplayName="contract"
+                           disabled="true">
+                </InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Requesting person:
+                <InputText class="form-control" @bind-Value="@contractRequest.Person.Name" DisplayName="person"
+                           disabled="true">
+                </InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                State:
+                <InputSelect class="form-control" @bind-Value="contractRequest.State" DisplayName="state"
+                             disabled="true">
+                    @foreach (var state in stateOptions)
+                    {
+                        <option value=@state>@state</option>
+                    }
+                </InputSelect>`
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Requested on:
+                <InputDate class="form-control" @bind-Value=@contractRequest.CreatedOn DisplayName="created on"
+                           disabled="true">
+                </InputDate>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Description:
+                <InputText class="form-control" @bind-Value="@contractRequest.Text" DisplayName="description"
+                           disabled="@_disableEdit">
+                </InputText>
+            </label>
+        </div>
+
+        @if (_scenario == Scenario.NewContractRequest)
+        {
+            <button class="btn btn-primary" type="submit" @onclick="@(() => CreateContractRequest(formContext))">Send request</button>
+        }
+        else if (_scenario == Scenario.ExistingContractRequest && contractRequest.State == ContractRequestState.Requested)
+        {
+            <button class="btn btn-primary" type="submit" @onclick="@ApproveContractRequest">Approve request</button>
+            <button class="btn btn-primary" type="submit" @onclick="@DeclineContractRequest">Decline request</button>
+        }
+    </EditForm>
+}
+
+@code {
+
+    // possibly transfer to DAL or SHARED as a proper enum
+    private enum Scenario
+    {
+        NewContractRequest,
+        ExistingContractRequest
+    }
+
+    private Scenario _scenario;
+
+    [Parameter]
+    public int? RequestId { get; set; }
+
+    [Parameter]
+    public int? ContractId { get; set; }
+
+    [Parameter]
+    public int? PersonId { get; set; }
+
+    private ContractRequestDetailedDto contractRequest;
+    private IEnumerable<ContractRequestState> stateOptions;
+
+    private bool _disableEdit = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (RequestId == null) // Adding new CR
+        {
+            contractRequest = new ContractRequestDetailedDto();
+            var requestedContract = await ContractService.GetContractByIdAsync((int) ContractId);
+            var requestedPerson = await PersonService.GetPersonById((int) PersonId);
+            contractRequest.Contract = requestedContract.Adapt<ContractSimpleDto>();
+            contractRequest.Person = requestedPerson.Adapt<PersonSimpleDto>();
+            
+            _disableEdit = false;
+            _scenario = Scenario.NewContractRequest;
+        }
+        else // Working with existing CR
+        {
+            contractRequest = await ContractRequestService.GetContractRequestByIdAsync(RequestId ?? -1);
+            _scenario = Scenario.ExistingContractRequest;
+        }
+        stateOptions = ContractRequestStateUtil.GetAllStates();
+    }
+
+
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Witcher)]
+    private async Task CreateContractRequest(EditContext formContext)
+    {
+        if (!formContext.Validate())
+        {
+            return;
+        }
+
+        var adapted = contractRequest.Adapt<ContractRequestAddDto>();
+        adapted.PersonId = (int) PersonId; // cast is ok because in create the personId is always provided
+        adapted.ContractId = (int) ContractId;
+        adapted.State = ContractRequestState.Requested;
+        await ContractRequestService.CreateContractRequestAsync(adapted);
+        NavigationManager.NavigateTo($"/contractRequests", true);
+    }
+
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.ContractManager)]
+    private async Task ApproveContractRequest()
+    {
+        var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
+        adapted.State = ContractRequestState.Approved;
+
+        await ContractRequestAdvancedService.ApproveContractRequest(adapted, adapted.ContractId, adapted.PersonId);
+
+        NavigationManager.NavigateTo($"/contractRequests", true);
+    }
+
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.ContractManager)]
+    private async Task DeclineContractRequest()
+    {
+        var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
+        adapted.State = ContractRequestState.Declined;
+        await ContractRequestService.UpdateContractRequestAsync(adapted);
+        NavigationManager.NavigateTo($"/contractRequests", true);
+    }
+}

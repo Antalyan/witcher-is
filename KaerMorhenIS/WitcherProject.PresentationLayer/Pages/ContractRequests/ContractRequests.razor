@@ -1,0 +1,9 @@
+﻿@page "/contractRequests"
+@using WitcherProject.Shared
+
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin)]
+
+
+<h3>Contract Requests</h3>
+
+<ContractRequestTableComponent></ContractRequestTableComponent>
