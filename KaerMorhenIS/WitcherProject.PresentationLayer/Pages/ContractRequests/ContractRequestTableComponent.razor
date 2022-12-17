@@ -21,66 +21,69 @@
 }
 else
 {
-        <div>
-            <EditForm Model=@filter OnValidSubmit="Filter">
-                <div class="row g-3">
-                    <div class="col-auto">
-                        <label class="form-label">
-                            State:
-                            <InputSelect class="form-control" @bind-Value=@filter.State>
-                                <option value="">All</option>
-                                @foreach (var state in Enum.GetNames(typeof(ContractRequestState)))
-                                {
-                                    <option value=@state>@state</option>
-                                }
-                            </InputSelect>
-                        </label>
-                    </div>
-                    
-                    @* TODO: optionally rework to "from" and "to" filtering?*@
-                    <div class="col-auto">
-                        <label class="form-label">
-                            Created since:
-                            <InputDate class="form-control col" @bind-Value=@filter.CreatedOn>
-                            </InputDate>
-                        </label>
-                    </div>
-    
-                        <div class="col-auto">
-                            <label class="form-label">
-                                Requesting person:
-                                <InputSelect class="form-control col" @bind-Value=@filter.PersonId>
-                                    <option value="">All</option>
-                                    @foreach (var person in allPersons)
-                                    {
-                                        <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
-                                    }
-                                </InputSelect>
-                            </label>
-                        </div>
-
-                    <div class="col-auto">
-                        <label class="form-label">
-                            Requested contract:
-                            <InputSelect class="form-control col" @bind-Value=@filter.ContractId>
-                                <option value="">All</option>
-                                @foreach (var contract in allContracts)
-                                {
-                                    <option value=@contract.Id>@(contract.Name)</option>
-                                }
-                            </InputSelect>
-                        </label>
-                    </div>
-    
-                    <div class="col-auto d-flex align-items-end pb-2">
-                        <button class="btn btn-primary form-control" type="submit">Filter</button>
-                    </div>
-                    <div class="col-auto d-flex align-items-end pb-2">
-                        <button class="btn btn-primary form-control" type="submit" @onclick=Reset>Reset</button>
-                    </div>
+    <div>
+        <EditForm Model=@filter OnValidSubmit="Filter">
+            <div class="row g-3">
+                <div class="col-auto">
+                    <label class="form-label">
+                        State:
+                        <InputSelect class="form-control" @bind-Value=@filter.State>
+                            <option value="">All</option>
+                            @foreach (var state in Enum.GetNames(typeof(ContractRequestState)))
+                            {
+                                <option value=@state>@state</option>
+                            }
+                        </InputSelect>
+                    </label>
                 </div>
-            </EditForm>
-        </div>
+
+                @* TODO: optionally rework to "from" and "to" filtering?*@
+                <div class="col-auto">
+                    <label class="form-label">
+                        Created since:
+                        <InputDate class="form-control col" @bind-Value=@filter.CreatedOn>
+                        </InputDate>
+                    </label>
+                </div>
+
+                @if (PersonIdLimit == null)
+                {
+                    <div class="col-auto">
+                        <label class="form-label">
+                            Requesting person:
+                            <InputSelect class="form-control col" @bind-Value=@filter.PersonId>
+                                <option value="">All</option>
+                                @foreach (var person in allPersons)
+                                {
+                                    <option value=@person.Id>@(person.Name + " " + person.Surname)</option>
+                                }
+                            </InputSelect>
+                        </label>
+                    </div>
+                }
+
+                <div class="col-auto">
+                    <label class="form-label">
+                        Requested contract:
+                        <InputSelect class="form-control col" @bind-Value=@filter.ContractId>
+                            <option value="">All</option>
+                            @foreach (var contract in allContracts)
+                            {
+                                <option value=@contract.Id>@(contract.Name)</option>
+                            }
+                        </InputSelect>
+                    </label>
+                </div>
+
+                <div class="col-auto d-flex align-items-end pb-2">
+                    <button class="btn btn-primary form-control" type="submit">Filter</button>
+                </div>
+                <div class="col-auto d-flex align-items-end pb-2">
+                    <button class="btn btn-primary form-control" type="submit" @onclick=Reset>Reset</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -125,7 +128,7 @@ else
         }
         </tbody>
     </table>
-    
+
     <nav class="d-flex justify-content-end" aria-label="Page navigation">
         <ul class="pagination">
             <li class="page-item page-pre" @onclick="Previous">
@@ -159,6 +162,10 @@ else
     private IEnumerable<ContractSimpleDto> allContracts;
     private ContractRequestFilterDto filter;
     
+    // Used to restrict contracts to those assigned to a chosen person
+    [Parameter]
+    public int? PersonIdLimit { get; set; }
+
     private bool _locked = false;
 
     private async Task SetPageNumber(int number)
@@ -166,7 +173,7 @@ else
         filter.RequestedPageNumber = number;
         contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
     }
-    
+
     private async Task Previous()
     {
         if (filter.RequestedPageNumber > 1)
@@ -175,23 +182,27 @@ else
             contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
         }
     }
-    
+
     private async Task Next()
     {
         filter.RequestedPageNumber++;
         contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
     }
-    
+
     private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "page-item";
-    
+
     protected override async Task OnInitializedAsync()
     {
         filter = new ContractRequestFilterDto { RequestedPageNumber = 1 };
+        if (PersonIdLimit != null)
+        {
+            filter.PersonId = PersonIdLimit;
+        }
         contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
         allPersons = await PersonService.GetAllSimpleUsersAsync();
         allContracts = await ContractService.GetAllSimpleContracts();
     }
-    
+
     private async Task Filter()
     {
         if (_locked)
@@ -200,7 +211,7 @@ else
             return;
         }
         _locked = true;
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);       
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
         _locked = false;
     }
 
@@ -218,14 +229,18 @@ else
             return;
         }
         _locked = true;
-        
-        // TODO: implement better way of reseting the filter? E.g. via resetting properties to default
+
+    // TODO: implement better way of reseting the filter? E.g. via resetting properties to default
         filter = new ContractRequestFilterDto() { RequestedPageNumber = 1 };
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);      
-        
+        if (PersonIdLimit != null)
+        {
+            filter.PersonId = PersonIdLimit;
+        }
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+
         _locked = false;
     }
-    
+
     private void RedirectToDetail(int contractRequestId)
     {
         NavigationManager.NavigateTo($"/contractRequests/edit/{contractRequestId}", true);

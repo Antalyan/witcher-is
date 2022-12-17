@@ -88,6 +88,10 @@ public class ContractService : IContractService
         {
             contractUpsertDto.State = ContractState.Assigned;
         }
+        if (contractUpsertDto.State == ContractState.Assigned && contractUpsertDto.PersonId == null)
+        {
+            contractUpsertDto.State = ContractState.Open;
+        }
         if (contractUpsertDto.EndDate == null &&
             (contractUpsertDto.State is ContractState.Cancelled or ContractState.Unresolved or ContractState.Resolved))
         {

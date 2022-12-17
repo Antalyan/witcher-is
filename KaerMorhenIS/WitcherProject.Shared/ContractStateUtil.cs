@@ -18,6 +18,8 @@ public static class ContractStateUtil
     
     public static IEnumerable<ContractState> GetAllStates()
     {
-        return Enum.GetValues(typeof(ContractState)).Cast<ContractState>();
+        return new List<ContractState>
+            { ContractState.Created, ContractState.Open, ContractState.Assigned, 
+                ContractState.Resolved, ContractState.Unresolved, ContractState.Cancelled };
     }
 }

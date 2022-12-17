@@ -99,10 +99,7 @@ else
             <th>End date</th>
             <th>Deadline</th>
             <th>Location</th>
-            @if (PersonIdLimit == null)
-            {
-                <th>Assigned to</th>
-            }
+            <th>Assigned to</th>
             <th>Contractor</th>
             <th></th>
         </tr>
@@ -139,9 +136,10 @@ else
                         }
                         else if (!HasOwnerRights(cont.Person?.Id) && cont.State == ContractState.Open)
                         {
-                                @* //TODO: add action: pop-up window with request text *@
                             <button class="btn btn-primary rounded-circle">
-                                <i class="bi bi-envelope" title="Send request"></i>
+                                <i class="bi bi-envelope" title="Send request"
+                                   @onclick="() => RedirectToRequestAdd(cont.Id, _userId)">
+                                </i>
                             </button>
                         }
                     </div>
@@ -250,7 +248,7 @@ else
     {
         await ContractService.DeleteContract(contractIdToDelete);
 
-        //StateHasChanged() didn't work
+    //StateHasChanged() didn't work
         contracts = await ContractService.GetContractsFiltered(filter);
     }
 
@@ -275,7 +273,11 @@ else
         }
         _locked = true;
         filter = new ContractFilterDto { RequestedPageNumber = 1 };
-        contracts = await ContractService.GetContractsFiltered(filter);        
+        if (PersonIdLimit != null)
+        {
+            filter.PersonId = PersonIdLimit;
+        }
+        contracts = await ContractService.GetContractsFiltered(filter);
         _locked = false;
     }
 
@@ -287,6 +289,11 @@ else
     private void RedirectToAdd()
     {
         NavigationManager.NavigateTo($"/contracts/add");
+    }
+
+    private void RedirectToRequestAdd(int contractId, int personId)
+    {
+        NavigationManager.NavigateTo($"/contractRequests/add/{contractId}/{personId}");
     }
 
 }
