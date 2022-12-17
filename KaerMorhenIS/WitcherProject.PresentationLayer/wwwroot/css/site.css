@@ -54,21 +54,21 @@ a, .btn-link {
     color: #fff;
 }
 
-.btn-primary {
+.btn-primary, .page-link {
     color: #020202;
     background-color: #ffd201;
     border-color: #ffd201;
 }
 
-.btn-primary:focus {
+.btn-primary:focus, .btn-primary:hover, .page-link:hover, .page-link:focus, .pagination > .disabled {
     color: #fff;
     background-color: #020202;
     border-color: #ff9c00;
 }
 
-.btn-primary:hover {
-    color: #fff;
-    background-color: #020202;
+.pagination > .active, .pagination > .active > a, .pagination > .active > a:hover  {
+    color: #020202;
+    background-color: #ff9c00;
     border-color: #ff9c00;
 }
 

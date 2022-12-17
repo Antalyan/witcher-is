@@ -53,20 +53,20 @@ else
                     <RadzenDropDown @bind-Value="@(user.RoleNames)" Multiple="true" Placeholder="Select role..." Data=roleString
                                  Class="@(!user.IsActive ? "user-disabled" : "")"   MaxSelectedLabels="6" Chips="true" @onblur="@(() => OnRoleUserSubmit(user))"/>
                 </td>
-                <td class="hstack gap-3">
+                <td class="hstack gap-3 p-3">
                     
-                    <button class="btn btn-outline-primary " onclick="@(() => PersonDetailEdit(user))">
+                    <button class="btn btn-primary rounded-circle" onclick="@(() => PersonDetailEdit(user))">
                         <i class="bi bi-pencil" title="Edit"></i>
                     </button>
                     @if (user.IsActive)
                     {
-                        <button class="btn btn-outline-danger" onclick="@(() => Disable(user.Adapt<PersonCompleteDto>()))">
+                        <button class="btn btn-danger rounded-circle" onclick="@(() => Disable(user.Adapt<PersonCompleteDto>()))">
                             <i class="bi bi-x" title="Disable"></i>
                         </button>
                     }
                     else
                     {
-                        <button class="btn btn-outline-success " onclick="@(() => Enable(user.Adapt<PersonUpdateDto>()))">
+                        <button class="btn btn-success rounded-circle" onclick="@(() => Enable(user.Adapt<PersonUpdateDto>()))">
                             <i class="bi bi-check" title="Enable"></i>
                         </button>
                     }

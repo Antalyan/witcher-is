@@ -37,10 +37,10 @@ else
                         </label>
                     </div>
                     
-                    @* TODO: rework to "from" and "to" filtering?*@
+                    @* TODO: optionally rework to "from" and "to" filtering?*@
                     <div class="col-auto">
                         <label class="form-label">
-                            Created on:
+                            Created since:
                             <InputDate class="form-control col" @bind-Value=@filter.CreatedOn>
                             </InputDate>
                         </label>
@@ -105,7 +105,7 @@ else
                 <td>@request.Contract.Name </td>
                 <td>
                     <div class="hstack gap-3">
-                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(request.Id)">
+                        <button class="btn btn-primary rounded-circle" @onclick="() => RedirectToDetail(request.Id)">
                             @if (request.State == ContractRequestState.Requested)
                             {
                                 <i class="bi bi-pencil" title="Edit"></i>
@@ -115,7 +115,7 @@ else
                                 <i class="bi bi-eye" title="Details"></i>
                             }
                         </button>
-                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => Delete(request.Id)">
+                        <button class="btn btn-primary rounded-circle" @onclick="() => Delete(request.Id)">
                             <i class="bi bi-x" title="Delete"></i>
                         </button>
                     </div>
@@ -130,18 +130,18 @@ else
             <li class="page-item page-pre" @onclick="Previous">
                 <a class="page-link" href="javascript:void(0)">Previous</a>
             </li>
-            <li class="page-item @IsActive(1)" @onclick="() => SetPageNumber(1)">
+            <li class="@IsActive(1)" @onclick="() => SetPageNumber(1)">
                 <a class="page-link" href="javascript:void(0)">1</a>
             </li>
-            <li class="page-item @IsActive(2)" @onclick="() => SetPageNumber(2)">
+            <li class="@IsActive(2)" @onclick="() => SetPageNumber(2)">
                 <a class="page-link" href="javascript:void(0)">2</a>
             </li>
             @if (filter.RequestedPageNumber > 2)
             {
-                <li class="page-item disabled">
+                <li class="disabled">
                     <a class="page-link" href="javascript:void(0)">...</a>
                 </li>
-                <li class="page-item active">
+                <li class="active">
                     <a class="page-link" href="javascript:void(0)">@filter.RequestedPageNumber</a>
                 </li>
             }
@@ -181,9 +181,8 @@ else
         contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
     }
     
-    private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "";
-
-
+    private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "page-item";
+    
     protected override async Task OnInitializedAsync()
     {
         filter = new ContractRequestFilterDto { RequestedPageNumber = 1 };

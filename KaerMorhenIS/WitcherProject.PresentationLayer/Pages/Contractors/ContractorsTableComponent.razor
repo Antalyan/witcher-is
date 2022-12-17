@@ -41,11 +41,11 @@ else
                 <td>@cont.Surname</td>
                 <td>
                     <div class="hstack gap-3">
-                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
+                        <button class="btn btn-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
                             <i class="bi bi-pencil" title="Edit"></i>
                         </button>
                         <AuthorizeView Roles="@RoleNames.GetRoles(new []{RoleNames.Admin})">
-                        <button class="btn btn-outline-danger rounded-circle" @onclick="() => Delete(cont.Id)">
+                        <button class="btn btn-danger rounded-circle" @onclick="() => Delete(cont.Id)">
                             <i class="bi bi-x" title="Delete"></i>
                         </button>
                         </AuthorizeView>

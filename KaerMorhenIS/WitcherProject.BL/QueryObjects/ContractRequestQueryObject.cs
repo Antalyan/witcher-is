@@ -28,7 +28,7 @@ public class ContractRequestQueryObject: IContractRequestQueryObject
         _contractRequestQuery.Filter(cr => filter.State == null || cr.State == filter.State);
         _contractRequestQuery.Filter(cr => filter.ContractId == null || cr.ContractId == filter.ContractId);
         _contractRequestQuery.Filter(cr => filter.PersonId == null || cr.PersonId == filter.PersonId);
-        _contractRequestQuery.Filter(cr => filter.CreatedOn == null || cr.CreatedOn == filter.CreatedOn);
+        _contractRequestQuery.Filter(cr => filter.CreatedOn == null || cr.CreatedOn >= filter.CreatedOn);
 
         if (filter.RequestedPageNumber != null)
         {

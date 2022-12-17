@@ -121,7 +121,7 @@ else
                 <td>@(cont.Contractor != null ? cont.Contractor.Name + " " + cont.Contractor.Surname : null) </td>
                 <td>
                     <div class="hstack gap-3">
-                        <button class="btn btn-outline-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
+                        <button class="btn btn-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
                             @if (HasOwnerRights(cont.Person?.Id))
                             {
                                 <i class="bi bi-pencil" title="Edit"></i>
@@ -133,14 +133,14 @@ else
                         </button>
                         @if (_hasAllRights)
                         {
-                            <button class="btn btn-outline-danger rounded-circle" @onclick="() => Delete(cont.Id)">
+                            <button class="btn btn-danger rounded-circle" @onclick="() => Delete(cont.Id)">
                                 <i class="bi bi-x" title="Delete"></i>
                             </button>
                         }
                         else if (!HasOwnerRights(cont.Person?.Id) && cont.State == ContractState.Open)
                         {
                                 @* //TODO: add action: pop-up window with request text *@
-                            <button class="btn btn-outline-primary rounded-circle">
+                            <button class="btn btn-primary rounded-circle">
                                 <i class="bi bi-envelope" title="Send request"></i>
                             </button>
                         }
@@ -161,15 +161,15 @@ else
             <li class="page-item page-pre" @onclick="Previous">
                 <a class="page-link" href="javascript:void(0)">Previous</a>
             </li>
-            <li class="page-item @IsActive(1)" @onclick="() => SetPageNumber(1)">
+            <li class="@IsActive(1)" @onclick="() => SetPageNumber(1)">
                 <a class="page-link" href="javascript:void(0)">1</a>
             </li>
-            <li class="page-item @IsActive(2)" @onclick="() => SetPageNumber(2)">
+            <li class="@IsActive(2)" @onclick="() => SetPageNumber(2)">
                 <a class="page-link" href="javascript:void(0)">2</a>
             </li>
             @if (filter.RequestedPageNumber > 2)
             {
-                <li class="page-item disabled">
+                <li class="page-item">
                     <a class="page-link" href="javascript:void(0)">...</a>
                 </li>
                 <li class="page-item active">
@@ -220,7 +220,7 @@ else
         contracts = await ContractService.GetContractsFilteredAsync(filter);
     }
 
-    private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "";
+    private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "page-item";
 
     private bool HasOwnerRights(int? assignedPersonId) => _hasAllRights || assignedPersonId == _userId;
 
