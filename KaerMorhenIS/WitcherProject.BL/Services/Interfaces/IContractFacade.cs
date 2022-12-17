@@ -3,7 +3,9 @@ using WitcherProject.BL.DTOs.ContractRequest;
 
 namespace WitcherProject.BL.Services.Interfaces;
 
-public interface IContractRequestAdvancedService
+public interface IContractFacade
 {
     Task ApproveContractRequest(ContractRequestUpdateDto contractRequest, int contractId, int personId);
+
+    Task<bool> DeleteContractorIfNotAssigned(int contractorId);
 }

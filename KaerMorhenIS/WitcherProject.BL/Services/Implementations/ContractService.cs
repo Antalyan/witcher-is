@@ -69,6 +69,14 @@ public class ContractService : IContractService
         });
     }
 
+    public async Task<IEnumerable<ContractDetailedDto>> GetContractsByContractorAsync(int contractorId)
+    {
+        return await _contractQueryObject.ExecuteQuery(new ContractFilterDto
+        {
+            ContractorId = contractorId, SortCriteria = "StartDate", SortAscending = false
+        });
+    }
+    
     public async Task UpdateContractAsync(ContractUpdateDto contractUpdateDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();

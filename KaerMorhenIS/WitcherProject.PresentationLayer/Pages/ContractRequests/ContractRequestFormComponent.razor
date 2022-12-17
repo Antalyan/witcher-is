@@ -7,7 +7,7 @@
 @using WitcherProject.Shared.Enums
 
 @inject IContractRequestService ContractRequestService
-@inject IContractRequestAdvancedService ContractRequestAdvancedService
+@inject IContractFacade ContractFacade
 @inject IContractService ContractService
 @inject IPersonService PersonService
 @inject NavigationManager NavigationManager
@@ -165,7 +165,7 @@ else
         var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
         adapted.State = ContractRequestState.Approved;
 
-        await ContractRequestAdvancedService.ApproveContractRequest(adapted, adapted.ContractId, adapted.PersonId);
+        await ContractFacade.ApproveContractRequest(adapted, adapted.ContractId, adapted.PersonId);
 
         NavigationManager.NavigateTo($"/contractRequests", true);
     }

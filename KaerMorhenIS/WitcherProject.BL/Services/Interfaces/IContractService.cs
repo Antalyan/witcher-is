@@ -16,6 +16,8 @@ public interface IContractService
     Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState contractState, int? pageNumber = null);
     
     Task<IEnumerable<ContractDetailedDto>> GetContractsAssignedToPersonAsync(int personId, int? pageNumber = null);
+    
+    Task<IEnumerable<ContractDetailedDto>> GetContractsByContractorAsync(int contractorId);
 
     Task UpdateContractAsync(ContractUpdateDto contractUpdateDto);
 

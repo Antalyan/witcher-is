@@ -9,17 +9,20 @@ using WitcherProject.Shared.Enums;
 namespace WitcherProject.BL.Services.Implementations;
 
 
-public class ContractRequestAdvancedService : IContractRequestAdvancedService
+public class ContractFacade : IContractFacade
 {
     private readonly IUnitOfWorkProvider _unitOfWorkProvider;
     private readonly IContractService _contractService;
     private readonly IContractRequestService _contractRequestService;
+    private readonly IContractorService _contractorService;
 
-    public ContractRequestAdvancedService(IUnitOfWorkProvider unitOfWorkProvider, IContractService contractService, IContractRequestService contractRequestService)
+    public ContractFacade(IUnitOfWorkProvider unitOfWorkProvider, IContractService contractService, 
+        IContractRequestService contractRequestService, IContractorService contractorService)
     {
         _unitOfWorkProvider = unitOfWorkProvider;
         _contractService = contractService;
         _contractRequestService = contractRequestService;
+        _contractorService = contractorService;
     }
 
     public async Task ApproveContractRequest(ContractRequestUpdateDto contractRequest, int contractId, int personId)
@@ -47,5 +50,13 @@ public class ContractRequestAdvancedService : IContractRequestAdvancedService
         _contractService.UpdateWithoutCommitContract(requestedContract.Adapt<ContractUpdateDto>());
 
         await uow.CommitAsync();
+    }
+
+    public async Task<bool> DeleteContractorIfNotAssigned(int contractorId)
+    {
+        var assignedContracts = await _contractService.GetContractsByContractorAsync(contractorId);
+        if (assignedContracts.Any()) return false;
+        await _contractorService.DeleteContractorAsync(contractorId);
+        return true;
     }
 }

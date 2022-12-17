@@ -38,7 +38,7 @@ builder.Services.AddTransient<IContractQueryObject, ContractQueryObject>();
 builder.Services.AddScoped<IUnitOfWorkProvider, EFUnitOfWorkProvider>();
 
 builder.Services.AddTransient<IContractorService, ContractorService>();
-builder.Services.AddTransient<IContractRequestAdvancedService, ContractRequestAdvancedService>();
+builder.Services.AddTransient<IContractFacade, ContractFacade>();
 builder.Services.AddTransient<IContractService, ContractService>();
 builder.Services.AddTransient<IContractRequestService, ContractRequestService>();
 builder.Services.AddTransient<IPersonService, PersonService>();

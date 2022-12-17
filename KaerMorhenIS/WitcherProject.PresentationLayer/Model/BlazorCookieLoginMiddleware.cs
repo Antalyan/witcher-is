@@ -56,7 +56,7 @@ namespace WitcherProject.PresentationLayer.Model
                 if (result.Succeeded)
                 {
                     Logins.Remove(key);
-                    context.Response.Redirect("/loginSucces");
+                    context.Response.Redirect("/loginsuccess");
                     return;
                 }
                 if (result.IsLockedOut)
