@@ -10,6 +10,8 @@
 @inject IPersonService PersonService
 @inject IContractService ContractService
 @inject NavigationManager NavigationManager
+@inject ILogger<ContractRequestTableComponent> Logger
+
 
 @if (contractRequests == null)
 {
@@ -156,6 +158,8 @@ else
     private IEnumerable<ContractSimpleDto> allContracts;
     private ContractRequestFilterDto filter;
     
+    private bool _locked = false;
+
     private async Task SetPageNumber(int number)
     {
         filter.RequestedPageNumber = number;
@@ -190,7 +194,14 @@ else
     
     private async Task Filter()
     {
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        if (_locked)
+        {
+            Logger.LogWarning("Filter could not be performed due to race condition");
+            return;
+        }
+        _locked = true;
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);       
+        _locked = false;
     }
 
     private async Task Delete(int contractRequestToDelete)
@@ -201,9 +212,18 @@ else
 
     private async Task Reset()
     {
+        if (_locked)
+        {
+            Logger.LogWarning("Reset could not be performed due to race condition");
+            return;
+        }
+        _locked = true;
+        
         // TODO: implement better way of reseting the filter? E.g. via resetting properties to default
         filter = new ContractRequestFilterDto() { RequestedPageNumber = 1 };
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);      
+        
+        _locked = false;
     }
     
     private void RedirectToDetail(int contractRequestId)
