@@ -6,23 +6,23 @@ namespace WitcherProject.BL.Services.Interfaces;
 
 public interface IContractRequestService
 {
-    Task CreateContractRequestAsync(ContractRequestAddDto contractRequestAddDto);
-
-    Task<IEnumerable<ContractRequestDetailedDto>> GetAllContractRequestsAsync();
+    Task<IEnumerable<ContractRequestDetailedDto>> GetAllContractRequests();
     
-    Task <ContractRequestDetailedDto> GetContractRequestByIdAsync(int requestId);
+    Task <ContractRequestDetailedDto> GetContractRequestById(int requestId);
     
-    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByStateAsync(ContractRequestState state, int? pageNumber);
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByState(ContractRequestState state, int? pageNumber);
     
-    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByContractAsync(int contractId, int? pageNumber);
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByContract(int contractId, int? pageNumber);
     
-    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByPersonAsync(int personId, int? pageNumber);
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestByPerson(int personId, int? pageNumber);
 
-    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestsFilteredAsync(ContractRequestFilterDto contractRequestFilterDto);
+    Task<IEnumerable<ContractRequestDetailedDto>> GetContractRequestsFiltered(ContractRequestFilterDto contractRequestFilterDto);
+    
+    Task CreateContractRequest(ContractRequestAddDto contractRequestAddDto);
+    
+    Task UpdateContractRequest(ContractRequestUpdateDto contractRequestUpdateDto);
 
-    Task UpdateContractRequestAsync(ContractRequestUpdateDto contractRequestUpdateDto);
+    void UpdateContractWithoutCommit(ContractRequestUpdateDto contractRequestUpdateDto);
 
-    void UpdateWithoutCommitContractRequest(ContractRequestUpdateDto contractRequestUpdateDto);
-
-    Task DeleteContractRequestAsync(int requestId);
+    Task DeleteContractRequest(int requestId);
 }

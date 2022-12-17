@@ -49,7 +49,7 @@ else
         }
         else //Edit
         {
-            contractor = await ContractorService.GetContractorByIdAsync(ContractId ?? -1);
+            contractor = await ContractorService.GetContractorById(ContractId ?? -1);
         }
     }
 
@@ -58,11 +58,11 @@ else
     {
         if (ContractId == null) //Add
         {
-            await ContractorService.CreateContractorAsync(contractor);
+            await ContractorService.CreateContractor(contractor);
         }
         else //Edit
         {
-            await ContractorService.UpdateContractorAsync(contractor);
+            await ContractorService.UpdateContractor(contractor);
         }
 
         RedirectToContractors();

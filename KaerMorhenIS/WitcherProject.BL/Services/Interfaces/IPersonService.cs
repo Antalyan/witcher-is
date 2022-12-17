@@ -5,23 +5,23 @@ namespace WitcherProject.BL.Services.Interfaces;
 
 public interface IPersonService
 {
-    Task CreateUserAsync(PersonCreateNewDto personCreateNewDto, string password);
-
-    Task UpdateRoleToUserAsync(string login, List<string> newRoleNames);
-
-    Task UpdateUserAsync(PersonUpdateDto personUpdateDto);
-
-    Task<IEnumerable<PersonCompleteDto>> GetAllUsersAsync();
+    Task<IEnumerable<PersonCompleteDto>> GetAllUsers();
     
-    Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsersAsync();
+    Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsers();
 
     Task<IEnumerable<PersonCompleteDto>> GetAllUserWithRoles();
 
     Task<PersonCompleteDto> GetPersonById(int personId);
 
     Task<PersonCompleteDto> GetPersonByLogin(string login);
+    
+    Task CreateUser(PersonCreateNewDto personCreateNewDto, string password);
 
-    Task DisableUserByIdAsync(int userId);
+    Task UpdateRoleToUser(string login, List<string> newRoleNames);
+
+    Task UpdateUser(PersonUpdateDto personUpdateDto);
+
+    Task DisableUserById(int userId);
     
     Task<IEnumerable<RoleDto>> GetRoles();
 

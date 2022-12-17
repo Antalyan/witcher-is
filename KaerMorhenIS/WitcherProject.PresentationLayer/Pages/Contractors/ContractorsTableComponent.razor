@@ -72,7 +72,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        contractors = await ContractorService.GetAllContractorsAsync();
+        contractors = await ContractorService.GetAllContractors();
     }
 
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin)]
@@ -80,7 +80,7 @@ else
     {
         if (await ContractFacade.DeleteContractorIfNotAssigned(contractorIdToDelete))
         {
-            contractors = await ContractorService.GetAllContractorsAsync();
+            contractors = await ContractorService.GetAllContractors();
         }
         else
         {

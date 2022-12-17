@@ -136,7 +136,7 @@ else
         }
         else // Working with existing CR
         {
-            contractRequest = await ContractRequestService.GetContractRequestByIdAsync(RequestId ?? -1);
+            contractRequest = await ContractRequestService.GetContractRequestById(RequestId ?? -1);
             _scenario = Scenario.ExistingContractRequest;
         }
         stateOptions = ContractRequestStateUtil.GetAllStates();
@@ -155,7 +155,7 @@ else
         adapted.PersonId = (int)PersonId; // cast is ok because in create the personId is always provided
         adapted.ContractId = (int)ContractId;
         adapted.State = ContractRequestState.Requested;
-        await ContractRequestService.CreateContractRequestAsync(adapted);
+        await ContractRequestService.CreateContractRequest(adapted);
         NavigationManager.NavigateTo($"/contractRequests", true);
     }
 
@@ -175,7 +175,7 @@ else
     {
         var adapted = contractRequest.Adapt<ContractRequestUpdateDto>();
         adapted.State = ContractRequestState.Declined;
-        await ContractRequestService.UpdateContractRequestAsync(adapted);
+        await ContractRequestService.UpdateContractRequest(adapted);
         NavigationManager.NavigateTo($"/contractRequests", true);
     }
 

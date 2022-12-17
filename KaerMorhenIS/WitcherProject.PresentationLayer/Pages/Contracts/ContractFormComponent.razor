@@ -175,8 +175,8 @@ else
 
         stateOptions = _hasFullRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates(contract.State);
     //TODO optional: replace people by only witchers
-        personOptions = _hasFullRights ? await PersonService.GetAllSimpleUsersAsync() : new List<PersonSimpleDto> { activePerson.Adapt<PersonSimpleDto>() };
-        contractorOptions = await ContractorService.GetAllContractorsAsync();
+        personOptions = _hasFullRights ? await PersonService.GetAllSimpleUsers() : new List<PersonSimpleDto> { activePerson.Adapt<PersonSimpleDto>() };
+        contractorOptions = await ContractorService.GetAllContractors();
     }
 
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]

@@ -88,7 +88,7 @@
         {
             try
             {
-                await _personService.CreateUserAsync(RegisterModelToCreateNewDto(), registerModel.Password);
+                await _personService.CreateUser(RegisterModelToCreateNewDto(), registerModel.Password);
                 showRegisterSuccess = registerModel.UserName;
                 registerModel = new RegisterModel();
                 StateHasChanged();

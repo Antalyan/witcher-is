@@ -171,7 +171,7 @@ else
     private async Task SetPageNumber(int number)
     {
         filter.RequestedPageNumber = number;
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
     }
 
     private async Task Previous()
@@ -179,14 +179,14 @@ else
         if (filter.RequestedPageNumber > 1)
         {
             filter.RequestedPageNumber--;
-            contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+            contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
         }
     }
 
     private async Task Next()
     {
         filter.RequestedPageNumber++;
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
     }
 
     private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "page-item";
@@ -198,8 +198,8 @@ else
         {
             filter.PersonId = PersonIdLimit;
         }
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
-        allPersons = await PersonService.GetAllSimpleUsersAsync();
+        contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
+        allPersons = await PersonService.GetAllSimpleUsers();
         allContracts = await ContractService.GetAllSimpleContracts();
     }
 
@@ -211,14 +211,14 @@ else
             return;
         }
         _locked = true;
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
         _locked = false;
     }
 
     private async Task Delete(int contractRequestToDelete)
     {
-        await ContractRequestService.DeleteContractRequestAsync(contractRequestToDelete);
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        await ContractRequestService.DeleteContractRequest(contractRequestToDelete);
+        contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
     }
 
     private async Task Reset()
@@ -236,7 +236,7 @@ else
         {
             filter.PersonId = PersonIdLimit;
         }
-        contractRequests = await ContractRequestService.GetContractRequestsFilteredAsync(filter);
+        contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
 
         _locked = false;
     }

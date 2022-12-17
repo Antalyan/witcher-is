@@ -20,7 +20,7 @@ public class ContractorService: IContractorService
         _contractorRepository = contractorRepository;
     }
     
-    public async Task CreateContractorAsync(ContractorDto contractDto)
+    public async Task CreateContractor(ContractorDto contractDto)
     {
         var contractorToInsert = contractDto.Adapt<Contractor>();
         await using var uow = _unitOfWorkProvider.CreateUow();
@@ -28,7 +28,7 @@ public class ContractorService: IContractorService
         await uow.CommitAsync();
     }
 
-    public async Task<IEnumerable<ContractorDto>> GetAllContractorsAsync()
+    public async Task<IEnumerable<ContractorDto>> GetAllContractors()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedContractors = (await _contractorRepository.GetAll())
@@ -36,21 +36,21 @@ public class ContractorService: IContractorService
         return returnedContractors.Select(contractor => contractor.Adapt<ContractorDto>());
     }
     
-    public async Task<ContractorDto> GetContractorByIdAsync(int contractorId)
+    public async Task<ContractorDto> GetContractorById(int contractorId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedContractor = await _contractorRepository.GetById(contractorId);
         return returnedContractor.Adapt<ContractorDto>();
     }
 
-    public async Task UpdateContractorAsync(ContractorDto contractorDto)
+    public async Task UpdateContractor(ContractorDto contractorDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         _contractorRepository.Update(contractorDto.Adapt<Contractor>());
         await uow.CommitAsync();
     }
 
-    public async Task DeleteContractorAsync(int contractId)
+    public async Task DeleteContractor(int contractId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         await _contractorRepository.Delete(contractId);

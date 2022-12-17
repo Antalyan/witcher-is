@@ -111,7 +111,7 @@ else
         createRoleError = null;
         try
         {
-            await PersonService.UpdateRoleToUserAsync(roleUserModel.UserName,
+            await PersonService.UpdateRoleToUser(roleUserModel.UserName,
                 roleUserModel.RoleNames.ToList());
             changeRoleLock = false;
             StateHasChanged();
@@ -124,7 +124,7 @@ else
     
     private async Task Disable(PersonCompleteDto person)
     {
-        await PersonService.DisableUserByIdAsync(person.Id);
+        await PersonService.DisableUserById(person.Id);
         await FetchUserWitchRoles();
         StateHasChanged();
     }
@@ -132,7 +132,7 @@ else
     private async Task Enable(PersonUpdateDto person)
     {
         person.IsActive = true;
-        await PersonService.UpdateUserAsync(person.Adapt<PersonUpdateDto>());
+        await PersonService.UpdateUser(person.Adapt<PersonUpdateDto>());
         await FetchUserWitchRoles();
         StateHasChanged();
     }

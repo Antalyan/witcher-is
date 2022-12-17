@@ -77,7 +77,7 @@
         showEditSuccess = "";
         try
         {
-            await PersonService.UpdateUserAsync(person.Adapt<PersonUpdateDto>());
+            await PersonService.UpdateUser(person.Adapt<PersonUpdateDto>());
             showEditSuccess = person.UserName;
         }
         catch (Exception e)

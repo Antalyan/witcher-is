@@ -27,7 +27,7 @@ public class PersonService : IPersonService
         _roleManager = roleManager;
     }
 
-    public async Task CreateUserAsync(PersonCreateNewDto personCreateNewDto, string password)
+    public async Task CreateUser(PersonCreateNewDto personCreateNewDto, string password)
     {
         var newUser = personCreateNewDto.Adapt<Person>();
         var callResult = await _userManager.CreateAsync(newUser, password);
@@ -36,7 +36,7 @@ public class PersonService : IPersonService
     }
 
     
-    public async Task UpdateRoleToUserAsync(string login, List<string> newRoleNames)
+    public async Task UpdateRoleToUser(string login, List<string> newRoleNames)
     {
         var userRoleAssignedTo = await _userManager.FindByNameAsync(login);
         if (userRoleAssignedTo is null)
@@ -60,15 +60,16 @@ public class PersonService : IPersonService
         }
     }
 
-    public async Task UpdateUserAsync(PersonUpdateDto personUpdateDto)
+    public async Task UpdateUser(PersonUpdateDto personUpdateDto)
     {
         var updatedPerson = await _userManager.FindByNameAsync(personUpdateDto.UserName);
         UpdatePerson(updatedPerson, personUpdateDto);
         await _userManager.UpdateAsync(updatedPerson);
     }
 
-    public async Task<IEnumerable<PersonCompleteDto>> GetAllUsersAsync()
+    public async Task<IEnumerable<PersonCompleteDto>> GetAllUsers()
     {
+        await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPersons = await _personRepository.GetAll();
         return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
     }
@@ -79,11 +80,10 @@ public class PersonService : IPersonService
         return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
     }
     
-    public async Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsersAsync()
+    public async Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsers()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPersons = await _personRepository.GetAll();
-        await uow.CommitAsync();
         return returnedPersons.Select(person => person.Adapt<PersonSimpleDto>());
     }
 
@@ -91,7 +91,6 @@ public class PersonService : IPersonService
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
         var returnedPerson = await _personRepository.GetById(personId);
-        await uow.CommitAsync();
         return returnedPerson.Adapt<PersonCompleteDto>();
     }
     
@@ -102,7 +101,7 @@ public class PersonService : IPersonService
     }
 
 
-    public async Task DisableUserByIdAsync(int userId)
+    public async Task DisableUserById(int userId)
     {
         var userToDisable = await _userManager.FindByIdAsync(userId.ToString());
         userToDisable.IsActive = false;

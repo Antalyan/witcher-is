@@ -4,13 +4,13 @@ namespace WitcherProject.BL.Services.Interfaces;
 
 public interface IContractorService
 {
-    Task CreateContractorAsync(ContractorDto contractDto);
+    Task<IEnumerable<ContractorDto>> GetAllContractors();
 
-    Task<IEnumerable<ContractorDto>> GetAllContractorsAsync();
+    Task<ContractorDto> GetContractorById(int contractorId);
+    
+    Task CreateContractor(ContractorDto contractDto);
 
-    Task<ContractorDto> GetContractorByIdAsync(int contractorId);
+    Task UpdateContractor(ContractorDto contractorDto);
 
-    Task UpdateContractorAsync(ContractorDto contractorDto);
-
-    Task DeleteContractorAsync(int contractId);
+    Task DeleteContractor(int contractId);
 }

@@ -239,8 +239,8 @@ else
             filter.PersonId = PersonIdLimit;
         }
         contracts = await ContractService.GetContractsFiltered(filter);
-        allPersons = await PersonService.GetAllSimpleUsersAsync();
-        allContractors = await ContractorService.GetAllContractorsAsync();
+        allPersons = await PersonService.GetAllSimpleUsers();
+        allContractors = await ContractorService.GetAllContractors();
     }
 
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin)]
