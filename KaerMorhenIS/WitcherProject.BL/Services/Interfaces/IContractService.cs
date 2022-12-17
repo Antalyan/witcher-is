@@ -8,7 +8,9 @@ public interface IContractService
     Task CreateContractAsync(ContractAddDto contractAddDto);
 
     Task<IEnumerable<ContractDetailedDto>> GetAllContractsAsync();
-    
+
+    Task<ContractDetailedDto> GetContractByIdAsync(int id);
+
     Task<IEnumerable<ContractDetailedDto>> GetContractsFilteredAsync(ContractFilterDto contractFilterDto);
     
     Task<IEnumerable<ContractDetailedDto>> GetContractsByStateAsync(ContractState contractState, int? pageNumber = null);

@@ -1,6 +1,6 @@
 ﻿namespace WitcherProject.BL.DTOs.Person;
 
-public class PersonSimpleDto
+public class PersonSimpleDto 
 {
     public int Id { get; set; }
     public string Login { get; set; }

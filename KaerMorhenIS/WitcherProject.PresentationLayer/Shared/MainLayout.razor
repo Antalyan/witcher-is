@@ -1,0 +1,27 @@
+﻿@inherits LayoutComponentBase
+
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu/>
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <div class="col-m-8">
+               
+            </div>
+            <div class="col-m-2">
+                <DropDownAdmin/>    
+                </div>
+            <div class="col-md-2">
+                <LoginDisplay/>
+            </div>
+            
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>

@@ -1,9 +1,12 @@
-﻿namespace WitcherProject.BL.DTOs.Contract;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WitcherProject.BL.DTOs.Contract;
 
 public class ContractSimpleDto
 {
     public int Id { get; set; }
 
+    [Required]
     public string Name { get; set; }
 
     protected bool Equals(ContractSimpleDto other)

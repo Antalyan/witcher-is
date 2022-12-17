@@ -1,0 +1,121 @@
+﻿@page "/RegisterUser"
+@attribute [Authorize(Roles = RoleNames.UserManager + "," + RoleNames.Admin)]
+
+@using WitcherProject.DAL.Models
+@using WitcherProject.PresentationLayer.Model.Administration
+@using WitcherProject.Shared
+@using Microsoft.AspNetCore.Components
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.BL.Services.Interfaces
+
+@inject IPersonService _personService
+
+<h3 class="text-primary">Register new user</h3>
+
+@if (!string.IsNullOrEmpty(showRegisterSuccess))
+{
+    <div class="alert alert-success mt-2 mb-2" role="alert">
+        <p>@showRegisterSuccess registration was succesfull.</p>
+    </div>
+}
+
+<EditForm Model="@registerModel" OnValidSubmit="OnRegisterSubmit">
+        <DataAnnotationsValidator/>
+
+        @if (!string.IsNullOrEmpty(registerModel.Error))
+            {
+                <div class="alert alert-danger mt-2 mb-2" role="alert">
+                    Registration failed: @registerModel.Error
+                </div>
+            }
+        
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Login: <InputText class="form-control" @bind-Value="@registerModel.UserName" DisplayName="login" ></InputText>
+            </label>
+            <ValidationMessage For="@(() => registerModel.UserName)"></ValidationMessage>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Password: <InputText class="form-control" @bind-Value="@registerModel.Password" DisplayName="Password" ></InputText>
+            </label>
+             <ValidationMessage For="@(() => registerModel.Password)"></ValidationMessage>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Repeat password: <InputText class="form-control" @bind-Value="@registerModel.PasswordCompare" DisplayName="Repeat password"></InputText>
+            </label>
+             <ValidationMessage For="@(() => registerModel.PasswordCompare)"></ValidationMessage>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Name: <InputText class="form-control" @bind-Value="@registerModel.Name" DisplayName="name"></InputText>
+            </label>
+             <ValidationMessage For="@(() => registerModel.Name)"></ValidationMessage>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Surname: <InputText class="form-control" @bind-Value="@registerModel.Surname" DisplayName="surname"></InputText>
+            </label>
+             <ValidationMessage For="@(() => registerModel.Surname)"></ValidationMessage>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Cv: <InputTextArea class="form-control" @bind-Value="@registerModel.Cv" DisplayName="cv"></InputTextArea>
+            </label>
+             <ValidationMessage For="@(() => registerModel.Cv)"></ValidationMessage>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Birthdate: <InputDate class="form-control" @bind-Value="@registerModel.Birthdate" DisplayName="birthdate"></InputDate>
+            </label>
+             <ValidationMessage For="@(() => registerModel.Birthdate)"></ValidationMessage>
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+    </EditForm>
+
+@code {
+
+    private RegisterModel registerModel = new();
+
+    private string showRegisterSuccess;
+
+    private async Task OnRegisterSubmit()
+    {
+        showRegisterSuccess = null;
+        registerModel.Error = null;
+        if (registerModel.Password.Any(char.IsUpper) && registerModel.Password.Any(char.IsDigit))
+        {
+            try
+            {
+                await _personService.CreateUserAsync(RegisterModelToCreateNewDto(), registerModel.Password);
+                showRegisterSuccess = registerModel.UserName;
+                registerModel = new RegisterModel();
+                StateHasChanged();
+            } catch (Exception e)
+            {
+                registerModel.Error = e.Message;
+            }
+        }
+        else
+        {
+            registerModel.Error = "Password must contain upperCharacter and digit.";
+        }
+        
+        
+    }
+
+    private PersonCreateNewDto RegisterModelToCreateNewDto()
+    {
+        return new PersonCreateNewDto
+        {
+            UserName = registerModel.UserName,
+            Name = registerModel.Name,
+            Surname = registerModel.Surname ?? "",
+            Cv = registerModel.Cv ?? "",
+            Birthdate = registerModel.Birthdate,
+            IsActive = true
+        };
+    }
+
+}

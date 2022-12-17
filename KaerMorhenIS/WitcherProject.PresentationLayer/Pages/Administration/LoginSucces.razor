@@ -1,0 +1,21 @@
+﻿@page "/loginSucces"
+
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider _authenticationStateProvider;
+
+
+<div class="alert alert-success mt-2 mb-2" role="alert">
+    Welcome @authUser, you have been succesfully logged in!
+    </div>
+@code {
+
+    string authUser = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        authUser = authState.User.Identity.Name;
+        
+    }
+
+}

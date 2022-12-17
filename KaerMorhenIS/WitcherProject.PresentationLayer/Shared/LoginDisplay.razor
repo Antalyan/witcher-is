@@ -1,0 +1,12 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <NavLink class=".rz-navigation-item-link" href="/logout" Match="NavLinkMatch.All">Logout</NavLink>
+    </Authorized>
+    <NotAuthorized>
+        <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">Login</NavLink>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    
+}

@@ -1,18 +1,21 @@
-﻿using WitcherProject.Shared.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.DTOs.Contract;
 
 public class ContractUpdateDto
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
 
+    [Required]
     public string Name { get; set; }
 
     public string? Description { get; set; }
 
-    public ContractState? State { get; set; }
+    [Required]
+    public ContractState State { get; set; }
 
-    public DateTime? StartDate { get; set; }
+    public DateTime StartDate { get; set; }
 
     public DateTime? EndDate { get; set; }
 

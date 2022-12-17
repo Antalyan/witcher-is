@@ -1,12 +1,9 @@
-﻿using WitcherProject.BL.DTOs.Person;
+﻿using Microsoft.AspNetCore.Identity;
+using WitcherProject.BL.DTOs.Person;
 
 namespace WitcherProject.BL.DTOs;
 
-public class RoleDto
+public class RoleDto : IdentityRole<int>
 {
-    public int Id { get; set; }
-
-    public string RoleName { get; set; }
-    
-    public virtual List<RoleToPersonDto> RoleToPersonDtos { get; set; }
+    public virtual IEnumerable<UserRoleDto>? UserRoleDtos { get; set; }
 }

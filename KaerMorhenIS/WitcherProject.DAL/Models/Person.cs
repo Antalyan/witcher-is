@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace WitcherProject.DAL.Models;
 
-[Index(nameof(Login), IsUnique = true)]
-public class Person
+public class Person : IdentityUser<int>
 {
-    public int Id { get; set; }
-    public string Login { get; set; }
-    public string PasswordHash { get; set; }
     public string Name { get; set; }
     public string? Surname { get; set; }
     public string? Cv { get; set; }
@@ -16,13 +13,14 @@ public class Person
 
     public virtual List<Contract> Contracts { get; set; }
     
-    public virtual List<RoleToPerson> RoleToPersons { get; set; }
     
     public virtual List<ContractRequest>? ContractRequests { get; set; }
+    
+    public virtual List<UserRole>?  UserRoles { get; set; }
 
     protected bool Equals(Person other)
     {
-        return Id == other.Id && Login == other.Login && PasswordHash == other.PasswordHash && Name == other.Name && Surname == other.Surname && Cv == other.Cv && Birthdate.Equals(other.Birthdate) && IsActive == other.IsActive && Nullable.Equals(Contracts, other.Contracts) && Nullable.Equals(RoleToPersons, other.RoleToPersons) && Nullable.Equals(ContractRequests, other.ContractRequests);
+        return Id == other.Id && PasswordHash == other.PasswordHash && Name == other.Name && Surname == other.Surname && Cv == other.Cv && Birthdate.Equals(other.Birthdate) && IsActive == other.IsActive ;
     }
 
     public override bool Equals(object? obj)
@@ -37,16 +35,12 @@ public class Person
     {
         var hashCode = new HashCode();
         hashCode.Add(Id);
-        hashCode.Add(Login);
         hashCode.Add(PasswordHash);
         hashCode.Add(Name);
         hashCode.Add(Surname);
         hashCode.Add(Cv);
         hashCode.Add(Birthdate);
         hashCode.Add(IsActive);
-        hashCode.Add(Contracts);
-        hashCode.Add(RoleToPersons);
-        hashCode.Add(ContractRequests);
         return hashCode.ToHashCode();
     }
 }

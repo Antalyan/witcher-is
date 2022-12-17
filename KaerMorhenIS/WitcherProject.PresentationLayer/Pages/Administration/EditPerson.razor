@@ -1,0 +1,59 @@
+﻿@page "/editPerson/{Id:int}"
+
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.Shared
+@attribute [Authorize(Roles = RoleNames.UserManager + "," + RoleNames.Admin)] 
+
+@inject IPersonService PersonService
+@inject NavigationManager _navigationManager
+
+@if (personById == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-2">
+            <button class="btn btn-primary btn-block" @onclick="RedirectToAdmin">
+                Back to admin
+                <i class="bi bi-box-arrow-in-left"></i>
+            </button>
+        </div>
+        <div class="col-md-10">
+            <EditFormComponent person="personById" personEditError="@error"/>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private PersonCompleteDto personById { get; set; }
+
+    private string error;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            personById = await PersonService.GetPersonById(Id);
+        }
+        catch (Exception e)
+        {
+            error = e.Message;
+        }
+    }
+
+    private void RedirectToAdmin()
+    {
+        _navigationManager.NavigateTo("/AdminPage", true);
+    }
+
+}

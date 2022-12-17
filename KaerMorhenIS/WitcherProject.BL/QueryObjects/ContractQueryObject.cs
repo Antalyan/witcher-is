@@ -19,12 +19,13 @@ public class ContractQueryObject: IContractQueryObject
 
     public async Task<IEnumerable<ContractDetailedDto>> ExecuteQuery(ContractFilterDto filter)
     {
-        _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Name) || contract.Name == filter.Name);
+        _contractQuery.Filter(contract => filter.Id == null || contract.Id == filter.Id);
+        _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Name) || contract.Name.Contains(filter.Name));
         _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Description) || contract.Description == filter.Description);
         _contractQuery.Filter(contract => filter.State == null || contract.State == filter.State);
-        _contractQuery.Filter(contract => filter.StartDate == null || contract.StartDate == filter.StartDate);
-        _contractQuery.Filter(contract => filter.EndDate == null || contract.EndDate == filter.EndDate);
-        _contractQuery.Filter(contract => filter.Deadline == null || contract.Deadline == filter.Deadline);
+        _contractQuery.Filter(contract => filter.StartDate == null || contract.StartDate <= filter.StartDate);
+        _contractQuery.Filter(contract => filter.EndDate == null || contract.EndDate <= filter.EndDate);
+        _contractQuery.Filter(contract => filter.Deadline == null || contract.Deadline <= filter.Deadline);
         _contractQuery.Filter(contract => string.IsNullOrEmpty(filter.Location) || contract.Location == filter.Location);
         _contractQuery.Filter(contract => filter.ContractorId == null || contract.ContractorId == filter.ContractorId);
         _contractQuery.Filter(contract => filter.PersonId == null || contract.PersonId == filter.PersonId);
@@ -38,7 +39,7 @@ public class ContractQueryObject: IContractQueryObject
         {
             case null:
             {
-                _contractQuery.OrderBy(x => x.Id, filter.SortAscending);
+                _contractQuery.OrderBy(x => x.StartDate, false);
                 break;
             }
             case "StartDate":
@@ -66,6 +67,9 @@ public class ContractQueryObject: IContractQueryObject
                 throw new ArgumentException($@"Filtering by {filter.SortCriteria} not supported");
             }
         }
+
+        _contractQuery.Include("Person");
+        _contractQuery.Include("Contractor");
 
         var returnedContracts = await _contractQuery.ExecuteAsync();
         return returnedContracts.Select(contract => contract.Adapt<ContractDetailedDto>());

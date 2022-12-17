@@ -1,0 +1,14 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.Contract
+@using WitcherProject.BL.DTOs.Contractor
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.Shared
+@using WitcherProject.Shared.Enums
+
+@page "/contracts"
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+@inject NavigationManager NavigationManager
+
+<h3 class="text-primary">Contracts</h3>
+
+<ContractTableComponent/>
