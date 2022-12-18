@@ -157,3 +157,7 @@ a, .btn-link {
 .blazor-error-boundary::after {
     content: "An error has occurred."
 }
+
+.menu-item a, .rz-navigation-item-text {
+    font-size: 1.7rem;
+}
