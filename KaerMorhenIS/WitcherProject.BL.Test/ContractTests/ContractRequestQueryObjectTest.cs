@@ -28,7 +28,7 @@ public class ContractRequestQueryObjectTest
             Contract = _devilByTheWell,
             Id = 1,
             CreatedOn = new DateTime(1446, 01, 01),
-            State = ContractRequestState.Accepted,
+            State = ContractRequestState.Requested,
             Text = "I'll  do it ok..."
         };
     }
@@ -41,7 +41,7 @@ public class ContractRequestQueryObjectTest
         var wellDevilContractRequestByGeraltDetailedDto = new ContractRequestDetailedDto
         {
             Id = 1,
-            State = ContractRequestState.Accepted,
+            State = ContractRequestState.Requested,
             Person = BlTestDataInitalizator.GetPersonSimpleDto("Geralt"),
             Contract = BlTestDataInitalizator.GetContractSimpleDto("Devil by the Well"),
             CreatedOn = _wellDevilContractRequestByGeralt.CreatedOn,
@@ -50,7 +50,7 @@ public class ContractRequestQueryObjectTest
 
         var contractRequestFilter = new ContractRequestFilterDto
         {
-            State = ContractRequestState.Accepted,
+            State = ContractRequestState.Requested,
             PersonId = _geralt.Id,
             SortAscending = false,
             RequestedPageNumber = 1

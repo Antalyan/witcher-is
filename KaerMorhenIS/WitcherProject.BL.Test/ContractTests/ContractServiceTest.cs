@@ -41,7 +41,7 @@ public class ContractServiceTest
     }
     
     [Fact]
-    public async Task GetAllContractsAsync_ReturnAllContracts()
+    public async Task GetAllContracts_ReturnAllContracts()
     {
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
@@ -52,21 +52,19 @@ public class ContractServiceTest
 
         var contractService = new ContractService(mockUnitOfWorkProvider.Object,
             mockQueryObject.Object, mockContractRepository.Object);
-        var result = await contractService.GetAllContractsAsync();
+        var result = await contractService.GetAllContracts();
         
         Assert.Equal(3, result.Count());
     }
     
     [Fact]
-    public async Task CreateContractAsync_Valid_CallsRepositoryInsert()
+    public async Task CreateContract_Valid_CallsRepositoryInsert()
     {
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
-        var mockQueryObject = new Mock<IContractQueryObject>();
+        var repositoryContracts = new List<Contract>();
         var mockContractRepository = new Mock<IGenericRepository<Contract>>();
 
-        var repositoryContracts = new List<Contract>();
-
-        var contractAddDto = new ContractAddDto()
+        var contractAddDto = new ContractUpsertDto()
         {
             ContractorId = 1,
             Name = "Devil by the Well",
@@ -82,16 +80,18 @@ public class ContractServiceTest
         mockUnitOfWorkProvider.Setup(provider => provider.CreateUow()).Returns(mockUoW);
         mockContractRepository.Setup(repo => repo.Insert(It.IsAny<Contract>()))
             .Callback(() => repositoryContracts.Add(contractAddDto.Adapt<Contract>()));
-        var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
-            mockQueryObject.Object, mockContractRepository.Object);
+        var contractFacade = new ContractFacade(mockUnitOfWorkProvider.Object, 
+            new ContractService(mockUnitOfWorkProvider.Object, new Mock<IContractQueryObject>().Object, mockContractRepository.Object),
+            new ContractRequestService(mockUnitOfWorkProvider.Object, new Mock<IContractRequestQueryObject>().Object, new Mock<IGenericRepository<ContractRequest>>().Object),
+            new ContractorService(mockUnitOfWorkProvider.Object, new Mock<IGenericRepository<Contractor>>().Object));
        
-        await contractService.CreateContractAsync(contractAddDto);
+        await contractFacade.SaveContract(null, 1, contractAddDto);
         
         Assert.Single(repositoryContracts);
     }
 
     [Fact]
-    public async Task UpdateContractAsync_Valid_CallsUpdate()
+    public async Task UpdateContract_Valid_CallsUpdate()
     {
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
@@ -104,7 +104,7 @@ public class ContractServiceTest
         
         var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
             mockQueryObject.Object, mockContractRepository.Object);
-        var contractUpdateDto = new ContractUpdateDto
+        var contractUpdateDto = new ContractUpsertDto
         {
             ContractorId = 1,
             Name = "Devil by the Well",
@@ -116,13 +116,13 @@ public class ContractServiceTest
             Location = "White Orchard",
         };
         
-        await contractService.UpdateContractAsync(contractUpdateDto);
+        contractService.UpdateContract(contractUpdateDto);
         
         mockContractRepository.Verify(repo => repo.Update(It.IsAny<Contract>()), Times.Once);
     }
     
     [Fact]
-    public async Task DeleteContractAsync_Deletes()
+    public async Task DeleteContract_Deletes()
     {
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
@@ -138,13 +138,13 @@ public class ContractServiceTest
         var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
             mockQueryObject.Object, mockContractRepository.Object);
         
-        await contractService.DeleteContractAsync(_jennyOTheWoods.Id);
+        await contractService.DeleteContract(_jennyOTheWoods.Id);
         
         Assert.Null(contractForDelete);
     }
 
     [Fact]
-    public async Task GetContractsFilteredAsync_Returns_Exact()
+    public async Task GetContractsFiltered_Returns_Exact()
     {
         var mockUnitOfWorkProvider = new Mock<IUnitOfWorkProvider>();
         var mockQueryObject = new Mock<IContractQueryObject>();
@@ -156,7 +156,7 @@ public class ContractServiceTest
         var contractService = new ContractService(mockUnitOfWorkProvider.Object, 
             mockQueryObject.Object, mockContractRepository.Object);
 
-        var result = await contractService.GetContractsFilteredAsync(new ContractFilterDto() { ContractorId = 1});
+        var result = await contractService.GetContractsFiltered(new ContractFilterDto() { ContractorId = 1});
 
         Assert.Equal(_devilByTheWellDetailedDto, result.First());
     }
