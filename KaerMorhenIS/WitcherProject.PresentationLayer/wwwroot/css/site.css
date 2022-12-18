@@ -89,7 +89,7 @@ a, .btn-link {
 }
 
 .form-control:disabled {
-    background-color: #8d7f7f;
+    background-color: #c0c0c0;
     color: #020202;
     font-weight: bolder;
 }
@@ -99,7 +99,7 @@ a, .btn-link {
 }
 
 .user-disabled {
-    background-color: #8d7f7f;
+    background-color: #c0c0c0;
     color: #020202;
 }
 
