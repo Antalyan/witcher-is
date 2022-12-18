@@ -1,0 +1,10 @@
+﻿@page "/contractors"
+@using WitcherProject.Shared
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+
+<h3 class="text-primary">Contractors</h3>
+
+<ContractorsTableComponent></ContractorsTableComponent>
+
+@code {
+}

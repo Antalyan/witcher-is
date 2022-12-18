@@ -1,0 +1,12 @@
+﻿@page "/contracts/add"
+@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.Shared
+@using WitcherProject.Shared.Enums
+@using WitcherProject.BL.DTOs.Contract
+@using WitcherProject.BL.DTOs.Contractor
+@using WitcherProject.BL.DTOs.Person
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+
+<h3 class="text-primary">New contract</h3>
+
+<ContractFormComponent></ContractFormComponent>

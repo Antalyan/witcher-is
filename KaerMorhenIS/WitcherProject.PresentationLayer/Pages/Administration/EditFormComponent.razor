@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNetCore.Components
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.BL.Services.Implementations
+@using WitcherProject.BL.Services.Interfaces
+@using Mapster
+
+@inject IPersonService PersonService
+
+<EditForm Model="@person" OnValidSubmit="UpdatePersonalData">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        @if (!string.IsNullOrEmpty(showEditSuccess))
+        {
+            <div class="alert alert-success mt-2 mb-2" role="alert">
+                <p>User: @showEditSuccess was updated succesfully.</p>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(personEditError))
+        {
+            <div class="alert alert-danger mt-2 mb-2" role="alert">
+                @personEditError
+            </div>
+        }
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Login: <InputText class="form-control" @bind-Value="@person.UserName" DisplayName="login" disabled></InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Name: <InputText class="form-control" @bind-Value="@person.Name" DisplayName="name"></InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Surname: <InputText class="form-control" @bind-Value="@person.Surname" DisplayName="surname"></InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Cv: <InputTextArea class="form-control" @bind-Value="@person.Cv" DisplayName="cv"></InputTextArea>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4">
+                Birthdate: <InputDate class="form-control" @bind-Value="@person.Birthdate" DisplayName="birthdate"></InputDate>
+            </label>
+        </div>
+        <button class="btn btn-primary" type="submit">Edit</button>
+    </EditForm>
+
+@code {
+    [Parameter]
+    public PersonCompleteDto person { get; set; }
+    
+    [Parameter]
+    public string personEditError { get; set; }
+
+    
+    private string showEditSuccess;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            person = await PersonService.GetPersonById(person.Id);
+        }
+        catch (Exception e)
+        {
+            personEditError = e.Message;
+        }
+    }
+    
+    private async Task UpdatePersonalData()
+    {
+        showEditSuccess = "";
+        try
+        {
+            await PersonService.UpdateUser(person.Adapt<PersonUpdateDto>());
+            showEditSuccess = person.UserName;
+        }
+        catch (Exception e)
+        {
+            personEditError = e.Message;
+        }
+        
+            
+    }
+}

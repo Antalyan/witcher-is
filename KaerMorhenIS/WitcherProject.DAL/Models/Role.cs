@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace WitcherProject.DAL.Models;
 
-[Index(nameof(RoleName), IsUnique = true)]
-public class Role
+public class Role : IdentityRole<int>
 {
-    public int Id { get; set; }
-
-    public string RoleName { get; set; }
+    public virtual List<UserRole> UserRoles { get; set; }
+    
 }

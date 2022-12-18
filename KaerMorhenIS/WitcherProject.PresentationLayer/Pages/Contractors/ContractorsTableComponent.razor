@@ -1,0 +1,100 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.Contract
+@using WitcherProject.BL.DTOs.Contractor
+@using WitcherProject.BL.DTOs.Person
+@using WitcherProject.Shared
+@using WitcherProject.Shared.Enums
+@using Microsoft.AspNetCore.Components
+
+@inject IContractorService ContractorService
+@inject IContractFacade ContractFacade
+@inject NavigationManager NavigationManager
+@inject ILogger<ContractorsTableComponent> Logger
+
+@if (contractors == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="alert alert-danger mt-2 mb-2" role="alert">
+            @error
+        </div>
+    }
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var cont in contractors)
+        {
+            <tr>
+                <td>@cont.Name</td>
+                <td>@cont.Surname</td>
+                <td>
+                    <div class="hstack gap-3">
+                        <button class="btn btn-primary rounded-circle" @onclick="() => RedirectToDetail(cont.Id)">
+                            <i class="bi bi-pencil" title="Edit"></i>
+                        </button>
+                        <AuthorizeView Roles="@RoleNames.GetRoles(new []{RoleNames.Admin})">
+                        <button class="btn btn-danger rounded-circle" @onclick="() => Delete(cont.Id)">
+                            <i class="bi bi-x" title="Delete"></i>
+                        </button>
+                        </AuthorizeView>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <nav class="d-flex justify-content-between" aria-label="Page navigation">
+        <div>
+            <button class="btn btn-primary" onclick="@RedirectToAdd">
+                Add
+                <i class="bi bi-plus" title="Add"></i>
+            </button>
+        </div>
+    </nav>
+}
+
+@code {
+    private IEnumerable<ContractorDto> contractors;
+
+    private string? error = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contractors = await ContractorService.GetAllContractors();
+    }
+
+    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin)]
+    private async Task Delete(int contractorIdToDelete)
+    {
+        if (await ContractFacade.DeleteContractorIfNotAssigned(contractorIdToDelete))
+        {
+            contractors = await ContractorService.GetAllContractors();
+        }
+        else
+        {
+            error = "Cannot delete: contractor is in use!";
+        }
+    }
+
+    private void RedirectToDetail(int contractId)
+    {
+        NavigationManager.NavigateTo($"/contractors/{contractId}", true);
+    }
+
+    private void RedirectToAdd()
+    {
+        NavigationManager.NavigateTo($"/contractors/add");
+    }
+}

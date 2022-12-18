@@ -1,0 +1,54 @@
+﻿@page "/PersonalInfo"
+@attribute [Authorize]
+@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.BL.DTOs.Person
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using WitcherProject.PresentationLayer.Pages.Administration
+@using WitcherProject.PresentationLayer.Pages.Contracts
+@using WitcherProject.PresentationLayer.Pages.ContractRequests
+@using WitcherProject.Shared
+
+@inject IPersonService PersonService
+
+<h3 class="text-primary">Personal info</h3>
+
+@if (authenticatedPerson == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div>
+        <EditFormComponent person="authenticatedPerson" personEditError="@authError"/>
+        <AuthorizeView Roles="@RoleNames.GetRoles(new[] { RoleNames.Witcher })">
+                    <h3 class="text-primary mt-4 mb-4">My contracts</h3>
+            <ContractTableComponent PersonIdLimit="@authenticatedPerson.Id"/>
+                    <h3 class="text-primary mt-4 mb-4">My contract requests</h3>
+            <ContractRequestTableComponent PersonIdLimit="@authenticatedPerson.Id"/>
+        </AuthorizeView>
+    </div>
+}
+
+@code {
+
+    private PersonCompleteDto authenticatedPerson;
+
+    private string authError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authUser = authState.User.Identity.Name;
+        try
+        {
+            authenticatedPerson = await PersonService.GetPersonByLogin(authUser);
+        }
+        catch (Exception e)
+        {
+            authError = e.Message;
+        }
+    }
+
+}

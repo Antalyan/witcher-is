@@ -1,0 +1,78 @@
+﻿@using WitcherProject.BL.Services.Interfaces
+@using WitcherProject.Shared
+@using WitcherProject.BL.DTOs.Contractor
+
+@inject IContractorService ContractorService
+@inject NavigationManager NavigationManager
+
+@if (contractor == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    @if (showSuccess)
+    {
+        <div class="alert alert-success mt-4 mb-4" role="alert">
+            <p>Contractor details succesfully saved.</p>
+        </div>
+    }
+    <EditForm Model="@contractor" OnValidSubmit="SaveContractor">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Name:
+                <InputText class="form-control" @bind-Value="@contractor.Name" DisplayName="name">
+                </InputText>
+            </label>
+        </div>
+        <div>
+            <label class="form-label col-sm-10 col-md-4 pb-2">
+                Surname:
+                <InputText class="form-control" @bind-Value="@contractor.Surname" DisplayName="surname">
+                </InputText>
+            </label>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public int? ContractId { get; set; }
+
+    private bool showSuccess = false;
+    
+    private ContractorDto contractor;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (ContractId == null) //Add
+        {
+            contractor = new ContractorDto();
+        }
+        else //Edit
+        {
+            contractor = await ContractorService.GetContractorById(ContractId ?? -1);
+        }
+    }
+
+    [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+    private async Task SaveContractor()
+    {
+        if (ContractId == null) //Add
+        {
+            await ContractorService.CreateContractor(contractor);
+        }
+        else //Edit
+        {
+            await ContractorService.UpdateContractor(contractor);
+        }
+
+        showSuccess = true;
+    }
+}

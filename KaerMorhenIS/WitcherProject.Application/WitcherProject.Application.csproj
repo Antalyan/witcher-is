@@ -11,7 +11,6 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-rc.1.22426.7" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0-rc.1.22426.7" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.0-rc.1.22426.7" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0-rc.1.22426.7" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0-rc.1.22426.7">
@@ -21,6 +20,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\WitcherProject.BL\WitcherProject.BL.csproj" />
       <ProjectReference Include="..\WitcherProject.DAL\WitcherProject.DAL.csproj" />
+      <ProjectReference Include="..\WitcherProject.Infrastructure.EFCore\WitcherProject.Infrastructure.EFCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="TestingWebRequest.Tests" />
     </ItemGroup>
 </Project>

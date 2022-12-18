@@ -1,0 +1,12 @@
+﻿@page "/contractors/{Id:int}"
+@using WitcherProject.Shared
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
+
+<h3 class="text-primary">Contractor detail</h3>
+
+<ContractorFormComponent contractId="@Id"></ContractorFormComponent>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+}

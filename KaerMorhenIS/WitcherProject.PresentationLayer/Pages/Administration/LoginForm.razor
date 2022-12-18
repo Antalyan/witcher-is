@@ -1,0 +1,92 @@
+﻿@page "/login"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Identity
+@using WitcherProject.DAL.Models
+@using WitcherProject.PresentationLayer.Model
+@using WitcherProject.PresentationLayer.Model.Administration
+@using Microsoft.AspNetCore.Components
+@using WitcherProject.BL.Services.Interfaces
+@using Mapster
+
+
+@inject SignInManager<Person> SignInManager
+@inject IPersonService PersonService
+@inject NavigationManager NavigationManager
+@inject ILogger<LoginForm> Logger
+
+<h3 class="row justify-content-center">
+    Enter freely at your own will.
+</h3>
+<EditForm OnValidSubmit="OnSubmit" Model="@loginModel" >
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="row justify-content-center">
+    <label class="form-label col-md-6">
+        <InputText class="form-control" Placeholder="Login" @bind-Value="@loginModel.UserName" DisplayName="Login"></InputText>
+    </label>
+    </div>
+    <div class="row justify-content-center">
+        <label class="form-label col-md-6">
+        
+            <RadzenPassword class="form-control" Placeholder="Enter password..." @bind-Value="@loginModel.Password" DisplayName="Password"/>
+        </label>
+    </div>
+<div class="row justify-content-center">
+    <button class="btn btn-lg btn-primary btn-block col-md-3" type="submit">Login</button>
+    </div>
+    @if (!string.IsNullOrEmpty(loginModel.Error))
+    {
+        <div class="alert alert-danger mt-2 mb-2" role="alert">
+            @loginModel.Error
+        </div>
+    }
+</EditForm>
+
+@code {
+
+
+    private LoginModel loginModel = new();
+
+    public static bool loginLock = false;
+
+    private async Task OnSubmit()
+    {
+        // LamberLambert152_
+        // OldWolf1*
+        //YoungSkell*55
+
+        if (loginLock)
+        {
+            Logger.LogWarning("Login method invoked too many times, chill please!");
+            return;
+        }
+        loginLock = true;
+        
+        loginModel.Error = null;
+        var userInDatabase = await PersonService.GetPersonByLogin(loginModel.UserName);
+        
+        if (userInDatabase is null)
+        {
+            loginModel.Error = "Username does not exist";
+            loginLock = false;
+            return;
+        }
+        if (!userInDatabase.IsActive)
+        {
+            loginModel.Error = "Your account is deactivated: Try contact your witcher school support!";
+            loginLock = false;
+            return;
+        }
+        var signInResult = await SignInManager.CheckPasswordSignInAsync(userInDatabase.Adapt<Person>(), loginModel.Password, false);
+        if (signInResult.Succeeded)
+        {
+            var key = BlazorCookieLoginMiddleware<Person>.AnnounceLogin(loginModel);
+            NavigationManager.NavigateTo($"/login?key={key}", true);
+        }
+        else
+        {
+            loginModel.Error = "Password or username does not match";
+        }
+        loginLock = false;
+    }
+}
