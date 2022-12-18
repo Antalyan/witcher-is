@@ -103,7 +103,7 @@ public class PersonService : IPersonService
     public async Task<PersonCompleteDto> GetPersonByLogin(string login)
     {
         var returnedPerson = await _userManager.FindByNameAsync(login);
-        return returnedPerson.Adapt<PersonCompleteDto>();
+        return returnedPerson.Adapt<PkCore.Internal.DbContextFactoryersonCompleteDto>();
     }
     
     public async Task DisableUserById(int userId)

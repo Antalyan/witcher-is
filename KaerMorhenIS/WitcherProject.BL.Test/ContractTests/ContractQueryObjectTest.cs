@@ -23,7 +23,7 @@ public class ContractQueryObjectTest : ContractServiceTest
         };
 
         mockQuery.Setup(mcq => mcq.Filter(It.IsAny<Expression<Func<Contract, bool>>>())).Verifiable();
-        mockQuery.Setup(mcq => mcq.OrderBy(It.IsAny<Expression<Func<Contract, int>>>(), false)).Verifiable();
+        mockQuery.Setup(mcq => mcq.OrderBy(It.IsAny<Expression<Func<Contract, DateTime>>>(), false)).Verifiable();
         mockQuery.Setup(mcq => mcq.ExecuteAsync().Result)
             .Returns(new List<Contract> { _beastOfHonorton });
 
@@ -33,7 +33,7 @@ public class ContractQueryObjectTest : ContractServiceTest
 
         mockQuery.Verify(mcq => mcq.Filter(It.IsAny<Expression<Func<Contract, bool>>>()), Times.AtLeast(2));
 
-        mockQuery.Verify(mcq => mcq.OrderBy(It.IsAny<Expression<Func<Contract, int>>>(), false), Times.Once);
+        mockQuery.Verify(mcq => mcq.OrderBy(It.IsAny<Expression<Func<Contract, DateTime>>>(), false), Times.Once);
 
         Assert.Single(result);
     }
