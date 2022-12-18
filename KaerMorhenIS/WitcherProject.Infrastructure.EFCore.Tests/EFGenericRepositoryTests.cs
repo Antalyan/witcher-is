@@ -32,6 +32,7 @@ public class EFGenericRepositoryTests: EFGenericTest
         // var mockFactory = new Mock<DbContextFactory<KaerMorhenDBContext>>();
         // mockFactory.Setup(fact => fact.CreateDbContext()).Returns(new KaerMorhenDBContext(_options));
         // dbContextProvider = new EFUnitOfWorkProvider(mockFactory.Object);
+        var mockProvider = new Mock<EFUnitOfWorkProvider>();
     }
 
     [Fact]
