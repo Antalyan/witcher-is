@@ -6,7 +6,7 @@
 @attribute [Authorize(Roles = RoleNames.UserManager + "," + RoleNames.Admin)] 
 
 @inject IPersonService PersonService
-@inject NavigationManager _navigationManager
+@inject NavigationManager NavigationManager
 
 @if (personById == null)
 {
@@ -53,7 +53,7 @@ else
 
     private void RedirectToAdmin()
     {
-        _navigationManager.NavigateTo("/AdminPage", true);
+        NavigationManager.NavigateTo("/AdminPage", true);
     }
 
 }

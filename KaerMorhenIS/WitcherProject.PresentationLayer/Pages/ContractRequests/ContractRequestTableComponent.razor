@@ -166,7 +166,7 @@ else
     [Parameter]
     public int? PersonIdLimit { get; set; }
 
-    private bool _locked = false;
+    private bool locked = false;
 
     private async Task SetPageNumber(int number)
     {
@@ -205,14 +205,14 @@ else
 
     private async Task Filter()
     {
-        if (_locked)
+        if (locked)
         {
             Logger.LogWarning("Filter could not be performed due to race condition");
             return;
         }
-        _locked = true;
+        locked = true;
         contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
-        _locked = false;
+        locked = false;
     }
 
     private async Task Delete(int contractRequestToDelete)
@@ -223,12 +223,12 @@ else
 
     private async Task Reset()
     {
-        if (_locked)
+        if (locked)
         {
             Logger.LogWarning("Reset could not be performed due to race condition");
             return;
         }
-        _locked = true;
+        locked = true;
 
     // TODO: implement better way of reseting the filter? E.g. via resetting properties to default
         filter = new ContractRequestFilterDto() { RequestedPageNumber = 1 };
@@ -238,7 +238,7 @@ else
         }
         contractRequests = await ContractRequestService.GetContractRequestsFiltered(filter);
 
-        _locked = false;
+        locked = false;
     }
 
     private void RedirectToDetail(int contractRequestId)

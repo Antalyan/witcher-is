@@ -84,7 +84,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Description:
                 <InputText class="form-control" @bind-Value="@contractRequest.Text" DisplayName="description"
-                           disabled="@_disableEdit">
+                           disabled="@disableEdit">
                 </InputText>
             </label>
         </div>
@@ -133,7 +133,7 @@ else
     private ContractRequestDetailedDto contractRequest;
     private IEnumerable<ContractRequestState> stateOptions;
 
-    private bool _disableEdit = true;
+    private bool disableEdit = true;
     private string? showSuccess;
 
 
@@ -147,7 +147,7 @@ else
             contractRequest.Contract = requestedContract.Adapt<ContractSimpleDto>();
             contractRequest.Person = requestedPerson.Adapt<PersonSimpleDto>();
 
-            _disableEdit = false;
+            disableEdit = false;
             _scenario = Scenario.NewContractRequest;
         }
         else // Working with existing CR

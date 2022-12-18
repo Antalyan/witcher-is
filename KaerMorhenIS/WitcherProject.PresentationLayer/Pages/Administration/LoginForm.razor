@@ -9,10 +9,10 @@
 @using Mapster
 
 
-@inject SignInManager<Person> _signInManager
-@inject IPersonService _personService
-@inject NavigationManager _navigationManager
-@inject ILogger<LoginForm> logger
+@inject SignInManager<Person> SignInManager
+@inject IPersonService PersonService
+@inject NavigationManager NavigationManager
+@inject ILogger<LoginForm> Logger
 
 <h3 class="row justify-content-center">
     Enter freely at your own will.
@@ -57,13 +57,13 @@
 
         if (loginLock)
         {
-            logger.LogWarning("Login method invoked too many times, chill please!");
+            Logger.LogWarning("Login method invoked too many times, chill please!");
             return;
         }
         loginLock = true;
         
         loginModel.Error = null;
-        var userInDatabase = await _personService.GetPersonByLogin(loginModel.UserName);
+        var userInDatabase = await PersonService.GetPersonByLogin(loginModel.UserName);
         
         if (userInDatabase is null)
         {
@@ -77,11 +77,11 @@
             loginLock = false;
             return;
         }
-        var signInResult = await _signInManager.CheckPasswordSignInAsync(userInDatabase.Adapt<Person>(), loginModel.Password, false);
+        var signInResult = await SignInManager.CheckPasswordSignInAsync(userInDatabase.Adapt<Person>(), loginModel.Password, false);
         if (signInResult.Succeeded)
         {
             var key = BlazorCookieLoginMiddleware<Person>.AnnounceLogin(loginModel);
-            _navigationManager.NavigateTo($"/login?key={key}", true);
+            NavigationManager.NavigateTo($"/login?key={key}", true);
         }
         else
         {

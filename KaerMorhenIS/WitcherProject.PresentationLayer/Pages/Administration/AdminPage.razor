@@ -11,8 +11,8 @@
 @using Castle.Core.Internal
 
 @inject IPersonService PersonService
-@inject ILogger<AdminPage> logger
-@inject NavigationManager _navigationManager
+@inject ILogger<AdminPage> Logger
+@inject NavigationManager NavigationManager
 
 @if (roles.IsNullOrEmpty() || userWithRolesModels.IsNullOrEmpty())
 {
@@ -105,7 +105,7 @@ else
     {
         if (changeRoleLock)
         {
-            logger.LogWarning("Too many calls of Role change");
+            Logger.LogWarning("Too many calls of Role change");
             return;
         }
         changeRoleLock = true;
@@ -153,6 +153,6 @@ else
 
     private void PersonDetailEdit(RoleUserModel roleUserModel)
     {
-        _navigationManager.NavigateTo($"/editPerson/{roleUserModel.Id}");
+        NavigationManager.NavigateTo($"/editPerson/{roleUserModel.Id}");
     }
 }

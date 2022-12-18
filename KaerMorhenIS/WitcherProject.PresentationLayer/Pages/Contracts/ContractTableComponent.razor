@@ -128,7 +128,7 @@ else
                                 <i class="bi bi-eye" title="Details"></i>
                             }
                         </button>
-                        @if (_hasAllRights)
+                        @if (hasAllRights)
                         {
                             <button class="btn btn-danger rounded-circle" @onclick="() => Delete(cont.Id)">
                                 <i class="bi bi-x" title="Delete"></i>
@@ -138,7 +138,7 @@ else
                         {
                             <button class="btn btn-primary rounded-circle">
                                 <i class="bi bi-envelope" title="Send request"
-                                   @onclick="() => RedirectToRequestAdd(cont.Id, _userId)">
+                                   @onclick="() => RedirectToRequestAdd(cont.Id, userId)">
                                 </i>
                             </button>
                         }
@@ -194,8 +194,8 @@ else
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    private bool _hasAllRights = false;
-    private int _userId;
+    private bool hasAllRights = false;
+    private int userId;
 
     private async Task SetPageNumber(int number)
     {
@@ -220,17 +220,17 @@ else
 
     private string IsActive(int givenPageNumber) => givenPageNumber == filter.RequestedPageNumber ? "active" : "page-item";
 
-    private bool HasOwnerRights(int? assignedPersonId) => _hasAllRights || assignedPersonId == _userId;
+    private bool HasOwnerRights(int? assignedPersonId) => hasAllRights || assignedPersonId == userId;
 
     private bool _locked = false;
 
     protected override async Task OnInitializedAsync()
     {
         var user = (await authenticationStateTask).User;
-        _userId = (await PersonService.GetPersonByLogin(user.Identity.Name!)).Id;
+        userId = (await PersonService.GetPersonByLogin(user.Identity.Name!)).Id;
         if (user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin))
         {
-            _hasAllRights = true;
+            hasAllRights = true;
         }
 
         filter = new ContractFilterDto { RequestedPageNumber = 1, Id = null };

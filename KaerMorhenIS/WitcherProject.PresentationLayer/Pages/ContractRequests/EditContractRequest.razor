@@ -1,10 +1,6 @@
 ﻿@page "/contractRequests/edit/{Id:int}"
 @using WitcherProject.Shared
 
-
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IAuthorizationService AuthorizationService
-
 @attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
 
 

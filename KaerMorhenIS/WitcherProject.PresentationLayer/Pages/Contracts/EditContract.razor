@@ -1,20 +1,6 @@
 ﻿@page "/contracts/{Id:int}"
-@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
-
-@using Mapster
-@using WitcherProject.BL.Services.Interfaces
 @using WitcherProject.Shared
-@using WitcherProject.Shared.Enums
-@using WitcherProject.BL.DTOs.Person
-@using WitcherProject.BL.DTOs.Contract
-@using WitcherProject.BL.DTOs.Contractor
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IAuthorizationService AuthorizationService
-
-@inject IContractService ContractService
-@inject IPersonService PersonService
-@inject IContractorService ContractorService
-@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
 
 <h3 class="text-primary">Contract detail</h3>
 

@@ -2,7 +2,7 @@
 
 @attribute [Authorize]
 
-@inject AuthenticationStateProvider _authenticationStateProvider;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
 
 
 <div class="alert alert-success mt-2 mb-2" role="alert">
@@ -13,7 +13,7 @@
     string authUser = "";
     protected override async Task OnInitializedAsync()
     {
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         authUser = authState.User.Identity.Name;
         
     }

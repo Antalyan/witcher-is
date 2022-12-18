@@ -35,7 +35,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Name:
                 <InputText class="form-control" @bind-Value="@contract.Name" DisplayName="contract"
-                           disabled="@(!_hasOwnerRights)">
+                           disabled="@(!hasOwnerRights)">
                 </InputText>
             </label>
         </div>
@@ -43,14 +43,14 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Description:
                 <InputTextArea class="form-control" @bind-Value="@contract.Description" DisplayName="description"
-                           disabled="@(!_hasOwnerRights)">
+                           disabled="@(!hasOwnerRights)">
                 </InputTextArea>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 State:
-                <InputSelect class="form-control" @bind-Value="contract.State" DisplayName="state" disabled="@(!_hasOwnerRights)">
+                <InputSelect class="form-control" @bind-Value="contract.State" DisplayName="state" disabled="@(!hasOwnerRights)">
                     @foreach (var state in stateOptions)
                     {
                         <option value=@state>@state</option>
@@ -78,7 +78,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Deadline:
                 <InputDate class="form-control" @bind-Value=@contract.Deadline DisplayName="deadline"
-                           disabled="@(!_hasOwnerRights)">
+                           disabled="@(!hasOwnerRights)">
                 </InputDate>
             </label>
         </div>
@@ -86,15 +86,15 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Location:
                 <InputText class="form-control" @bind-Value="@contract.Location" DisplayName="location"
-                           disabled="@(!_hasOwnerRights)">
+                           disabled="@(!hasOwnerRights)">
                 </InputText>
             </label>
         </div>
         <div>
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 Assigned person:
-                <InputSelect class="form-control" @bind-Value="@_personId" disabled="@(!_hasFullRights)">
-                    @if (_hasFullRights || !_hasOwnerRights)
+                <InputSelect class="form-control" @bind-Value="@personId" disabled="@(!hasFullRights)">
+                    @if (hasFullRights || !hasOwnerRights)
                     {
                         <option value=""></option>
                     }
@@ -109,7 +109,7 @@ else
             <label class="form-label col-sm-10 col-md-4 pb-2">
                 @* TODO limit witcher view by id *@
                 Contractor:
-                <InputSelect class="form-control" @bind-Value="@_contractorId" disabled="@(!_hasOwnerRights)">
+                <InputSelect class="form-control" @bind-Value="@contractorId" disabled="@(!hasOwnerRights)">
                     <option value=""></option>
                     @foreach (var contractor in contractorOptions)
                     {
@@ -118,7 +118,7 @@ else
                 </InputSelect>
             </label>
         </div>
-        @if (_hasOwnerRights)
+        @if (hasOwnerRights)
         {
             <button class="btn btn-primary" type="submit">Save</button>
         }
@@ -133,8 +133,8 @@ else
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    private bool _hasOwnerRights = false;
-    private bool _hasFullRights = false;
+    private bool hasOwnerRights = false;
+    private bool hasFullRights = false;
 
     private PersonCompleteDto activePerson;
 
@@ -144,8 +144,8 @@ else
     private IEnumerable<PersonSimpleDto> personOptions;
     private IEnumerable<ContractorDto> contractorOptions;
 
-    private int? _personId;
-    private int? _contractorId;
+    private int? personId;
+    private int? contractorId;
     private bool showSuccess = false;
 
 
@@ -160,11 +160,11 @@ else
             contract = await ContractService.GetContractById(ContractId ?? -1);
             if (contract.Person != null)
             {
-                _personId = contract.Person.Id;
+                personId = contract.Person.Id;
             }
             if (contract.Contractor != null)
             {
-                _contractorId = contract.Contractor.Id;
+                contractorId = contract.Contractor.Id;
             }
         }
 
@@ -172,25 +172,24 @@ else
         activePerson = await PersonService.GetPersonByLogin(user.Identity.Name!);
         if (user.IsInRole(RoleNames.ContractManager) || user.IsInRole(RoleNames.Admin))
         {
-            _hasFullRights = true;
-            _hasOwnerRights = true;
+            hasFullRights = true;
+            hasOwnerRights = true;
         }
-        else if (_personId == activePerson.Id || ContractId == null)
+        else if (personId == activePerson.Id || ContractId == null)
         {
-            _hasOwnerRights = true;
-            _personId = activePerson.Id;
+            hasOwnerRights = true;
+            personId = activePerson.Id;
         }
 
-        stateOptions = _hasFullRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates(contract.State);
-    //TODO optional: replace people by only witchers
-        personOptions = _hasFullRights ? await PersonService.GetAllWitchers() : new List<PersonSimpleDto> { activePerson.Adapt<PersonSimpleDto>() };
+        stateOptions = hasFullRights ? ContractStateUtil.GetAllStates() : ContractStateUtil.GetUserSettableStates(contract.State);
+        personOptions = hasFullRights ? await PersonService.GetAllWitchers() : new List<PersonSimpleDto> { activePerson.Adapt<PersonSimpleDto>() };
         contractorOptions = await ContractorService.GetAllContractors();
     }
 
     [Authorize(Roles = RoleNames.ContractManager + "," + RoleNames.Admin + "," + RoleNames.Witcher)]
     private async Task SaveContract()
     {
-        await ContractFacade.SaveContract(_personId, _contractorId, contract.Adapt<ContractUpsertDto>());
+        await ContractFacade.SaveContract(personId, contractorId, contract.Adapt<ContractUpsertDto>());
         showSuccess = true;
     }
 }
