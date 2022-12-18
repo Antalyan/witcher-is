@@ -86,6 +86,12 @@ public class PersonService : IPersonService
         var returnedPersons = await _personRepository.GetAll();
         return returnedPersons.Select(person => person.Adapt<PersonSimpleDto>());
     }
+    
+    public async Task<IEnumerable<PersonSimpleDto>> GetAllWitchers()
+    {
+        var returnedPersons = _userManager.Users.Where(u => u.UserRoles.Select(x => x.Role.Name).Contains(RoleNames.Witcher));
+        return returnedPersons.Select(person => person.Adapt<PersonSimpleDto>()).ToList();
+    }
 
     public async Task<PersonCompleteDto> GetPersonById(int personId)
     {

@@ -32,6 +32,13 @@
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
       <PackageReference Include="Radzen.Blazor" Version="4.4.4" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Shared\kaer-morhen.jpg">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
     
 
 </Project>

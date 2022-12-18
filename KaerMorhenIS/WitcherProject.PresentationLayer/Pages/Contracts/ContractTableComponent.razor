@@ -239,7 +239,7 @@ else
             filter.PersonId = PersonIdLimit;
         }
         contracts = await ContractService.GetContractsFiltered(filter);
-        allPersons = await PersonService.GetAllSimpleUsers();
+        allPersons = await PersonService.GetAllWitchers();
         allContractors = await ContractorService.GetAllContractors();
     }
 

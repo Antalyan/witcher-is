@@ -9,6 +9,8 @@ public interface IPersonService
     
     Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsers();
 
+    Task<IEnumerable<PersonSimpleDto>> GetAllWitchers();
+
     Task<IEnumerable<PersonCompleteDto>> GetAllUserWithRoles();
 
     Task<PersonCompleteDto> GetPersonById(int personId);
