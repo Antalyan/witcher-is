@@ -1,5 +1,9 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.page {
+    min-height: 100vh;
+}
+
 html, body {
     font-family: 'Morpheus', sans-serif;
     background-color: #020202;
@@ -107,10 +111,6 @@ a, .btn-link {
 
 
 .footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
     background-color: #a6531e !important;
     color: white !important;
 }
