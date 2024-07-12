@@ -1,39 +1,75 @@
 # Witcher system
 
-## System by měl umožňovat:
+## Zadání
+Projekt představuje informační systém pro zaklínače (fiktivní povolání, známé ze světa A. Sapkowského). 
+
+Doménou, pro kterou bude vymodelován systém, je zaklínačské hradiště Kaer
+Morhen. Systém by měl poskytovat veškeré informace související s vykonáváním
+zaklínačské činnosti pro zaklínače z tohoto hradiště. Kromě základních osobních
+informací a rozdělení jednotlivých zodpovědností to zahrnuje zejména detailní
+údaje o jednotlivých zakázkách a jejich rozdělení jednotlivým osobám. Důležitou
+složkou informačního systému jsou také poznatky získané vykonáváním tohoto
+řemesla po staletí, uchovávané pro další generace zaklínačů.
+
+V systému vystupují osoby několika rolí. Správce zakázek
+eviduje veškeré poptávky ze strany veřejnosti a přiřazování zaklínačů k
+jednotlivým zakázkám. Evidenci všech osob a jejich role má na starost
+správce osob. Hlavní černou práci pak odvádí samotný zaklínač, který
+vykonává jednotlivé zakázky.
+
+Projektová dokumentace odpovídá několikaměsíční práci profesionální firmy. Implementace v tomto repozitáři byla proto značně zjednodušena: 
+
+## Funkční požadavky implementace
+
+### System by měl umožňovat:
 - autentizaci uživatelů
+- správci osob vytvářet uživatele
 - správci osob přidělovat uživatelům role
 - uživateli změnit si osobní údaje
 - zaklínači přistupovat k zakázkám
 - zaklínači aktualizovat stav zakázky
 - správci zakázek přidávat, upravovat a mazat zakázky
 - správci zakázek přiřadit zakázku k zaklínači
+- zaklínači požádat o přidělení zakázky
 
-## Volitelná rozšíření zadání:
-- žádost o přidělení zakázky (bude implementováno)
+### Volitelná rozšíření zadání:
 - databáze zaklínačských znalostí (návrh k dispozici v ERD, zatím nebude implementováno)
 
-## Členové týmu (v abecedním pořadí)
-- Michael Koudela 485441
-- Patrik Procházka 467880
-- Peter Šípoš 527365
+Projekt byl implementován v rámci volitelného předmětu PV179: Vývoj systémů v C#/.NET na Fakultě informatiky Masarykovy univerzity.
 
-## Rozběhnutí localDB MSSQL (1.10.2022)
+Projektová dokumentace byla vytvořena v rámci předmětů PA116: Domain Understanding and Modelling a PA179: Project Management. 
 
-* Stáhnout Microsoft SQL server (mě fungoval postup z tohoto odkazu)
-  * https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?source=recommendations&view=sql-server-ver16:
-* Po nainstalování v terminálu lokalizovat **SqllocalDB.exe**
-  * Já jsem  našel na adrese: C:\Program Files\Microsoft SQL Server\150\Tools\Binn>
-* Zadat příkazy 
-  * Vytvoření LocalDB `.\SqlLocalDb create KaerMorhenIS`
-  * Spuštění LocalDB `.\SqlLocalDb start KaerMorhenIS`
-  * Zkontrolovat, že vše funguje: `.\SqlLocalDb info KaerMorhenIS`
-    * ![Info](img.png)
-* `connectionString` by měl být nastaven v appsettings.json na DB s názvem KaerMorhenIS.
-* V IDE přidat nový Data Source -> Microsoft SQL Server Local Db a jako instanci vybrat KaerMorhen IS
-* Vytvořit migraci: *dotnet ef migrations add <jmenomigrace>* NEBO přes plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
-* Updatovat databázi dle migrace: *dotnet ef database update* NEBO přes plugin *Update Database*
-* Data by měla být viditelná v DB
+## Dokumentace
 
-## Hodnocení:
-* Kdyby chyběl půlbod na konci semestru, Dominik ho přidá
+Projektová dokumentace k implementaci zahrnuje:
+
+- ERD diagram implementovaného systému
+- diagram znázorňující infrastrukturu celého projektu
+
+Kromě toho jsou součástí další analytické dokumenty pro rozšířené zadání:
+
+- projektové diagramy (pro vodopádový vývojový model): myšlenková mapa, případy užití a jejich popis, diagram případů užití, event partitioning, diagramy toků dat, wireframy, datový slovník, ERD, sekvenční diagram, stavový diagram, Ganttův diagram 
+- (fiktivní) projektová dokumentace (pro agilní vývoj): PPP, project charter, WBS, odhady trvání, úsilí a financí; analýza rizik; Ganttův diagram, realizace změn a uzavření projektu
+
+## Struktura projektu
+
+Jedná se o jednu .NET solutionu, rozdělenou do několika projektů standardně podle vrstev, včetně příkladů testů. 
+
+Struktura projektu je složitější, protože cílem bylo vyzkoušet si různé návrhové vzory: Query Object, Unit of Work, Repository, CQRS.
+
+Využité technologie: C#/.NET, Blazor, Entity Framework, ASP.NET Core Identity
+
+## Členové implementačního týmu (v abecedním pořadí)
+- Michael Koudela 
+- Patrik Procházka 
+- Peter Šípoš
+
+## Členové plánovacího týmu (v abecedním pořadí)
+- Ondřej Dacer
+- Zdena Faragulová
+- Michael Koudela 
+- Peter Šípoš
+
+## Jak spustit lokálně
+
+Instrukce jsou k dispozici v anglické verzi README.
