@@ -29,6 +29,8 @@ public class KaerMorhenDBContext : IdentityDbContext<Person,
     {
         base.OnModelCreating(modelBuilder);
         /* Setup the connection table */
+        
+        modelBuilder.HasDefaultSchema("witcher");
        
         modelBuilder.Entity<Contract>();
         modelBuilder.Entity<Contractor>();
