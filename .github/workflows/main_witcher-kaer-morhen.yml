@@ -25,9 +25,15 @@ jobs:
       - name: Navigate to solution folder
         run: cd ./KaerMorhenIS
 
-      - name: List files in root directory
-        run: ls $GITHUB_WORKSPACE
+      - name: List files in this directory
+        run: ls
 
+      - name: Navigate to solution folder
+        run: cd ~/KaerMorhenIS
+
+      - name: List files in this directory
+        run: ls
+        
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
