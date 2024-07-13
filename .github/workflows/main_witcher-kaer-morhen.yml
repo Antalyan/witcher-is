@@ -22,14 +22,11 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: true
 
-      - name: Navigate to solution folder
-        run: cd ./KaerMorhenIS
-
       - name: List files in this directory
         run: ls
 
       - name: Navigate to solution folder
-        run: cd ~/KaerMorhenIS
+        run: cd .\KaerMorhenIS
 
       - name: List files in this directory
         run: ls
