@@ -16,20 +16,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: List files in root directory
-        run: ls $GITHUB_WORKSPACE
-
-      - name: Navigate to solution folder
-        run: cd ./KaerMorhenIS
-
-      - name: List files in root directory
-        run: echo $GITHUB_WORKSPACE
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
           include-prerelease: true
+
+      - name: Navigate to solution folder
+        run: cd ./KaerMorhenIS
+
+      - name: List files in root directory
+        run: ls $GITHUB_WORKSPACE
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
