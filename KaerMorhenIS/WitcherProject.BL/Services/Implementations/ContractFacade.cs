@@ -66,7 +66,7 @@ public class ContractFacade : IContractFacade
         contractDto.PersonId = personId;
         contractDto.ContractorId = contractorId;
 
-        if (contractDto.Id is null or -1) // Create
+        if (contractDto.Id is null) // Create
         {
             await _contractService.CreateContractWithoutCommit(contractDto);
         }

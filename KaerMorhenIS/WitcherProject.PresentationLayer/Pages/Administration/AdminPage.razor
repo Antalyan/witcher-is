@@ -89,7 +89,7 @@ else
     private IEnumerable<string> roleString;
     private IEnumerable<RoleUserModel> userWithRolesModels = new List<RoleUserModel>();
     
-    private string createRoleError = "" ;
+    private string? createRoleError = "" ;
 
     private static bool changeRoleLock = false;
 
@@ -120,6 +120,10 @@ else
         catch (Exception e)
         {
             createRoleError = e.Message;
+        }
+        finally
+        {
+            changeRoleLock = false;
         }
     }
     

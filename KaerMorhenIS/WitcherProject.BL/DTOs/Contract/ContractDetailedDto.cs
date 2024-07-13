@@ -8,7 +8,7 @@ namespace WitcherProject.BL.DTOs.Contract;
 
 public class ContractDetailedDto
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     [Required]
     public string Name { get; set; }

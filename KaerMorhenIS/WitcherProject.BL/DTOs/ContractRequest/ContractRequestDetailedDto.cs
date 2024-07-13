@@ -6,7 +6,7 @@ namespace WitcherProject.BL.DTOs.ContractRequest;
 
 public class ContractRequestDetailedDto
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     public DateTime? CreatedOn { get; set; }
 
