@@ -83,7 +83,9 @@ Technologies used: C#/.NET, Blazor, Entity Framework, ASP.NET Core Identity
   * Check that everything works: `.\SqlLocalDb.exe info <dbname>`
 * Check that database `connectionString` in appsettings.json is set to *dbname*.
 * Add new Data Source in Rider IDE -> Microsoft SQL Server Local Db -> choose *dbname* as instance name
-* Create migration (for PresentationLayer project since it contains main Program.cs): *dotnet ef migrations add <jmenomigrace>* OR using plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
+* Create migration
+  - go to DAL project -> run `dotnet ef migrations add <jmenomigrace> --startup-project ..\WitcherProject.PresentationLayer\`
+  - OR using plugin entity framework core UI: right click solution -> Tools -> Entity Framework Core -> *Add Migration* 
 * Update database according to chosen migration: *dotnet ef database update* OR using plugin... *Update Database*
 * Data should be visible in DB
 
