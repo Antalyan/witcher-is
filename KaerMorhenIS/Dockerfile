@@ -4,10 +4,10 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+WORKDIR /KaerMorhenIS
 
 COPY . .
-WORKDIR "/src/WitcherProject.PresentationLayer"
+WORKDIR "/KaerMorhenIS/WitcherProject.PresentationLayer"
 RUN dotnet restore WitcherProject.Presentation.csproj
 RUN dotnet publish WitcherProject.Presentation.csproj -c Release -o /app/publish
 
