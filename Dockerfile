@@ -11,8 +11,10 @@ WORKDIR /src
 # Copy everything from repo root into /src in container
 COPY . .
 
-# Restore & publish only the Presentation project
-WORKDIR /src/WitcherProject.PresentationLayer
+# Set WORKDIR to exact project folder
+WORKDIR /src/KaerMorhenIS/WitcherProject.PresentationLayer
+
+# Restore & publish
 RUN dotnet restore WitcherProject.PresentationLayer.csproj
 RUN dotnet publish WitcherProject.PresentationLayer.csproj -c Release -o /app/publish
 
