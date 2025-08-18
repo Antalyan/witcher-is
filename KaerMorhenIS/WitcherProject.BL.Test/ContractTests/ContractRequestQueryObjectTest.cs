@@ -3,7 +3,7 @@ using Moq;
 using WitcherProject.BL.DTOs.ContractRequest;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.DAL.Models;
-using WitcherProject.Infrastructure.Query;
+using WitcherProject.Infrastructure.EFCore.Query;
 using WitcherProject.Shared.Enums;
 using Xunit;
 

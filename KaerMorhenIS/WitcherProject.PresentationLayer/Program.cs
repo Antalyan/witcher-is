@@ -1,35 +1,33 @@
-using Mapster;
+using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using WitcherProject.BL.DTOs;
-using WitcherProject.BL.DTOs.Person;
+using WitcherProject.BL;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.BL.Services.Implementations;
 using WitcherProject.BL.Services.Interfaces;
-using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
+using WitcherProject.Infrastructure.EFCore;
+using WitcherProject.Infrastructure.EFCore.Data.Initializers;
 using WitcherProject.Infrastructure.EFCore.Query;
 using WitcherProject.Infrastructure.EFCore.Repository;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
-using WitcherProject.Infrastructure.Query;
 using WitcherProject.PresentationLayer.Model;
 using WitcherProject.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (File.Exists(".env"))
+{
+    Env.Load();
+}
+builder.Configuration
+    .AddEnvironmentVariables();
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddDbContextFactory<KaerMorhenDBContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("KaerMorhenDatabase")), ServiceLifetime.Transient);
+builder.Services.ConfigureDatabase(builder.Configuration);
 
-var config = TypeAdapterConfig.GlobalSettings;
-config.ForType<Role, RoleDto>().TwoWays()
-    .Map(rd => rd.UserRoleDtos, r => r.UserRoles).PreserveReference(true);
-config.ForType<Person, PersonCompleteDto>().TwoWays()
-    .Map(pcd => pcd.UserRoleDtos, p => p.UserRoles).PreserveReference(true)
-    .Map(pcd => pcd.Contracts, p => p.Contracts).PreserveReference(true);
-
+MapsterConfig.RegisterMappings();
 
 builder.Services.AddTransient(typeof(IQuery<>), typeof(EFQuery<>));
 builder.Services.AddTransient<IContractRequestQueryObject, ContractRequestQueryObject>();
@@ -112,5 +110,10 @@ app.UseMiddleware<BlazorCookieLoginMiddleware<Person>>();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+// Seed data
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<KaerMorhenDBContext>();
+await db.SeedAsync();
 
 app.Run();

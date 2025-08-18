@@ -1,15 +1,7 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.Contracts;
-using Mapster;
-using Microsoft.EntityFrameworkCore;
-using WitcherProject.BL.DTOs;
-using WitcherProject.BL.DTOs.Contract;
+﻿using Mapster;
 using WitcherProject.BL.DTOs.ContractRequest;
-using WitcherProject.DAL;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Query;
-using WitcherProject.Infrastructure.Query;
-using Contract = WitcherProject.DAL.Models.Contract;
 
 namespace WitcherProject.BL.QueryObjects;
 

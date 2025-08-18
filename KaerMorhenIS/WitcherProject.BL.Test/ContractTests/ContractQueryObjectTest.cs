@@ -3,7 +3,7 @@ using Moq;
 using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.QueryObjects;
 using WitcherProject.DAL.Models;
-using WitcherProject.Infrastructure.Query;
+using WitcherProject.Infrastructure.EFCore.Query;
 using Xunit;
 
 namespace WitcherProject.BL.Test.ContractTests;

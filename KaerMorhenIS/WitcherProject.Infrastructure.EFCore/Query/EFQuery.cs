@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using WitcherProject.DAL;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
-using WitcherProject.Infrastructure.Query;
 
 namespace WitcherProject.Infrastructure.EFCore.Query;
 

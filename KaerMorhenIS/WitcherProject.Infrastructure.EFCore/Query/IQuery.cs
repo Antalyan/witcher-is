@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace WitcherProject.Infrastructure.Query;
+namespace WitcherProject.Infrastructure.EFCore.Query;
 
 public interface IQuery<TEntity> where TEntity: class
 {

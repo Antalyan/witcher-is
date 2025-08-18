@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.DAL.Models;
 using WitcherProject.Infrastructure.EFCore.Query;
-using WitcherProject.Infrastructure.Query;
 
 namespace WitcherProject.BL.QueryObjects;
 
