@@ -8,8 +8,8 @@ WORKDIR /KaerMorhenIS
 
 COPY . .
 WORKDIR "/KaerMorhenIS/WitcherProject.PresentationLayer"
-RUN dotnet restore WitcherProject.Presentation.csproj
-RUN dotnet publish WitcherProject.Presentation.csproj -c Release -o /app/publish
+RUN dotnet restore WitcherProject.PresentationLayer.csproj
+RUN dotnet publish WitcherProject.PresentationLayer.csproj -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
