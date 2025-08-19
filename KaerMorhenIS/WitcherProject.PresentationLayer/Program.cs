@@ -34,13 +34,13 @@ builder.Services.AddTransient<IContractRequestQueryObject, ContractRequestQueryO
 builder.Services.AddTransient<IContractQueryObject, ContractQueryObject>();
 
 builder.Services.AddScoped<IUnitOfWorkProvider, EFUnitOfWorkProvider>();
+builder.Services.AddScoped<IRepositoryProvider, EFRepositoryProvider>();
 
-builder.Services.AddTransient<IContractorService, ContractorService>();
-builder.Services.AddTransient<IContractFacade, ContractFacade>();
-builder.Services.AddTransient<IContractService, ContractService>();
-builder.Services.AddTransient<IContractRequestService, ContractRequestService>();
-builder.Services.AddTransient<IPersonService, PersonService>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(EFGenericRepository<>));
+builder.Services.AddScoped<IContractorService, ContractorService>();
+builder.Services.AddScoped<IContractFacade, ContractFacade>();
+builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<IContractRequestService, ContractRequestService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 
 builder.Services.AddAuthorizationCore(
     options =>

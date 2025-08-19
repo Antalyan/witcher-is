@@ -14,15 +14,15 @@ namespace WitcherProject.BL.Services.Implementations;
 public class PersonService : IPersonService
 {
     private readonly IUnitOfWorkProvider _unitOfWorkProvider;
-    private readonly IGenericRepository<Person> _personRepository;
+    private readonly IRepositoryProvider _repositoryProvider;
     private readonly UserManager<Person> _userManager;
     private readonly RoleManager<Role> _roleManager;
 
-    public PersonService(IUnitOfWorkProvider unitOfWorkProvider, IGenericRepository<Person> personRepository, UserManager<Person> userManager,
+    public PersonService(IUnitOfWorkProvider unitOfWorkProvider, IRepositoryProvider repositoryProvider, UserManager<Person> userManager,
         RoleManager<Role> roleManager)
     {
         _unitOfWorkProvider = unitOfWorkProvider;
-        _personRepository = personRepository;
+        _repositoryProvider = repositoryProvider;
         _userManager = userManager;
         _roleManager = roleManager;
     }
@@ -70,7 +70,8 @@ public class PersonService : IPersonService
     public async Task<IEnumerable<PersonCompleteDto>> GetAllUsers()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedPersons = await _personRepository.GetAll();
+        var repository = _repositoryProvider.GetRepository<Person>(uow);
+        var returnedPersons = await repository.GetAll();
         return returnedPersons.Select(person => person.Adapt<PersonCompleteDto>());
     }
     
@@ -83,7 +84,8 @@ public class PersonService : IPersonService
     public async Task<IEnumerable<PersonSimpleDto>> GetAllSimpleUsers()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedPersons = await _personRepository.GetAll();
+        var repository = _repositoryProvider.GetRepository<Person>(uow);
+        var returnedPersons = await repository.GetAll();
         return returnedPersons.Select(person => person.Adapt<PersonSimpleDto>());
     }
     
@@ -96,7 +98,8 @@ public class PersonService : IPersonService
     public async Task<PersonCompleteDto> GetPersonById(int personId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedPerson = await _personRepository.GetById(personId);
+        var repository = _repositoryProvider.GetRepository<Person>(uow);
+        var returnedPerson = await repository.GetById(personId);
         return returnedPerson.Adapt<PersonCompleteDto>();
     }
     

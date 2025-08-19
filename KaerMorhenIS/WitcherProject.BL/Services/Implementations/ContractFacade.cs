@@ -1,7 +1,6 @@
 ﻿using Mapster;
 using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.DTOs.ContractRequest;
-using WitcherProject.BL.DTOs.Person;
 using WitcherProject.BL.Services.Interfaces;
 using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Shared.Enums;
@@ -29,7 +28,7 @@ public class ContractFacade : IContractFacade
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
 
-        _contractRequestService.UpdateContractWithoutCommit(contractRequest);
+        _contractRequestService.UpdateContractWithoutCommit(contractRequest, uow);
 
         // set declined for all other requesters for this particular contract
         var filter = new ContractRequestFilterDto {State = ContractRequestState.Requested, ContractId = contractId};
@@ -40,10 +39,10 @@ public class ContractFacade : IContractFacade
         foreach (var request in allOpenRequestsForContract)
         {
             request.State = ContractRequestState.Declined;
-            _contractRequestService.UpdateContractWithoutCommit(request.Adapt<ContractRequestUpdateDto>());
+            _contractRequestService.UpdateContractWithoutCommit(request.Adapt<ContractRequestUpdateDto>(), uow);
         }
         
-        await _contractService.AssignPersonToContractWithoutCommit(contractId, personId);
+        await _contractService.AssignPersonToContractWithoutCommit(contractId, personId, uow);
         await uow.CommitAsync();
     }
 
@@ -68,11 +67,11 @@ public class ContractFacade : IContractFacade
 
         if (contractDto.Id is null) // Create
         {
-            await _contractService.CreateContractWithoutCommit(contractDto);
+            await _contractService.CreateContractWithoutCommit(contractDto, uow);
         }
         else // Update
         {
-            _contractService.UpdateContractWithoutCommit(contractDto);
+            _contractService.UpdateContractWithoutCommit(contractDto, uow);
             if (personChanged)
             {
                 var filter = new ContractRequestFilterDto {State = ContractRequestState.Requested, ContractId = contractDto.Id};
@@ -81,7 +80,7 @@ public class ContractFacade : IContractFacade
                 foreach (var request in allOpenRequestsForContract)
                 {
                     request.State = request.Person.Id == personId ? ContractRequestState.Approved : ContractRequestState.Declined;
-                    _contractRequestService.UpdateContractWithoutCommit(request.Adapt<ContractRequestUpdateDto>());
+                    _contractRequestService.UpdateContractWithoutCommit(request.Adapt<ContractRequestUpdateDto>(), uow);
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using WitcherProject.BL.DTOs.Contract;
 using WitcherProject.BL.DTOs.ContractRequest;
+using WitcherProject.Infrastructure.EFCore.UnitOfWorkProvider;
 using WitcherProject.Shared.Enums;
 
 namespace WitcherProject.BL.Services.Interfaces;
@@ -22,7 +23,7 @@ public interface IContractRequestService
     
     Task UpdateContractRequest(ContractRequestUpdateDto contractRequestUpdateDto);
 
-    void UpdateContractWithoutCommit(ContractRequestUpdateDto contractRequestUpdateDto);
+    void UpdateContractWithoutCommit(ContractRequestUpdateDto contractRequestUpdateDto, IUnitOfWork uow);
 
     Task DeleteContractRequest(int requestId);
 }
