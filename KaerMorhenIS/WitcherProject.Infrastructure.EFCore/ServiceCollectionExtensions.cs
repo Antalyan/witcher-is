@@ -14,12 +14,13 @@ public static class ServiceCollectionExtensions
         {
             var connectionString = config.GetConnectionString("PostgresqlMain");
             services.AddDbContextFactory<KaerMorhenDBContext>(
-                options => options.UseNpgsql(connectionString), ServiceLifetime.Transient);
+                options => options.UseNpgsql(connectionString).EnableSensitiveDataLogging(), ServiceLifetime.Transient);
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         } else if (usedDb == "SqlServer")
         {
             var connectionString = config.GetConnectionString("SqlServerMain");
             services.AddDbContextFactory<KaerMorhenDBContext>(
-                options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+                options => options.UseSqlServer(connectionString).EnableSensitiveDataLogging(), ServiceLifetime.Transient);
         }
         else
         {
