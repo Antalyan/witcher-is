@@ -16,4 +16,5 @@
 */obj
 
 /Migrations
+.env
 

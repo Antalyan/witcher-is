@@ -10,28 +10,28 @@ namespace WitcherProject.BL.Services.Implementations;
 public class ContractorService: IContractorService
 {
     private readonly IUnitOfWorkProvider _unitOfWorkProvider;
+    private readonly IRepositoryProvider _repositoryProvider;
     
-    private readonly IGenericRepository<Contractor> _contractorRepository;
-
-    public ContractorService(IUnitOfWorkProvider unitOfWorkProvider,
-        IGenericRepository<Contractor> contractorRepository)
+    public ContractorService(IUnitOfWorkProvider unitOfWorkProvider, IRepositoryProvider repositoryProvider)
     {
         _unitOfWorkProvider = unitOfWorkProvider;
-        _contractorRepository = contractorRepository;
+        _repositoryProvider = repositoryProvider;
     }
     
     public async Task CreateContractor(ContractorDto contractDto)
     {
         var contractorToInsert = contractDto.Adapt<Contractor>();
         await using var uow = _unitOfWorkProvider.CreateUow();
-        await _contractorRepository.Insert(contractorToInsert);
+        var repository = _repositoryProvider.GetRepository<Contractor>(uow);
+        await repository.Insert(contractorToInsert);
         await uow.CommitAsync();
     }
 
     public async Task<IEnumerable<ContractorDto>> GetAllContractors()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedContractors = (await _contractorRepository.GetAll())
+        var repository = _repositoryProvider.GetRepository<Contractor>(uow);
+        var returnedContractors = (await repository.GetAll())
             .OrderBy(contractor => contractor.Surname).ThenBy(contractor => contractor.Name);
         return returnedContractors.Select(contractor => contractor.Adapt<ContractorDto>());
     }
@@ -39,21 +39,24 @@ public class ContractorService: IContractorService
     public async Task<ContractorDto> GetContractorById(int contractorId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedContractor = await _contractorRepository.GetById(contractorId);
+        var repository = _repositoryProvider.GetRepository<Contractor>(uow);
+        var returnedContractor = await repository.GetById(contractorId);
         return returnedContractor.Adapt<ContractorDto>();
     }
 
     public async Task UpdateContractor(ContractorDto contractorDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        _contractorRepository.Update(contractorDto.Adapt<Contractor>());
+        var repository = _repositoryProvider.GetRepository<Contractor>(uow);
+        repository.Update(contractorDto.Adapt<Contractor>());
         await uow.CommitAsync();
     }
 
     public async Task DeleteContractor(int contractId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        await _contractorRepository.Delete(contractId);
+        var repository = _repositoryProvider.GetRepository<Contractor>(uow);
+        await repository.Delete(contractId);
         await uow.CommitAsync();
     }
 }

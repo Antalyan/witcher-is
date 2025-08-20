@@ -3,5 +3,4 @@
 public interface IUnitOfWorkProvider
 {
     IUnitOfWork CreateUow();
-    IUnitOfWork GetUow();
 }

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using WitcherProject.DAL.Data.Initializers;
 using WitcherProject.DAL.Models;
+using WitcherProject.Infrastructure.EFCore.Data.Initializers;
 
-namespace WitcherProject.DAL;
+namespace WitcherProject.Infrastructure.EFCore;
 
 public class KaerMorhenDBContext : IdentityDbContext<Person, 
     Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
@@ -53,7 +53,5 @@ public class KaerMorhenDBContext : IdentityDbContext<Person,
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
-
-        modelBuilder.Seed();
     }
 }

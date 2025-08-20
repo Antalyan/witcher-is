@@ -8,13 +8,12 @@
 @using Mapster
 @using WitcherProject.BL.DTOs
 @using WitcherProject.BL.DTOs.Person
-@using Castle.Core.Internal
 
 @inject IPersonService PersonService
 @inject ILogger<AdminPage> Logger
 @inject NavigationManager NavigationManager
 
-@if (roles.IsNullOrEmpty() || userWithRolesModels.IsNullOrEmpty())
+@if (roles == null || userWithRolesModels == null)
 {
     <p>
         <em>Loading...</em>

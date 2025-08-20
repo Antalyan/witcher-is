@@ -12,32 +12,33 @@ namespace WitcherProject.BL.Services.Implementations;
 public class ContractRequestService : IContractRequestService
 {
     private readonly IUnitOfWorkProvider _unitOfWorkProvider;
+    private readonly IRepositoryProvider _repositoryProvider;
     
     private readonly IContractRequestQueryObject _contractRequestQueryObject;
     
-    private readonly IGenericRepository<ContractRequest> _contractRequestRepository;
-    
     public ContractRequestService(IUnitOfWorkProvider unitOfWorkProvider,
         IContractRequestQueryObject contractRequestQueryObject,
-        IGenericRepository<ContractRequest> contractRequestRepository)
+        IRepositoryProvider repositoryProvider)
     {
         _unitOfWorkProvider = unitOfWorkProvider;
         _contractRequestQueryObject = contractRequestQueryObject;
-        _contractRequestRepository = contractRequestRepository;
+        _repositoryProvider = repositoryProvider;
     }
     public async Task CreateContractRequest(ContractRequestAddDto contractRequestAddDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
+        var repository = _repositoryProvider.GetRepository<ContractRequest>(uow);
         var requestToInsert = contractRequestAddDto.Adapt<ContractRequest>();
         requestToInsert.CreatedOn = DateTime.Now;
-        await _contractRequestRepository.Insert(requestToInsert);
+        await repository.Insert(requestToInsert);
         await uow.CommitAsync();
     }
 
     public async Task<IEnumerable<ContractRequestDetailedDto>> GetAllContractRequests()
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        var returnedRequests = await _contractRequestRepository.GetAll();
+        var repository = _repositoryProvider.GetRepository<ContractRequest>(uow);
+        var returnedRequests = await repository.GetAll();
         return returnedRequests.Select(request => request.Adapt<ContractRequestDetailedDto>());
     }
 
@@ -66,19 +67,22 @@ public class ContractRequestService : IContractRequestService
     public async Task UpdateContractRequest(ContractRequestUpdateDto contractRequestUpdateDto)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        _contractRequestRepository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
+        var repository = _repositoryProvider.GetRepository<ContractRequest>(uow);
+        repository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
         await uow.CommitAsync();
     }
 
-    public void UpdateContractWithoutCommit(ContractRequestUpdateDto contractRequestUpdateDto)
+    public void UpdateContractWithoutCommit(ContractRequestUpdateDto contractRequestUpdateDto, IUnitOfWork uow)
     {
-        _contractRequestRepository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
+        var repository = _repositoryProvider.GetRepository<ContractRequest>(uow);
+        repository.Update(contractRequestUpdateDto.Adapt<ContractRequest>());
     }
 
     public async Task DeleteContractRequest(int requestId)
     {
         await using var uow = _unitOfWorkProvider.CreateUow();
-        await _contractRequestRepository.Delete(requestId);
+        var repository = _repositoryProvider.GetRepository<ContractRequest>(uow);
+        await repository.Delete(requestId);
         await uow.CommitAsync();
     }
 }
