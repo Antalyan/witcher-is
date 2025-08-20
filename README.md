@@ -1,20 +1,20 @@
 # Witcher system
 
+The system is available on: https://witcher-is.onrender.com 
+
+To access as a non-admin Witcher, use credentials: user: vesemir, pwd: OldWolf1*
+
 ## Domain description
 Project features an information system for witchers (fictional job, known from A. Sapkowski's world). 
 
-The domain for which the system will be modeled is the witcher castle Kaer
+The domain for which the system will be modelled is the witcher castle Kaer
 Morhen. The system should provide all the information related to the
 witcher job activities for witchers from this fort. In addition to basic personal
 information and the distribution of individual responsibilities, this includes especially detailed
-data on individual contracts and their distribution to individual persons. Important
+data on individual contracts and their distribution to individual persons. An important
 part of the system is also the knowledge, obtained and preserved for future generations of witchers for centuries.
 
-People play several roles in the system. Order manager
-registers all requests from the public and assigning witches to
-individual orders. He is responsible for the records of all persons and their roles
-people manager. The main work is then performed by the witcher himself, who
-executes individual orders.
+People have several roles in the system. The contract manager registers all requests from the public and assigns witchers to individual contracts. The people manager is responsible for the records of all persons and their roles. The main work is then performed by the witcher himself, who carries out individual contracts.
 
 Project documentation corresponds to several months of work by a professional company. The implementation in this repository has therefore been greatly simplified:
 
@@ -32,7 +32,7 @@ Information system enables:
 - contract manager to assign a contract to a witcher
 - witcher to ask for contracts
 
-### Optional uses cases (assignment extensions):
+### Optional use cases (assignment extensions):
 - witcher knowledge database/wikipedia (included in ERD, currently not in implementation plan)
 
 Project was implemented within an optional course PV179: System development in C#/.NET at Faculty of Informatics, Masaryk University.
@@ -57,7 +57,9 @@ This is one .NET solution, divided into several projects by standard layers, inc
 
 The structure of the project is more complex because the goal was to try different design patterns: Query Object, Unit of Work, Repository, CQRS.
 
-Technologies used: C#/.NET, Blazor, Entity Framework, ASP.NET Core Identity
+Technologies used: C#/.NET, Blazor (server), Entity Framework, ASP.NET Core Identity
+
+Deployment: Render + Supreme + Docker
 
 ## Implementation team members
 - Michael Koudela 
@@ -70,7 +72,7 @@ Technologies used: C#/.NET, Blazor, Entity Framework, ASP.NET Core Identity
 - Michael Koudela 
 - Peter Šípoš
 
-## Running project with MS SQL & Rider (1.10.2022)
+## Running project locally with MS SQL & Rider (1.10.2022) - obsolete
 
 * Download Microsoft SQL server
   * https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?source=recommendations&view=sql-server-ver16:
